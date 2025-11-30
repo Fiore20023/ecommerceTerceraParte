@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECommerce (alta)</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/alta.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div id="logo">
+                <a href="index.html">
+                    <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
+                </a>
+            </div>
+            <div id="barra-busqueda">
+                <form action="">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+            <div id="boton-carrito">
+                <a href="./carrito.html">🛒</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li> <a href="./index.html">Inicio</a> </li>
+                <li> <a href="./alta.html">Alta</a> </li>
+                <li> <a href="./carrito.html">Carrito</a> </li>
+                <li> <a href="./contacto.html">Contacto</a> </li>
+                <li> <a href="./nosotros.html">Nosotros</a> </li>
+                <li> <a href="./otra.html">Otra</a> </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Alta de Productos</h1>
+
+        <form id="form-alta-producto" class="alta-form">
+            <div class="input-group">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" type="text" name="nombre" required minlength="2">
+            </div>
+
+            <div class="input-group">
+                <label for="precio">Precio</label>
+                <input id="precio" type="number" name="precio" required min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="stock">Stock</label>
+                <input id="stock" type="number" name="stock" required min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="marca">Marca</label>
+                <input id="marca" type="text" name="marca" required>
+            </div>
+
+            <div class="input-group">
+                <label for="categoria">Categoría</label>
+                <input id="categoria" type="text" name="categoria" required>
+            </div>
+
+            <div class="input-group">
+                <label for="descripcion-corta">Descripción Corta</label>
+                <input id="descripcion-corta" type="text" name="descripcion-corta" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="descripcion-larga">Descripción Larga</label>
+                <textarea id="descripcion-larga" name="descripcion-larga"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="foto">URL Foto</label>
+                <input id="foto" type="text" name="foto" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+
+            <div class="input-group-checkbox">
+                <input id="envio" type="checkbox" name="envio">
+                <label for="envio">Envío sin cargo</label>
+            </div>
+
+            <button type="submit">Agregar</button>
+        </form>
+
+        <hr>
+
+        <h2>Lista de productos disponibles</h2>
+        <div class="tabla-container">
+            <table id="tabla-productos">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Marca</th>
+                        <th>Categoría</th>
+                        <th>Descripción Corta</th>
+                        <th>Descripción Larga</th>
+                        <th>Envío sin cargo</th>
+                        <th>Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas de productos se insertarán aquí -->
+                </tbody>
+            </table>
+        </div>
+        
+    </main>
+
+    <footer>
+        <p>&copy; Copyright 2025 - Planeta Citroen</p>
+        <p>Síguenos en redes sociales</p>
+    </footer>
+    
+    <script src="js/productos.js"></script>
+    <script src="js/alta.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>

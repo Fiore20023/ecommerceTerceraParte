@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECommerce (contacto)</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/contacto.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div id="logo">
+                <a href="index.html">
+                    <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
+                </a>
+            </div>
+            <div id="barra-busqueda">
+                <form action="">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+            <div id="boton-carrito">
+                <a href="./carrito.html">🛒</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li> <a href="./index.html">Inicio</a> </li>
+                <li> <a href="./alta.html">Alta</a> </li>
+                <li> <a href="./carrito.html">Carrito</a> </li>
+                <li> <a href="./contacto.html">Contacto</a> </li>
+                <li> <a href="./nosotros.html">Nosotros</a> </li>
+                <li> <a href="./otra.html">Otra</a> </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Contacto</h1>
+        <form class="contact-form">
+            <div class="input-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="celular">Número de celular</label>
+                <input type="tel" id="celular" name="celular" placeholder="+54 9 11 1234 5678">
+            </div>
+            <div class="input-group">
+                <label for="pais">País</label>
+                <input type="text" id="pais" name="pais">
+            </div>
+            <div class="input-group">
+                <label for="provincia">Provincia</label>
+                <input type="text" id="provincia" name="provincia">
+            </div>
+            <div class="input-group">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad">
+            </div>
+            <div class="input-group">
+                <label for="comentarios">Comentarios</label>
+                <textarea id="comentarios" name="comentarios" rows="5" required></textarea>
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; Copyright 2025 - Planeta Citroen</p>
+        <p>Síguenos en redes sociales</p>
+    </footer>
+    
+    <script src="js/main.js"></script>
+
+</body>
+</html>

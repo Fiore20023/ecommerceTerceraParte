@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECommerce (carrito)</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/carrito.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div id="logo">
+                <a href="index.html">
+                    <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
+                </a>
+            </div>
+            <div id="barra-busqueda">
+                <form action="">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+            <div id="boton-carrito">
+                <a href="./carrito.html">🛒</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li> <a href="./index.html">Inicio</a> </li>
+                <li> <a href="./alta.html">Alta</a> </li>
+                <li> <a href="./carrito.html">Carrito</a> </li>
+                <li> <a href="./contacto.html">Contacto</a> </li>
+                <li> <a href="./nosotros.html">Nosotros</a> </li>
+                <li> <a href="./otra.html">Otra</a> </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Carrito de Compras</h1>
+    <div class="cards-container" id="carrito-productos-container"></div>
+    <div id="carrito-total-view"></div>
+        <h2>Todos los productos</h2>
+        <div class="tabla-container">
+            <table id="tabla-productos">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Marca</th>
+                        <th>Categoría</th>
+                        <th>Descripción</th>
+                        <th>Envío</th>
+                        <th>Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas de productos se insertarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Copyright 2025 - Planeta Citroen</p>
+        <p>Síguenos en redes sociales</p>
+    </footer>
+    <script src="js/productos.js"></script>
+    <script src="js/carrito.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>

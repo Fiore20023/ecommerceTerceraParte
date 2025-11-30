@@ -1,0 +1,19 @@
+# Node / env
+node_modules/
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+
+# VSCode
+.vscode/
+
+# Live server temp
+*.log
+
+# Others
+.idea/

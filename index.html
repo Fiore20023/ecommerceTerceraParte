@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECommerce (inicio)</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    <!-- Load view-specific styles so SPA-loaded pages keep their styles -->
+    <link rel="stylesheet" href="css/alta.css">
+    <link rel="stylesheet" href="css/carrito.css">
+    <link rel="stylesheet" href="css/contacto.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div id="logo">
+                <a href="index.html">
+                    <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
+                </a>
+            </div>
+            <div id="barra-busqueda">
+                <form action="">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+            <div id="boton-carrito">
+                <a href="./carrito.html" data-cart-toggle>🛒</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li> <a href="./index.html">Inicio</a> </li>
+                <li> <a href="./alta.html">Alta</a> </li>
+                <li> <a href="./carrito.html">Carrito</a> </li>
+                <li> <a href="./contacto.html">Contacto</a> </li>
+                <li> <a href="./nosotros.html">Nosotros</a> </li>
+                <li> <a href="./otra.html">Otra</a> </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="app">
+        <div class="section-cards">
+            <div class="section-cards-header">
+                <h1>Listado de Productos</h1>
+            </div>
+
+            <div class="cards-container">
+                <!-- Las cards de productos se insertarán aquí dinámicamente -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Copyright 2025 - Planeta Citroen</p>
+        <p>Síguenos en redes sociales</p>
+    </footer>
+
+    <script src="js/productos.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/spa.js"></script>
+    <script>
+        // Verificar que spa.js cargó correctamente
+        console.log('Verificando funciones del carrito...');
+        console.log('window.addToCart:', typeof window.addToCart);
+        console.log('window.openCart:', typeof window.openCart);
+    </script>
+    <script src="js/inicio.js"></script>
+    <script src="js/alta.js"></script>
+    <script src="js/carrito.js"></script>
+    <script src="js/contacto.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
