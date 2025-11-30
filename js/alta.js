@@ -123,11 +123,76 @@ function initAlta(){
                 <td>${p['descripcion-corta'] || ''}</td>
                 <td>${p['descripcion-larga'] || ''}</td>
                 <td>${p.envio ? 'Sí' : 'No'}</td>
-                <td><img src="${imgSrc}" alt="${p.nombre||''}" width="50" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No';"></td>
+                <td><img src="${imgSrc}" alt="${p.nombre||""}" width="50" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No';"></td>
+                <td style="white-space:nowrap;">
+                    <button class="btn-editar" data-id="${p._id}" title="Editar producto" style="background:#ffc107; color:#000; border:none; padding:0.4rem 0.6rem; margin:0 0.3rem; cursor:pointer; border-radius:4px; font-size:1rem;">✏️</button>
+                    <button class="btn-eliminar" data-id="${p._id}" title="Eliminar producto" style="background:#dc3545; color:#fff; border:none; padding:0.4rem 0.6rem; margin:0 0.3rem; cursor:pointer; border-radius:4px; font-size:1rem;">❌</button>
+                </td>
             `;
             tablaBody.appendChild(fila);
         });
     }
+
+    // Event listeners para botones de editar y eliminar
+    tablaBody.addEventListener('click', async (e) => {
+        const btnEditar = e.target.closest('.btn-editar');
+        const btnEliminar = e.target.closest('.btn-eliminar');
+        
+        if (btnEditar) {
+            const id = btnEditar.dataset.id;
+            const producto = window.productos.find(p => p._id === id);
+            if (!producto) return;
+            
+            // Llenar el formulario con los datos del producto
+            form.nombre.value = producto.nombre || '';
+            form.precio.value = producto.precio || '';
+            form.stock.value = producto.stock || '';
+            form.marca.value = producto.marca || '';
+            form.categoria.value = producto.categoria || '';
+            if (form['descripcion-corta']) form['descripcion-corta'].value = producto['descripcion-corta'] || '';
+            if (form['descripcion-larga']) form['descripcion-larga'].value = producto['descripcion-larga'] || '';
+            if (form.foto) form.foto.value = producto.foto || producto.imagen || '';
+            if (form.envio) form.envio.checked = producto.envio || false;
+            
+            // Cambiar el botón a "Actualizar"
+            const btnSubmit = form.querySelector('button[type="submit"]');
+            btnSubmit.textContent = 'Actualizar';
+            btnSubmit.dataset.editId = id;
+            
+            // Scroll al formulario
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        if (btnEliminar) {
+            const id = btnEliminar.dataset.id;
+            const producto = window.productos.find(p => p._id === id);
+            
+            if (!confirm(`¿Estás seguro de eliminar "${producto?.nombre || 'este producto'}"?`)) return;
+            
+            if (window.API_CONFIG) {
+                try {
+                    const res = await fetch(`${window.API_CONFIG.getProductosUrl()}/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (res.ok) {
+                        alert('✅ Producto eliminado exitosamente');
+                        // Recargar productos
+                        const response = await fetch(window.API_CONFIG.getProductosUrl());
+                        const result = await response.json();
+                        window.productos = result.data || result;
+                        renderizarTabla();
+                    } else {
+                        const error = await res.json();
+                        alert('❌ Error: ' + (error.message || 'No se pudo eliminar'));
+                    }
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('❌ Error de conexión');
+                }
+            }
+        }
+    });
 
     // Cargar productos desde el backend
     if (window.API_CONFIG) {
@@ -184,7 +249,11 @@ function initAlta(){
         const allOk = fields.map(f=> validateField(f)).every(Boolean);
         if (!allOk) { if (typeof showToast === 'function') showToast('Corrija los errores antes de enviar'); return; }
 
-        const nuevoProducto = {
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        const editId = btnSubmit.dataset.editId;
+        const isEdit = !!editId;
+
+        const productoData = {
             nombre: form.nombre.value,
             precio: Number(form.precio.value),
             stock: Number(form.stock.value),
@@ -197,18 +266,23 @@ function initAlta(){
             imagen: form.foto ? form.foto.value.trim() : '' // Enviar también como 'imagen'
         };
         
-        console.log('📸 URL de la foto que se va a enviar:', nuevoProducto.foto);
-        console.log('📦 Producto completo a enviar:', nuevoProducto);
+        console.log('📸 URL de la foto que se va a enviar:', productoData.foto);
+        console.log('📦 Producto completo a enviar:', productoData);
 
         // Enviar producto al backend
         if (window.API_CONFIG) {
             (async ()=>{
                 try {
-                    console.log('📤 Enviando producto al backend...');
-                    const res = await fetch(window.API_CONFIG.getProductosUrl(), { 
-                        method: 'POST', 
+                    const url = isEdit 
+                        ? `${window.API_CONFIG.getProductosUrl()}/${editId}`
+                        : window.API_CONFIG.getProductosUrl();
+                    const method = isEdit ? 'PUT' : 'POST';
+                    
+                    console.log(`📤 ${isEdit ? 'Actualizando' : 'Creando'} producto...`);
+                    const res = await fetch(url, { 
+                        method: method, 
                         headers: {'Content-Type':'application/json'}, 
-                        body: JSON.stringify(nuevoProducto) 
+                        body: JSON.stringify(productoData) 
                     });
                     
                     if (res.ok) {
@@ -216,13 +290,18 @@ function initAlta(){
                         const saved = result.data || result;
                         console.log('✅ Producto guardado:', saved);
                         
-                        // Agregar a la lista local
-                        window.productos = window.productos || [];
-                        window.productos.push(saved);
+                        // Recargar productos desde el backend
+                        const response = await fetch(window.API_CONFIG.getProductosUrl());
+                        const productsResult = await response.json();
+                        window.productos = productsResult.data || productsResult;
                         renderizarTabla();
-                        form.reset();
                         
-                        alert('✅ Producto creado exitosamente');
+                        // Resetear formulario
+                        form.reset();
+                        btnSubmit.textContent = 'Agregar';
+                        delete btnSubmit.dataset.editId;
+                        
+                        alert(`✅ Producto ${isEdit ? 'actualizado' : 'creado'} exitosamente`);
                     } else {
                         const error = await res.json();
                         console.error('❌ Error del servidor:', error);
@@ -235,10 +314,18 @@ function initAlta(){
             })();
         } else {
             // Fallback: guardar solo localmente
-            productos.push(nuevoProducto);
+            if (isEdit) {
+                const index = window.productos.findIndex(p => p._id === editId);
+                if (index !== -1) window.productos[index] = {...window.productos[index], ...productoData};
+            } else {
+                window.productos = window.productos || [];
+                window.productos.push(productoData);
+            }
             renderizarTabla();
             form.reset();
-            alert('⚠️ Producto guardado solo localmente (backend no configurado)');
+            btnSubmit.textContent = 'Agregar';
+            delete btnSubmit.dataset.editId;
+            alert(`⚠️ Producto ${isEdit ? 'actualizado' : 'guardado'} solo localmente`);
         }
     });
 }
