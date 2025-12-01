@@ -13,5 +13,13 @@ export const config = {
             productos: process.env.PRODUCTOS_COLLECTION || 'productos',
             carrito: process.env.CARRITO_COLLECTION || 'carritos'
         }
+    },
+    mercadopago: {
+        accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+        publicKey: process.env.MERCADOPAGO_PUBLIC_KEY
+    },
+    app: {
+        frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3001',
+        backendUrl: process.env.BACKEND_URL || 'http://localhost:3001'
     }
 };

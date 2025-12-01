@@ -23,7 +23,7 @@
                 </form>
             </div>
             <div id="boton-carrito">
-                <a href="./carrito.html">🛒</a>
+                <a href="./carrito.html" data-cart-toggle>🛒</a>
             </div>
         </div>
         <nav>
@@ -40,27 +40,28 @@
 
     <main>
         <h1>Carrito de Compras</h1>
-    <div class="cards-container" id="carrito-productos-container"></div>
-    <div id="carrito-total-view"></div>
-        <h2>Todos los productos</h2>
         <div class="tabla-container">
-            <table id="tabla-productos">
+            <table id="tabla-carrito">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Marca</th>
-                        <th>Categoría</th>
-                        <th>Descripción</th>
-                        <th>Envío</th>
                         <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Precio Unit.</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Filas de productos se insertarán aquí dinámicamente -->
+                    <!-- Filas de productos del carrito se insertarán aquí -->
                 </tbody>
             </table>
+        </div>
+        <div id="carrito-total-view">
+            <!-- Total y botones se mostrarán aquí -->
+        </div>
+        <div id="carrito-mensaje">
+            <!-- Mensajes de estado -->
         </div>
     </main>
 
@@ -68,8 +69,10 @@
         <p>&copy; Copyright 2025 - Planeta Citroen</p>
         <p>Síguenos en redes sociales</p>
     </footer>
+    <script src="js/config.js"></script>
     <script src="js/productos.js"></script>
     <script src="js/carrito.js"></script>
+    <script src="js/spa.js"></script>
     <script src="js/main.js"></script>
 
 </body>

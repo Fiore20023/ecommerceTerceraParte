@@ -1,10 +1,60 @@
 // ------------------------------------------------
 //             variables globales
 // ------------------------------------------------
+let pedidoFinalizado = false;
+
+// Cargar carrito desde localStorage al inicio
+if (!window.cart) {
+    window.cart = {};
+}
+try {
+    const stored = localStorage.getItem('cart');
+    if (stored) {
+        window.cart = JSON.parse(stored);
+        console.log('🛒 Carrito cargado desde localStorage:', window.cart);
+    }
+} catch (e) {
+    console.error('Error al cargar carrito:', e);
+}
 
 // ------------------------------------------------
 //             funciones globales
 // ------------------------------------------------
+
+// Función para guardar el carrito en localStorage
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(window.cart || {}));
+    console.log('💾 Carrito guardado:', window.cart);
+}
+
+// Función para cambiar cantidad de un producto
+function cambiarCantidad(productId) {
+    const nuevaCantidad = prompt('Ingresa la nueva cantidad:', window.cart[productId].qty);
+    if (nuevaCantidad && !isNaN(nuevaCantidad) && nuevaCantidad > 0) {
+        window.cart[productId].qty = parseInt(nuevaCantidad);
+        saveCart();
+        renderCarrito();
+    }
+}
+
+// Función para eliminar un producto del carrito
+function eliminarDelCarrito(productId) {
+    if (confirm(`¿Eliminar ${window.cart[productId].nombre} del carrito?`)) {
+        delete window.cart[productId];
+        saveCart();
+        renderCarrito();
+    }
+}
+
+// Función para vaciar todo el carrito
+function vaciarCarrito() {
+    if (confirm('¿Vaciar todo el carrito?')) {
+        window.cart = {};
+        saveCart();
+        pedidoFinalizado = false;
+        renderCarrito();
+    }
+}
 
 // Función para enviar el carrito al backend
 async function enviarCarritoAlBackend() {
@@ -35,14 +85,21 @@ async function enviarCarritoAlBackend() {
 
         if (response.ok && result.success) {
             console.log('✅ Carrito enviado exitosamente:', result);
-            alert(`✅ Pedido enviado exitosamente!\nTotal de productos: ${items.length}\nTotal: $${result.data.total || 0}`);
+            pedidoFinalizado = true;
             
-            // Vaciar el carrito después de enviar
-            window.cart = {};
-            localStorage.removeItem('cart');
+            const mensajeEl = document.getElementById('carrito-mensaje');
+            if (mensajeEl) {
+                mensajeEl.innerHTML = `
+                    <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <strong>✅ Pedido registrado exitosamente!</strong><br>
+                        Total de productos: ${items.length}<br>
+                        Total: $${result.data.total || 0}<br>
+                        <em>Ahora puedes proceder al pago.</em>
+                    </div>
+                `;
+            }
             
-            // Re-renderizar el carrito vacío
-            initCarrito();
+            renderCarrito();
         } else {
             console.error('❌ Error del servidor:', result);
             alert('❌ Error al procesar el pedido: ' + (result.message || 'Error desconocido'));
@@ -53,71 +110,122 @@ async function enviarCarritoAlBackend() {
     }
 }
 
-
-function initCarrito(){
-    const container = document.getElementById('carrito-productos-container');
-    const tablaBody = document.querySelector('#tabla-productos tbody');
+// Función para crear preferencia de pago con Mercado Pago
+async function pagarConMercadoPago() {
+    const items = Object.values(window.cart || {});
     
-    // Render using window.cart if available
-    function renderProductosCarrito(){
-        if (!container) return;
-        const items = Object.values(window.cart || {});
-        
-        if (!items.length) { 
-            container.innerHTML = '<h2>No hay productos en el carrito</h2>'; 
-            return; 
-        }
-        
-        container.innerHTML = '';
-        items.forEach(producto => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${producto.foto}" alt="${producto.nombre}">
-                <div class="card-body">
-                    <h3 class="card-title">${producto.nombre}</h3>
-                    <p class="card-price">$${producto.precio}</p>
-                    <p class="card-description">${producto['descripcion-corta'] || producto.detalles}</p>
-                    <p>Cantidad: ${producto.qty}</p>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-
-        if (tablaBody) {
-            tablaBody.innerHTML = items.map(p => `
-                <tr>
-                    <td>${p.nombre}</td>
-                    <td>$${p.precio}</td>
-                    <td>${p.qty}</td>
-                    <td>${p.marca||''}</td>
-                    <td>${p.categoria||''}</td>
-                    <td>${p['descripcion-corta'] || p.detalles||''}</td>
-                    <td>${p.envio ? 'Sí' : 'No'}</td>
-                    <td><img src="${p.foto}" alt="${p.nombre}" style="width:40px;height:40px;object-fit:cover;"></td>
-                </tr>
-            `).join('');
-        }
-        
-        // render summary total for view
-        const summaryEl = document.getElementById('carrito-total-view');
-        if (summaryEl){
-            const total = items.reduce((s,it)=> s + (it.precio * it.qty), 0);
-            summaryEl.innerHTML = `
-                <h3>Total: $${total.toFixed(2)}</h3>
-                <button id="btn-finalizar-compra" class="btn-finalizar">Finalizar Compra</button>
-            `;
-            
-            // Agregar evento al botón de finalizar compra
-            const btnFinalizar = document.getElementById('btn-finalizar-compra');
-            if (btnFinalizar) {
-                btnFinalizar.addEventListener('click', enviarCarritoAlBackend);
-            }
-        }
+    if (!items.length) {
+        alert('⚠️ El carrito está vacío');
+        return;
     }
 
-    renderProductosCarrito();
+    try {
+        console.log('💳 Creando preferencia de pago...');
+        
+        // BASE_URL ya incluye /api, solo agregamos /mercadopago/create-preference
+        const response = await fetch(`${window.API_CONFIG.BASE_URL}/mercadopago/create-preference`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ items })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            console.log('✅ Preferencia creada:', result.data);
+            
+            // Vaciar el carrito antes de redirigir
+            window.cart = {};
+            saveCart();
+            
+            // Redirigir a Mercado Pago
+            window.location.href = result.data.init_point;
+        } else {
+            console.error('❌ Error al crear preferencia:', result);
+            alert('❌ Error al procesar el pago: ' + (result.message || 'Error desconocido'));
+        }
+    } catch (error) {
+        console.error('❌ Error de conexión:', error);
+        alert('❌ Error de conexión con el servidor');
+    }
+}
+
+// Función principal para renderizar el carrito
+function renderCarrito() {
+    const tablaBody = document.querySelector('#tabla-carrito tbody');
+    const summaryEl = document.getElementById('carrito-total-view');
+    
+    if (!tablaBody) return;
+    
+    const items = Object.values(window.cart || {});
+    
+    // Si el carrito está vacío
+    if (!items.length) {
+        tablaBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 40px;"><h2>No hay productos en el carrito</h2></td></tr>';
+        if (summaryEl) summaryEl.innerHTML = '';
+        return;
+    }
+    
+    // Renderizar tabla de productos
+    tablaBody.innerHTML = items.map(p => {
+        const subtotal = p.precio * p.qty;
+        const foto = p.foto || p.imagen || 'https://via.placeholder.com/60?text=Sin+Imagen';
+        
+        return `
+            <tr>
+                <td><img src="${foto}" alt="${p.nombre}" style="width:60px;height:60px;object-fit:cover;border-radius:5px;"></td>
+                <td>${p.nombre}</td>
+                <td>$${p.precio}</td>
+                <td>
+                    <button onclick="cambiarCantidad('${p.id}')" style="background:#ffc107;color:#000;border:none;padding:5px 10px;margin-right:5px;cursor:pointer;border-radius:3px;">✏️ ${p.qty}</button>
+                </td>
+                <td>$${subtotal.toFixed(2)}</td>
+                <td>
+                    <button onclick="eliminarDelCarrito('${p.id}')" style="background:#dc3545;color:#fff;border:none;padding:5px 10px;cursor:pointer;border-radius:3px;">🗑️ Eliminar</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    // Calcular total
+    const total = items.reduce((s, it) => s + (it.precio * it.qty), 0);
+    
+    // Renderizar resumen y botones
+    if (summaryEl) {
+        let html = `<h2 style="margin: 20px 0;">Total: $${total.toFixed(2)}</h2>`;
+        
+        if (!pedidoFinalizado) {
+            // Antes de finalizar: mostrar botón de finalizar compra y vaciar carrito
+            html += `
+                <div style="margin: 20px 0;">
+                    <button id="btn-finalizar-compra" class="btn-finalizar" onclick="enviarCarritoAlBackend()" style="background:#28a745;color:#fff;border:none;padding:12px 24px;margin:10px 5px;cursor:pointer;border-radius:5px;font-size:16px;font-weight:bold;">✅ Finalizar Compra</button>
+                    <button onclick="vaciarCarrito()" style="background:#6c757d;color:#fff;border:none;padding:12px 24px;margin:10px 5px;cursor:pointer;border-radius:5px;font-size:16px;">🗑️ Vaciar Carrito</button>
+                </div>
+            `;
+        } else {
+            // Después de finalizar: mostrar botón de Mercado Pago y vaciar carrito
+            html += `
+                <div style="margin: 20px 0;">
+                    <button onclick="pagarConMercadoPago()" style="background:#009ee3;color:#fff;border:none;padding:12px 24px;margin:10px 5px;cursor:pointer;border-radius:5px;font-size:16px;font-weight:bold;">💳 Pagar con Mercado Pago</button>
+                    <button onclick="vaciarCarrito()" style="background:#6c757d;color:#fff;border:none;padding:12px 24px;margin:10px 5px;cursor:pointer;border-radius:5px;font-size:16px;">🗑️ Vaciar Carrito</button>
+                </div>
+            `;
+        }
+        
+        summaryEl.innerHTML = html;
+    }
+}
+
+// Inicializar carrito al cargar la página
+function initCarrito() {
+    renderCarrito();
 }
 
 // auto-run if loaded standalone
-if (document.readyState === 'complete' || document.readyState === 'interactive') initCarrito();
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initCarrito();
+} else {
+    document.addEventListener('DOMContentLoaded', initCarrito);
+}

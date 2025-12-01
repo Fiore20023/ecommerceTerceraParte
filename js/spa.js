@@ -76,6 +76,10 @@ window.addEventListener('popstate', (e) => {
                 <button id="cart-continue" style="background:#6c757d;">Seguir Comprando</button>
                 <button id="cart-empty">Vaciar carrito</button>
                 <button id="cart-checkout">Finalizar Compra</button>
+                <button id="cart-mercadopago" style="background:#00b1ea; color:#fff; display:none;">
+                    <img src="https://http2.mlstatic.com/storage/logos-api-admin/51b446b0-571c-11e8-9a2d-4b2bd7b1bf77-m.svg" alt="Mercado Pago" style="height:20px; vertical-align:middle; margin-right:0.5rem;">
+                    Pagar con Mercado Pago
+                </button>
             </div>
         </div>
     `;
@@ -362,15 +366,21 @@ window.addEventListener('popstate', (e) => {
 
                 if (response.ok && result.success) {
                     console.log('✅ Carrito enviado exitosamente:', result);
-                    showToast(`✅ Pedido enviado! Total: $${result.data.total || 0}`);
+                    showToast(`✅ Pedido registrado! Total: $${result.data.total || 0}`);
                     
-                    // Vaciar el carrito
-                    window.cart = {};
-                    saveCart();
-                    renderCart();
+                    // Ocultar botones de finalizar compra y vaciar
+                    document.getElementById('cart-checkout').style.display = 'none';
+                    document.getElementById('cart-empty').style.display = 'none';
                     
-                    // Cerrar modal después de 2 segundos
-                    setTimeout(closeCart, 2000);
+                    // Mostrar botón de Mercado Pago
+                    const mpButton = document.getElementById('cart-mercadopago');
+                    mpButton.style.display = 'inline-block';
+                    
+                    // Cambiar mensaje del modal
+                    const summary = document.getElementById('cart-summary');
+                    if (summary) {
+                        summary.innerHTML += '<p style="color:#28a745; font-weight:bold; margin-top:1rem;">✅ Pedido registrado. Ahora puedes proceder al pago.</p>';
+                    }
                 } else {
                     console.error('❌ Error del servidor:', result);
                     showToast('❌ Error: ' + (result.message || 'No se pudo procesar'));
@@ -387,6 +397,60 @@ window.addEventListener('popstate', (e) => {
                 saveCart(); 
                 renderCart(); 
                 showToast('🗑️ Carrito vaciado');
+            }
+        }
+
+        // Pagar con Mercado Pago
+        if (e.target && (e.target.id === 'cart-mercadopago' || e.target.closest('#cart-mercadopago'))){
+            const items = Object.values(window.cart);
+            
+            if (!items.length) {
+                showToast('⚠️ El carrito está vacío');
+                return;
+            }
+
+            if (!window.API_CONFIG) {
+                showToast('⚠️ Backend no configurado');
+                return;
+            }
+
+            try {
+                console.log('💳 Iniciando pago con Mercado Pago...', items);
+                showToast('⏳ Preparando pago...');
+
+                // Preparar items para Mercado Pago
+                const mpItems = items.map(item => ({
+                    title: item.nombre,
+                    unit_price: Number(item.precio),
+                    quantity: Number(item.qty || 1)
+                }));
+
+                // Crear preferencia de pago
+                const response = await fetch(`${window.API_CONFIG.BASE_URL}/mercadopago/create-preference`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: mpItems })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    console.log('✅ Preferencia creada:', result);
+                    
+                    // Vaciar el carrito antes de redirigir
+                    window.cart = {};
+                    saveCart();
+                    
+                    // Redirigir al checkout de Mercado Pago
+                    const checkoutUrl = result.sandboxInitPoint || result.initPoint;
+                    window.location.href = checkoutUrl;
+                } else {
+                    console.error('❌ Error al crear preferencia:', result);
+                    showToast('❌ Error: ' + (result.message || 'No se pudo iniciar el pago'));
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showToast('❌ Error de conexión');
             }
         }
     });

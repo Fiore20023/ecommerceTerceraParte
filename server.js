@@ -4,6 +4,7 @@ import { config } from './server/config/config.js';
 import { database } from './server/config/database.js';
 import productoRoutes from './server/routes/producto.routes.js';
 import carritoRoutes from './server/routes/carrito.routes.js';
+import mercadoPagoRoutes from './server/routes/mercadopago.routes.js';
 
 // Crear aplicación Express
 const app = express();
@@ -51,6 +52,10 @@ app.get('/api', (req, res) => {
             carrito: {
                 procesar: 'POST /api/carrito',
                 getPedidos: 'GET /api/carrito'
+            },
+            mercadopago: {
+                createPreference: 'POST /api/mercadopago/create-preference',
+                webhook: 'POST /api/mercadopago/webhook'
             }
         }
     });
@@ -61,6 +66,9 @@ app.use('/api/productos', productoRoutes);
 
 // Rutas de carrito
 app.use('/api/carrito', carritoRoutes);
+
+// Rutas de Mercado Pago
+app.use('/api/mercadopago', mercadoPagoRoutes);
 
 // Ruta 404
 app.use((req, res) => {
