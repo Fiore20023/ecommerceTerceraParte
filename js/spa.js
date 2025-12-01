@@ -126,9 +126,22 @@ window.addEventListener('popstate', (e) => {
         const productPrice = document.getElementById('qty-product-price');
         const productImg = document.getElementById('qty-product-img');
         
+        const stockDisponible = product.stock || 999;
+        const key = product._id || product.id || product.nombre;
+        const enCarrito = window.cart[key]?.qty || 0;
+        const maxDisponible = stockDisponible - enCarrito;
+        
         qtyInput.value = 1;
+        qtyInput.max = maxDisponible > 0 ? maxDisponible : 0;
+        
         productName.textContent = product.nombre || product.name || 'Producto';
-        productPrice.textContent = `Precio: $${product.precio || 0}`;
+        productPrice.innerHTML = `
+            Precio: $${product.precio || 0}<br>
+            <span style="font-size:0.9rem; color:#666;">
+                Stock disponible: ${stockDisponible} 
+                ${enCarrito > 0 ? `(${enCarrito} en carrito)` : ''}
+            </span>
+        `;
         
         const imagenUrl = product.foto || product.imagen;
         if (imagenUrl && imagenUrl !== '' && imagenUrl !== 'undefined') {
@@ -182,7 +195,12 @@ window.addEventListener('popstate', (e) => {
 
     document.getElementById('qty-increase').addEventListener('click', () => {
         const input = document.getElementById('qty-input');
-        if (input.valueAsNumber < 99) input.value = input.valueAsNumber + 1;
+        const max = parseInt(input.max) || 99;
+        if (input.valueAsNumber < max) {
+            input.value = input.valueAsNumber + 1;
+        } else {
+            showToast('⚠️ Stock máximo alcanzado');
+        }
     });
 
     document.querySelector('.qty-modal-confirm').addEventListener('click', () => {
@@ -210,6 +228,7 @@ window.addEventListener('popstate', (e) => {
         console.log('🛒 addToCartWithQty llamada:', product, 'cantidad:', qty);
         const key = product._id || product.id || product.nombre;
         const precioNum = Number(product.precio) || 0;
+        const stockDisponible = product.stock || 999;
         
         console.log('🔑 Key del producto:', key);
         console.log('📦 Carrito antes:', JSON.stringify(window.cart));
@@ -217,7 +236,17 @@ window.addEventListener('popstate', (e) => {
         if (!window.cart[key]) {
             window.cart[key] = {...product, qty: 0, precio: precioNum};
         }
-        window.cart[key].qty += qty;
+        
+        const cantidadActual = window.cart[key].qty;
+        const nuevaCantidad = cantidadActual + qty;
+        
+        // Validar stock
+        if (nuevaCantidad > stockDisponible) {
+            alert(`⚠️ Stock insuficiente!\\nSolo hay ${stockDisponible} unidades disponibles.\\nYa tienes ${cantidadActual} en el carrito.`);
+            return;
+        }
+        
+        window.cart[key].qty = nuevaCantidad;
         
         console.log('📦 Carrito después:', JSON.stringify(window.cart));
         console.log('💾 Guardando en localStorage...');

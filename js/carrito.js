@@ -29,12 +29,29 @@ function saveCart() {
 
 // Función para cambiar cantidad de un producto
 function cambiarCantidad(productId) {
-    const nuevaCantidad = prompt('Ingresa la nueva cantidad:', window.cart[productId].qty);
-    if (nuevaCantidad && !isNaN(nuevaCantidad) && nuevaCantidad > 0) {
-        window.cart[productId].qty = parseInt(nuevaCantidad);
-        saveCart();
-        renderCarrito();
+    const producto = window.cart[productId];
+    const stockDisponible = producto.stock || 999;
+    
+    const mensaje = `Producto: ${producto.nombre}\nCantidad actual: ${producto.qty}\nStock disponible: ${stockDisponible}\n\nIngresa la nueva cantidad:`;
+    const nuevaCantidad = prompt(mensaje, producto.qty);
+    
+    if (nuevaCantidad === null) return; // Cancelado
+    
+    const cantidadNum = parseInt(nuevaCantidad);
+    
+    if (isNaN(cantidadNum) || cantidadNum <= 0) {
+        alert('⚠️ Cantidad inválida');
+        return;
     }
+    
+    if (cantidadNum > stockDisponible) {
+        alert(`⚠️ Stock insuficiente!\nSolo hay ${stockDisponible} unidades disponibles.`);
+        return;
+    }
+    
+    window.cart[productId].qty = cantidadNum;
+    saveCart();
+    renderCarrito();
 }
 
 // Función para eliminar un producto del carrito
@@ -62,6 +79,20 @@ async function enviarCarritoAlBackend() {
     
     if (!items.length) {
         alert('⚠️ El carrito está vacío');
+        return;
+    }
+    
+    // Validar stock antes de enviar
+    const itemsSinStock = [];
+    items.forEach(item => {
+        const stockDisponible = item.stock || 999;
+        if (item.qty > stockDisponible) {
+            itemsSinStock.push(`${item.nombre}: solicitaste ${item.qty} pero solo hay ${stockDisponible}`);
+        }
+    });
+    
+    if (itemsSinStock.length > 0) {
+        alert('⚠️ Stock insuficiente en los siguientes productos:\n\n' + itemsSinStock.join('\n'));
         return;
     }
 
@@ -136,11 +167,18 @@ async function pagarConMercadoPago() {
         if (response.ok && result.success) {
             console.log('✅ Preferencia creada:', result.data);
             
+            if (!result.data || !result.data.init_point) {
+                console.error('❌ No se recibió init_point:', result);
+                alert('❌ Error: No se pudo generar el link de pago de Mercado Pago');
+                return;
+            }
+            
             // Vaciar el carrito antes de redirigir
             window.cart = {};
             saveCart();
             
             // Redirigir a Mercado Pago
+            console.log('🔗 Redirigiendo a:', result.data.init_point);
             window.location.href = result.data.init_point;
         } else {
             console.error('❌ Error al crear preferencia:', result);
@@ -171,12 +209,18 @@ function renderCarrito() {
     // Renderizar tabla de productos
     tablaBody.innerHTML = items.map(p => {
         const subtotal = p.precio * p.qty;
-        const foto = p.foto || p.imagen || 'https://via.placeholder.com/60?text=Sin+Imagen';
+        const foto = p.foto || p.imagen || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Crect fill="%2328a745" width="60" height="60"/%3E%3Ctext fill="%23ffffff" font-family="Arial" font-size="10" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3E%3F%3C/text%3E%3C/svg%3E';
+        
+        const stockDisponible = p.stock || 999;
+        const stockWarning = p.qty > stockDisponible ? ' style="background:#f8d7da; color:#721c24;"' : '';
+        const stockBadge = p.qty > stockDisponible 
+            ? `<span style="color:#dc3545; font-size:0.8rem; display:block;">⚠️ Stock: ${stockDisponible}</span>`
+            : `<span style="color:#666; font-size:0.8rem; display:block;">Stock: ${stockDisponible}</span>`;
         
         return `
-            <tr>
+            <tr${stockWarning}>
                 <td><img src="${foto}" alt="${p.nombre}" style="width:60px;height:60px;object-fit:cover;border-radius:5px;"></td>
-                <td>${p.nombre}</td>
+                <td>${p.nombre}${stockBadge}</td>
                 <td>$${p.precio}</td>
                 <td>
                     <button onclick="cambiarCantidad('${p.id}')" style="background:#ffc107;color:#000;border:none;padding:5px 10px;margin-right:5px;cursor:pointer;border-radius:3px;">✏️ ${p.qty}</button>

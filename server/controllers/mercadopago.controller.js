@@ -46,6 +46,7 @@ class MercadoPagoController {
             const response = await this.preferenceClient.create({ body: preference });
 
             console.log('✅ Preferencia creada:', response.id);
+            console.log('📋 Respuesta completa de MP:', JSON.stringify(response, null, 2));
 
             res.status(200).json({
                 success: true,

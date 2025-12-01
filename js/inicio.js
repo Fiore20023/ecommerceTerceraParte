@@ -65,7 +65,26 @@ function initInicio(){
             
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.cssText = 'border:1px solid #ddd; border-radius:8px; padding:1rem; margin:1rem;';
+            card.style.cssText = 'border:1px solid #ddd; border-radius:8px; padding:1rem; margin:1rem; cursor:pointer; transition: transform 0.2s, box-shadow 0.2s;';
+            
+            // Agregar efecto hover
+            card.onmouseenter = function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            };
+            card.onmouseleave = function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            };
+            
+            // Click en la card para ir al detalle
+            card.onclick = function(e) {
+                // Si el click fue en el botón de comprar, no redirigir
+                if (e.target.classList.contains('card-buy-button')) {
+                    return;
+                }
+                window.location.href = `producto-detalle.html?id=${producto.id || producto._id}`;
+            };
             
             // Crear botón de comprar
             const btnComprar = document.createElement('button');
@@ -73,15 +92,13 @@ function initInicio(){
             btnComprar.className = 'card-buy-button';
             btnComprar.style.cssText = 'background:#dc3545; color:white; border:none; padding:0.8rem 1.5rem; border-radius:5px; cursor:pointer; font-size:1rem; font-weight:bold;';
             
-            // Si la imagen está vacía o es undefined, usar placeholder
-            let imagenUrl = 'https://via.placeholder.com/300x200/28a745/ffffff?text=Sin+Imagen';
+            // Si la imagen está vacía o es undefined, usar placeholder local
+            let imagenUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%2328a745" width="300" height="200"/%3E%3Ctext fill="%23ffffff" font-family="Arial" font-size="20" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ESin Imagen%3C/text%3E%3C/svg%3E';
             
             if (producto.foto && producto.foto !== '' && producto.foto !== 'undefined') {
                 imagenUrl = producto.foto;
             } else if (producto.imagen && producto.imagen !== '' && producto.imagen !== 'undefined') {
                 imagenUrl = producto.imagen;
-            } else {
-                imagenUrl = `https://via.placeholder.com/300x200/28a745/ffffff?text=${encodeURIComponent(producto.nombre)}`;
             }
             
             console.log('🖼️ Imagen URL para', producto.nombre, ':', imagenUrl);
@@ -89,12 +106,13 @@ function initInicio(){
             card.innerHTML = `
                 <img src="${imagenUrl}" 
                      alt="${producto.nombre}" 
-                     style="width:100%; height:200px; object-fit:cover; border-radius:4px;"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200/28a745/ffffff?text=Sin+Imagen';">
+                     style="width:100%; height:200px; object-fit:cover; border-radius:4px; background:#f0f0f0;"
+                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%2328a745%22 width=%22300%22 height=%22200%22/%3E%3Ctext fill=%22%23ffffff%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E';">
                 <div class="card-body" style="padding:1rem 0;">
                     <h3 class="card-title" style="margin:0.5rem 0; color:#333;">${producto.nombre}</h3>
                     <p class="card-price" style="font-size:1.5rem; color:#28a745; font-weight:bold; margin:0.5rem 0;">$${producto.precio}</p>
                     <p class="card-description" style="color:#666; margin:0.5rem 0;">${producto['descripcion-corta'] || producto.descripcion || 'Sin descripción'}</p>
+                    <a href="producto-detalle.html?id=${producto.id || producto._id}" style="color:#007bff; text-decoration:none; font-size:0.9rem;">👁️ Ver detalle completo →</a>
                 </div>
             `;
             
