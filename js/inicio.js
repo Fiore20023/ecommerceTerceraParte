@@ -191,26 +191,36 @@ function initInicio(){
         
         console.log(`⭐ ${destacados.length} destacados, 📦 ${normales.length} normales`);
         
+        // Detectar si es móvil
+        const isMobile = window.innerWidth <= 576;
+        
         // Mostrar sección de destacados si hay
         if (destacados.length > 0) {
-            const tituloDestacados = document.createElement('h2');
-            tituloDestacados.textContent = '⭐ Productos Destacados';
-            tituloDestacados.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); padding: 1.5rem; margin: 1rem 0; border-radius: 10px; border: 2px solid #ffc107; font-size: 2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);';
-            cardsContainer.appendChild(tituloDestacados);
+            const seccionDestacados = createHorizontalSection('⭐ Productos Destacados', destacados, '#ffc107', isMobile);
+            cardsContainer.appendChild(seccionDestacados);
+        }
+        
+        if (isMobile && normales.length > 0) {
+            // EN MÓVIL: Agrupar por categorías y mostrar carrouseles horizontales
+            const categorias = {};
             
-            // Crear wrapper horizontal para destacados (carrusel en móvil)
-            const destacadosWrapper = document.createElement('div');
-            destacadosWrapper.className = 'destacados-wrapper';
-            destacadosWrapper.style.cssText = 'grid-column: 1 / -1; display: contents;';
-            
-            destacados.forEach(producto => {
-                const card = createProductCard(producto);
-                destacadosWrapper.appendChild(card);
+            normales.forEach(producto => {
+                const cat = producto.categoria || 'Otros';
+                if (!categorias[cat]) {
+                    categorias[cat] = [];
+                }
+                categorias[cat].push(producto);
             });
             
-            cardsContainer.appendChild(destacadosWrapper);
+            // Mostrar cada categoría como carrusel horizontal
+            Object.keys(categorias).forEach(categoria => {
+                const productos = categorias[categoria];
+                const seccion = createHorizontalSection(`🔧 ${categoria}`, productos, '#007bff', true);
+                cardsContainer.appendChild(seccion);
+            });
             
-            // Separador entre destacados y normales
+        } else {
+            // EN DESKTOP: Mostrar todos los productos normales en grid
             if (normales.length > 0) {
                 const separador = document.createElement('hr');
                 separador.style.cssText = 'grid-column: 1 / -1; margin: 2rem 0; border: none; border-top: 3px solid #ddd;';
@@ -220,24 +230,45 @@ function initInicio(){
                 tituloNormales.textContent = '📦 Todos los Productos';
                 tituloNormales.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #333; padding: 1rem; margin: 1rem 0; font-size: 1.8rem;';
                 cardsContainer.appendChild(tituloNormales);
+                
+                normales.forEach(producto => {
+                    const card = createProductCard(producto);
+                    cardsContainer.appendChild(card);
+                });
             }
         }
         
-        // Mostrar productos normales en wrapper vertical
-        if (normales.length > 0) {
-            const normalesWrapper = document.createElement('div');
-            normalesWrapper.className = 'normales-wrapper';
-            normalesWrapper.style.cssText = 'grid-column: 1 / -1; display: contents;';
-            
-            normales.forEach(producto => {
-                const card = createProductCard(producto);
-                normalesWrapper.appendChild(card);
-            });
-            
-            cardsContainer.appendChild(normalesWrapper);
-        }
-        
         console.log('✅ Productos renderizados');
+    };
+    
+    // Crear sección horizontal con título y carrusel
+    const createHorizontalSection = (titulo, productos, color, isMobile) => {
+        const section = document.createElement('div');
+        section.className = 'categoria-section';
+        section.style.cssText = 'grid-column: 1 / -1; margin-bottom: 2rem;';
+        
+        // Título de la sección
+        const tituloElement = document.createElement('div');
+        tituloElement.className = 'categoria-header';
+        tituloElement.innerHTML = `
+            <h2 style="margin: 0; color: ${color}; font-size: 1.5rem;">${titulo}</h2>
+            <span style="color: #666; font-size: 0.9rem;">${productos.length} productos</span>
+        `;
+        tituloElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 0 0.5rem;';
+        section.appendChild(tituloElement);
+        
+        // Wrapper del carrusel
+        const wrapper = document.createElement('div');
+        wrapper.className = isMobile ? 'horizontal-scroll-mobile' : 'horizontal-scroll-desktop';
+        
+        productos.forEach(producto => {
+            const card = createProductCard(producto);
+            wrapper.appendChild(card);
+        });
+        
+        section.appendChild(wrapper);
+        
+        return section;
     };
     
     const createProductCard = (producto) => {
