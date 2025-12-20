@@ -401,8 +401,20 @@ function initInicio(){
     // Cargar productos desde el backend
     if (window.API_CONFIG) {
         console.log('📡 Cargando productos desde el backend...');
-        fetch(window.API_CONFIG.getProductosUrl())
+        
+        // Timeout de 30 segundos para esperar que Heroku despierte
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        
+        fetch(window.API_CONFIG.getProductosUrl(), { 
+            signal: controller.signal,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
             .then(response => {
+                clearTimeout(timeoutId);
                 if (!response.ok) throw new Error('Error al cargar productos');
                 return response.json();
             })
@@ -410,8 +422,8 @@ function initInicio(){
                 console.log('✅ Productos cargados del backend:', result);
                 const productos = result.data || result;
                 window.productos = productos;
-                todosLosProductos = productos; // Guardar para búsqueda local
-                todosLosProductosGlobal = productos; // Guardar globalmente para filtros de navegación
+                todosLosProductos = productos;
+                todosLosProductosGlobal = productos;
                 
                 // Verificar si hay término de búsqueda en la URL
                 const urlParams = new URLSearchParams(window.location.search);
@@ -425,10 +437,29 @@ function initInicio(){
                 }
             })
             .catch(error => {
+                clearTimeout(timeoutId);
                 console.warn('⚠️ Error cargando desde backend:', error);
+                
+                // Mostrar mensaje más amigable
+                const cardsContainer = document.querySelector('.cards-container');
+                if (cardsContainer) {
+                    cardsContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                            <h2 style="color: #dc3545; margin-bottom: 1rem;">⏳ El servidor está iniciando...</h2>
+                            <p style="color: #666; margin-bottom: 2rem;">
+                                El backend puede tardar unos segundos en despertar.<br>
+                                Por favor, esperá un momento y recargá la página.
+                            </p>
+                            <button onclick="location.reload()" 
+                                    style="background: #28a745; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                🔄 Recargar página
+                            </button>
+                        </div>
+                    `;
+                }
+                
                 todosLosProductos = window.productos || [];
                 todosLosProductosGlobal = window.productos || [];
-                renderProducts(window.productos || []);
             });
     } else {
         console.log('📦 Usando productos locales');
