@@ -198,7 +198,17 @@ function initInicio(){
             tituloDestacados.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); padding: 1.5rem; margin: 1rem 0; border-radius: 10px; border: 2px solid #ffc107; font-size: 2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);';
             cardsContainer.appendChild(tituloDestacados);
             
-            destacados.forEach(producto => renderProductCard(producto));
+            // Crear wrapper horizontal para destacados (carrusel en móvil)
+            const destacadosWrapper = document.createElement('div');
+            destacadosWrapper.className = 'destacados-wrapper';
+            destacadosWrapper.style.cssText = 'grid-column: 1 / -1; display: contents;';
+            
+            destacados.forEach(producto => {
+                const card = createProductCard(producto);
+                destacadosWrapper.appendChild(card);
+            });
+            
+            cardsContainer.appendChild(destacadosWrapper);
             
             // Separador entre destacados y normales
             if (normales.length > 0) {
@@ -213,13 +223,24 @@ function initInicio(){
             }
         }
         
-        // Mostrar productos normales
-        normales.forEach(producto => renderProductCard(producto));
+        // Mostrar productos normales en wrapper vertical
+        if (normales.length > 0) {
+            const normalesWrapper = document.createElement('div');
+            normalesWrapper.className = 'normales-wrapper';
+            normalesWrapper.style.cssText = 'grid-column: 1 / -1; display: contents;';
+            
+            normales.forEach(producto => {
+                const card = createProductCard(producto);
+                normalesWrapper.appendChild(card);
+            });
+            
+            cardsContainer.appendChild(normalesWrapper);
+        }
         
         console.log('✅ Productos renderizados');
     };
     
-    const renderProductCard = (producto) => {
+    const createProductCard = (producto) => {
         console.log(`Producto:`, producto);
             
             const card = document.createElement('div');
@@ -328,11 +349,11 @@ function initInicio(){
                 }
             };
             
-            cardsContainer.appendChild(card);
+            return card;
     };
     
-    // Exponer renderProductCard globalmente para usarlo en los filtros
-    window.renderProductCardGlobal = renderProductCard;
+    // Exponer createProductCard globalmente para usarlo en los filtros
+    window.renderProductCardGlobal = createProductCard;
 
     // FUNCIONALIDAD DE BÚSQUEDA
     const formBusqueda = document.getElementById('form-busqueda');

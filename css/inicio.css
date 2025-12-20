@@ -253,10 +253,58 @@ nav ul li a:hover {
         font-size: 0.8rem;
     }
     
+    /* Carrusel horizontal para destacados en móvil */
     .cards-container {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 1rem;
         padding: 0.5rem;
+    }
+    
+    /* Wrapper para productos destacados */
+    .destacados-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        display: flex;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .destacados-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+    
+    .destacados-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .destacados-wrapper::-webkit-scrollbar-thumb {
+        background: #ffc107;
+        border-radius: 10px;
+    }
+    
+    .destacados-wrapper .card {
+        min-width: 280px;
+        max-width: 280px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+    
+    /* Productos normales siguen vertical */
+    .normales-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .normales-wrapper .card {
+        width: 100%;
     }
     
     /* Títulos de secciones en móvil */
@@ -266,6 +314,7 @@ nav ul li a:hover {
         word-wrap: break-word;
         white-space: normal;
         line-height: 1.4;
+        width: 100%;
     }
     
     .card {
