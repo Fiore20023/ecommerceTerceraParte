@@ -401,12 +401,26 @@ function initInicio(){
         
         // Mostrar sección de destacados si hay
         if (destacados.length > 0) {
-            const seccionDestacados = createHorizontalSection('⭐ Productos Destacados', destacados, '#ffc107', isMobile);
-            cardsContainer.appendChild(seccionDestacados);
+            if (isMobile) {
+                // En móvil: carrusel horizontal
+                const seccionDestacados = createHorizontalSection('⭐ Productos Destacados', destacados, '#ffc107', true);
+                cardsContainer.appendChild(seccionDestacados);
+            } else {
+                // En desktop: mostrar en grilla
+                const tituloDestacados = document.createElement('h2');
+                tituloDestacados.textContent = '⭐ Productos Destacados';
+                tituloDestacados.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #ffc107; padding: 1rem; margin: 1rem 0; font-size: 2rem;';
+                cardsContainer.appendChild(tituloDestacados);
+                
+                destacados.forEach(producto => {
+                    const card = createProductCard(producto);
+                    cardsContainer.appendChild(card);
+                });
+            }
         }
         
         if (isMobile && normales.length > 0) {
-            // EN MÓVIL: Agrupar por categorías y mostrar carrouseles horizontales
+            // EN MÓVIL: Agrupar por categorías y mostrar carruseles horizontales
             const categorias = {};
             
             normales.forEach(producto => {
@@ -424,23 +438,21 @@ function initInicio(){
                 cardsContainer.appendChild(seccion);
             });
             
-        } else {
-            // EN DESKTOP: Mostrar todos los productos normales en grid
-            if (normales.length > 0) {
-                const separador = document.createElement('hr');
-                separador.style.cssText = 'grid-column: 1 / -1; margin: 2rem 0; border: none; border-top: 3px solid #ddd;';
-                cardsContainer.appendChild(separador);
-                
-                const tituloNormales = document.createElement('h2');
-                tituloNormales.textContent = '🔧 Todos los Repuestos';
-                tituloNormales.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #333; padding: 1rem; margin: 1rem 0; font-size: 1.8rem;';
-                cardsContainer.appendChild(tituloNormales);
-                
-                normales.forEach(producto => {
-                    const card = createProductCard(producto);
-                    cardsContainer.appendChild(card);
-                });
-            }
+        } else if (!isMobile && normales.length > 0) {
+            // EN DESKTOP: Mostrar todos los productos normales en grilla
+            const separador = document.createElement('hr');
+            separador.style.cssText = 'grid-column: 1 / -1; margin: 2rem 0; border: none; border-top: 3px solid #ddd;';
+            cardsContainer.appendChild(separador);
+            
+            const tituloNormales = document.createElement('h2');
+            tituloNormales.textContent = '🔧 Todos los Repuestos';
+            tituloNormales.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #333; padding: 1rem; margin: 1rem 0; font-size: 1.8rem;';
+            cardsContainer.appendChild(tituloNormales);
+            
+            normales.forEach(producto => {
+                const card = createProductCard(producto);
+                cardsContainer.appendChild(card);
+            });
         }
         
         console.log('✅ Productos renderizados');
