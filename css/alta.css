@@ -74,21 +74,73 @@ nav ul li a:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.alta-form button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .alta-form { 
+        padding: 1rem;
+        max-width: 100%;
+    }
+    
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
 }
 
 @media (max-width: 600px) {
-    .alta-form { padding: 0.5rem; }
-    .alta-form input, .alta-form textarea { font-size: 0.95rem; }
+    .alta-form { 
+        padding: 0.75rem;
+    }
+    
+    .input-group label {
+        font-size: 0.9rem;
+    }
+    
+    .input-group input, 
+    .input-group textarea,
+    .input-group select { 
+        font-size: 16px;
+        padding: 0.6rem;
+    }
+    
+    .alta-form button {
+        padding: 0.9rem 1.2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .alta-form {
+        padding: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .input-group {
+        margin-bottom: 0.75rem;
+    }
 }
 
 .tabla-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 #tabla-productos {
     width: 100%;
     border-collapse: collapse;
     margin-top: 2rem;
+    min-width: 600px;
 }
 
 #tabla-productos th, #tabla-productos td {
@@ -99,6 +151,28 @@ nav ul li a:hover {
 
 #tabla-productos th {
     background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+}
+
+@media (max-width: 768px) {
+    #tabla-productos {
+        font-size: 0.85rem;
+    }
+    
+    #tabla-productos th, #tabla-productos td {
+        padding: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    #tabla-productos {
+        font-size: 0.75rem;
+    }
+    
+    #tabla-productos th, #tabla-productos td {
+        padding: 4px;
+    }
 }
 
 

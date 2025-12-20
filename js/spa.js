@@ -1,61 +1,8 @@
 // SPA router and cart modal utility
 console.log('spa.js cargado');
 
-// Simple router: intercept link clicks and load views into #app
-function spaNavigate(url, push = true) {
-    // If linking to same origin files, fetch and replace main content
-    fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            // Parse returned HTML and extract the main innerHTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const main = doc.querySelector('main');
-            if (main) {
-                document.getElementById('app').innerHTML = main.innerHTML;
-                // update title from fetched doc
-                if (doc.title) document.title = doc.title;
-                if (push) history.pushState({path: url}, '', url);
-                // init view script if present
-                runViewInitForPath(url);
-            }
-        })
-        .catch(err => console.error('Error cargando vista:', err));
-}
-
-function runViewInitForPath(path) {
-    const p = path.split('/').pop();
-    if (p === '' || p === 'index.html') {
-        if (typeof initInicio === 'function') initInicio();
-    } else if (p === 'alta.html') {
-        if (typeof initAlta === 'function') initAlta();
-    } else if (p === 'carrito.html') {
-        if (typeof initCarrito === 'function') initCarrito();
-    } else if (p === 'contacto.html') {
-        if (typeof initContacto === 'function') initContacto();
-    }
-}
-
-// Intercept clicks on internal links
-document.addEventListener('click', (e) => {
-    const a = e.target.closest('a');
-    if (!a) return;
-    // if the click is inside the cart toggle, let cart handlers run (do not navigate)
-    if (e.target.closest('#boton-carrito') || e.target.closest('[data-cart-toggle]')) return;
-    const href = a.getAttribute('href');
-    if (!href) return;
-    // Only handle local html links
-    if (href.endsWith('.html') || href === './' || href === '/') {
-        e.preventDefault();
-        spaNavigate(href);
-    }
-});
-
-// Handle back/forward
-window.addEventListener('popstate', (e) => {
-    const path = document.location.pathname.split('/').pop() || 'index.html';
-    spaNavigate(path, false);
-});
+// Ya no necesitamos interceptar clicks para verificar autenticación
+// La página alta.html tiene su propia protección al cargar
 
 // Basic cart modal implementation
 (function(){

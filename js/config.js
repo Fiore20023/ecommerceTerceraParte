@@ -5,6 +5,12 @@ const API_CONFIG = {
     // URL base del backend (desarrollo local)
     BASE_URL: 'http://localhost:3001/api',
     
+    // WhatsApp Business
+    WHATSAPP: {
+        NUMERO: '5491165677391',
+        MENSAJE_DEFAULT: 'Hola! Quisiera consultar sobre un producto.'
+    },
+    
     // Endpoints
     ENDPOINTS: {
         PRODUCTOS: '/productos',
@@ -22,6 +28,11 @@ const API_CONFIG = {
     
     getCarritoUrl: function() {
         return this.BASE_URL + this.ENDPOINTS.CARRITO;
+    },
+    
+    getWhatsAppUrl: function(mensaje) {
+        const mensajeEncoded = encodeURIComponent(mensaje || this.WHATSAPP.MENSAJE_DEFAULT);
+        return `https://wa.me/${this.WHATSAPP.NUMERO}?text=${mensajeEncoded}`;
     }
 };
 

@@ -42,6 +42,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 #logo a {
@@ -51,29 +53,47 @@ header {
     font-weight: bold;
 }
 
+#barra-busqueda {
+    flex: 1;
+    min-width: 200px;
+}
+
 #barra-busqueda form {
     display: flex;
+    width: 100%;
 }
 
 #barra-busqueda input[type="text"] {
     padding: 0.5rem;
     border: none;
     border-radius: 5px 0 0 5px;
+    flex: 1;
 }
 
 #barra-busqueda button {
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     border: none;
     background-color: #d32f2f;
     color: white;
     cursor: pointer;
     border-radius: 0 5px 5px 0;
+    white-space: nowrap;
+}
+
+#boton-carrito {
+    display: flex;
+    align-items: center;
 }
 
 #boton-carrito a {
     color: white;
     font-size: 1.5rem;
     text-decoration: none;
+}
+
+#boton-login {
+    display: flex;
+    align-items: center;
 }
 
 nav {
@@ -94,6 +114,10 @@ nav ul {
     justify-content: center;
 }
 
+nav ul li {
+    position: relative;
+}
+
 nav ul li a {
     color: #fff;
     background: rgba(100,100,100,0.7);
@@ -103,6 +127,53 @@ nav ul li a {
 }
 
 nav ul li a:hover {
+    background-color: var(--accent-color);
+}
+
+/* Dropdown menu styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown .dropbtn {
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(40, 40, 40, 0.95);
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+    z-index: 1000;
+    border-radius: 5px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--accent-color);
+}
+
+/* Mostrar dropdown cuando tiene clase active */
+.dropdown.active .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown.active .dropbtn {
     background-color: var(--accent-color);
 }
 
@@ -121,23 +192,245 @@ footer {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+    #logo img {
+        max-width: 180px;
+    }
+    
+    nav ul li a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-content {
+        min-width: 180px;
+    }
+}
+
 @media (max-width: 768px) {
+    header {
+        padding: 0.75rem;
+    }
+    
     .header-container {
         flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    
+    #logo {
+        width: 100%;
+        text-align: center;
+    }
+    
+    #logo img {
+        max-width: 180px;
     }
 
     #barra-busqueda {
-        margin: 1rem 0;
+        width: 100%;
+        order: 3;
+        min-width: unset;
+    }
+    
+    #barra-busqueda form {
+        width: 100%;
+    }
+    
+    #barra-busqueda input[type="text"] {
+        flex: 1;
+        width: 100%;
+        font-size: 16px;
+    }
+    
+    #barra-busqueda button {
+        font-size: 0.9rem;
+    }
+    
+    #boton-carrito {
+        order: 1;
+        position: absolute;
+        top: 1rem;
+        right: 4.5rem;
+    }
+    
+    #boton-login {
+        order: 2;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        margin-left: 0;
+    }
+    
+    #boton-login a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    nav {
+        margin-top: 0.5rem;
     }
 
     nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0 0.5rem;
+    }
+    
+    nav ul li {
+        margin: 0;
+    }
+    
+    nav ul li a {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-content {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 85%;
+        max-width: 350px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    .dropdown.active .dropdown-content {
+        transform: translate(-50%, -50%);
+    }
+    
+    /* Cart modal responsive */
+    .cart-modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        max-height: 85vh;
+    }
+    
+    .cart-item {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+    }
+    
+    .cart-item img {
+        width: 100%;
+        height: 150px;
+    }
+    
+    #cart-actions {
+        flex-direction: column;
+    }
+    
+    #cart-actions button {
+        width: 100%;
+    }
+    
+    #cart-summary {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 0.5rem;
+    }
+    
+    #logo img {
+        max-width: 150px;
+    }
+    
+    #boton-carrito {
+        top: 0.75rem;
+        right: 4rem;
+    }
+    
+    #boton-carrito a {
+        font-size: 1.3rem;
+    }
+    
+    #boton-login {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+    
+    #boton-login a {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    nav ul {
+        gap: 0.25rem;
+        padding: 0 0.25rem;
+    }
+    
+    nav ul li a {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    #barra-busqueda input[type="text"] {
+        font-size: 14px;
+        padding: 0.4rem;
+    }
+    
+    #barra-busqueda button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    main {
+        padding: 0.5rem;
+    }
+    
+    footer {
+        padding: 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-content {
+        min-width: 90%;
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-content a {
+        padding: 10px 14px;
     }
 }
 
 h1, h2, h3, h4, h5, h6 {
     color: rgb(14, 9, 154);
+    word-wrap: break-word;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+    
+    h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.4rem;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+    }
 }
 
 /* Cart modal styles */

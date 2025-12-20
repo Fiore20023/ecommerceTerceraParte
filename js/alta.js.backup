@@ -1,6 +1,103 @@
 // ------------------------------------------------
-//             ALTA.JS - Gestión de productos
+//             variables globales
 // ------------------------------------------------
+
+// ------------------------------------------------
+//             funciones globales
+// ------------------------------------------------
+/*function agregar(e) {
+    e.preventDefault()
+
+    console.log('agregar producto')
+
+    var refNombre = document.getElementById('nombre')
+    var refPrecio = document.getElementById('precio')
+    var refStock = document.getElementById('stock')
+    var refMarca = document.getElementById('marca')
+    var refCategoria = document.getElementById('categoria')
+    var refDetalles = document.getElementById('detalles')
+    var refFoto = document.getElementById('foto')
+    var refEnvio = document.getElementById('envio')
+
+    var nombre = refNombre.value
+    var precio = refPrecio.value
+    var stock = refStock.value
+    var marca = refMarca.value
+    var categoria = refCategoria.value
+    var detalles = refDetalles.value
+    var foto = refFoto.value
+    var envio = refEnvio.checked
+
+    var producto = {
+        nombre: nombre,
+        precio: +precio,
+        stock: parseInt(stock),
+        marca: marca,
+        categoria: categoria,
+        detalles: detalles,
+        foto: foto,
+        envio: envio
+    }
+
+    console.log(producto)
+    productos.push(producto)
+
+    representarTablaProductos()
+
+    refNombre.value = ''
+    refPrecio.value = ''
+    refStock.value = ''
+    refMarca.value = ''
+    refCategoria.value = ''
+    refDetalles.value = ''
+    refFoto.value = ''
+    refEnvio.checked = false
+}
+
+
+function representarTablaProductos() {
+    var filasTabla = ''
+
+    //encabezado de la tabla
+    filasTabla +=
+            '<tr>'+
+                '<th>nombre</th>' +
+                '<th>precio</th>' +
+                '<th>stock</th>' +
+                '<th>marca</th>' +
+                '<th>categoría</th>' +
+                '<th>detalles</th>' +
+                '<th>foto</th>' +
+                '<th>envío</th>' +
+            '</tr>'
+
+    //datos de la tabla
+    for(var i=0; i<productos.length; i++) {
+        var producto = productos[i]
+        filasTabla +=
+                '<tr>' +
+                    '<td>' + producto.nombre + '</td>' +
+                    '<td class="centrar">' + producto.precio + '</td>' +
+                    '<td class="centrar">' + producto.stock + '</td>' +
+                    '<td>' + producto.marca + '</td>' +
+                    '<td>' + producto.categoria + '</td>' +
+                    '<td>' + producto.detalles + '</td>' +
+                    '<td><img width="75" src="' + producto.foto + '" alt="foto de ' + producto.nombre + ' ' + producto.marca + '"></td>' +
+                    '<td class="centrar">' + (producto.envio? 'Si':'No') + '</td>' +
+                '</tr>'
+    }
+
+    document.querySelector('table').innerHTML = filasTabla
+}
+
+function start() {
+    console.warn( document.querySelector('title').innerText )
+
+    representarTablaProductos()
+}
+*/
+
+//nuevo
 
 function initAlta(){
     console.log('🔵 initAlta ejecutándose');
@@ -152,7 +249,7 @@ function initAlta(){
             const fila = document.createElement('tr');
             
             // Determinar tipo de producto
-            const tipo = p.tipoProducto === 'auto' ? '🚗 Auto' : '🔧 Producto';
+            const tipo = p.tipoProducto === 'auto' ? '🚗 Auto' : '🔧 Repuesto';
             
             // Modelo(s)
             let modelos = '';
@@ -167,8 +264,8 @@ function initAlta(){
             if (p.tipoProducto === 'auto') {
                 const km = p.kilometros ? `${p.kilometros} km` : '';
                 const color = p.colorAuto || '';
-                const estado = p.estadoStock || '';
-                detalles = [estado, color, km].filter(Boolean).join(' | ') || '-';
+                const ubicacion = p.ubicacion || '';
+                detalles = [color, km, ubicacion].filter(Boolean).join(' | ') || '-';
             } else {
                 const stock = `Stock: ${p.stock || 0}`;
                 const tipo = p.subcategoria || '';
@@ -191,13 +288,10 @@ function initAlta(){
                 }
             }
             
-            // Moneda
-            const moneda = p.moneda === 'USD' ? 'USD' : 'ARS';
-            
             fila.innerHTML = `
                 <td style="text-align:center;">${tipo}</td>
                 <td><strong>${p.nombre || ''}</strong></td>
-                <td style="text-align:right; color:#28a745; font-weight:bold;">${moneda} $${p.precio || 0}</td>
+                <td style="text-align:right; color:#28a745; font-weight:bold;">$${p.precio || 0}</td>
                 <td>${modelos}</td>
                 <td><small>${detalles}</small></td>
                 <td style="text-align:center;">${imagenesHTML}</td>
@@ -298,10 +392,6 @@ function initAlta(){
                 if (envioProducto) envioProducto.checked = producto.envio || false;
             }
             
-            // Destacado (común para ambos)
-            const checkDestacado = document.getElementById('destacado');
-            if (checkDestacado) checkDestacado.checked = producto.destacado || false;
-            
             // Mostrar imágenes existentes en preview
             const previewDiv = document.getElementById('preview-imagenes');
             if (producto.imagenes && producto.imagenes.length > 0) {
@@ -335,7 +425,6 @@ function initAlta(){
                         const response = await fetch(window.API_CONFIG.getProductosUrl());
                         const result = await response.json();
                         window.productos = result.data || result;
-                        todosLosProductos = window.productos;
                         renderizarTabla();
                     } else {
                         const error = await res.json();
@@ -385,7 +474,38 @@ function initAlta(){
         renderizarTabla();
     }
 
-    // SUBMIT DEL FORMULARIO
+    // simple validation helpers
+    function validateField(field){
+        const el = form[field];
+        if (!el) return true;
+        const val = el.value.trim();
+        let ok = true, msg = '';
+        if (['nombre','marca','categoria'].includes(field)) {
+            if (!val) { ok=false; msg='Requerido'; }
+        }
+        if (field === 'precio') {
+            const n = Number(val);
+            if (!val || isNaN(n) || n <= 0) { ok=false; msg='Precio inválido'; }
+        }
+        if (field === 'stock') {
+            const n = Number(val);
+            if (!val || isNaN(n) || n < 0) { ok=false; msg='Stock inválido'; }
+        }
+        // show error
+        let err = el.nextElementSibling;
+        if (!err || !err.classList || !err.classList.contains('field-error')){
+            err = document.createElement('div'); err.className='field-error'; el.parentNode.insertBefore(err, el.nextSibling);
+        }
+        err.innerText = ok ? '' : msg;
+        return ok;
+    }
+
+    // on blur validate
+    ['nombre','precio','stock','marca','categoria'].forEach(f => {
+        const el = form[f]; if (!el) return;
+        el.addEventListener('blur', ()=> validateField(f));
+    });
+
     form.addEventListener('submit', async (e)=>{
         e.preventDefault();
         
@@ -459,24 +579,13 @@ function initAlta(){
                 productoData.envio = document.getElementById('envio-producto').checked;
             }
             
-            // DESTACADO (común para ambos)
-            productoData.destacado = document.getElementById('destacado').checked;
-            
             // PROCESAR IMÁGENES
             const inputImagenes = document.getElementById('imagenes');
             if (inputImagenes && inputImagenes.files.length > 0 && window.uploadImages) {
-                // Si hay nuevas imágenes, procesarlas
-                console.log('📸 Procesando nuevas imágenes...');
+                console.log('📸 Procesando imágenes...');
                 const imagenes = await window.uploadImages.convertirImagenesABase64(inputImagenes.files);
                 productoData.imagenes = imagenes;
-                console.log(`✅ ${imagenes.length} imágenes nuevas procesadas`);
-            } else if (isEdit) {
-                // Si es edición y NO hay nuevas imágenes, mantener las existentes
-                const productoOriginal = window.productos.find(p => p._id === editId);
-                if (productoOriginal && productoOriginal.imagenes) {
-                    productoData.imagenes = productoOriginal.imagenes;
-                    console.log('🔄 Manteniendo imágenes existentes:', productoData.imagenes.length);
-                }
+                console.log(`✅ ${imagenes.length} imágenes procesadas`);
             }
             
             console.log('📦 Producto completo a enviar:', productoData);
@@ -512,7 +621,6 @@ function initAlta(){
                     document.getElementById('preview-imagenes').innerHTML = '';
                     document.getElementById('color-auto-otro-group').style.display = 'none';
                     document.getElementById('color-producto-otro-group').style.display = 'none';
-                    btnSubmit.disabled = false;
                     btnSubmit.textContent = 'Agregar';
                     delete btnSubmit.dataset.editId;
                     cambiarTipoProducto(); // Restaurar vista por defecto
@@ -536,32 +644,177 @@ function initAlta(){
         }
     });
 
-    // FILTRADO DE TABLA
-    const buscar = document.getElementById('buscar');
-    if (buscar) {
-        buscar.addEventListener('input', (e) => {
-            const termino = e.target.value.toLowerCase();
-            const productosFiltrados = todosLosProductos.filter(p => {
-                const nombre = (p.nombre || '').toLowerCase();
-                const marca = (p.marca || '').toLowerCase();
-                const categoria = (p.categoria || '').toLowerCase();
-                return nombre.includes(termino) || marca.includes(termino) || categoria.includes(termino);
-            });
-            window.productos = productosFiltrados;
+    // Event listeners para botones de editar y eliminar
+    tablaBody.addEventListener('click', async (e) => {
+        const btnEditar = e.target.closest('.btn-editar');
+        const btnEliminar = e.target.closest('.btn-eliminar');
+                productoData.categoria = document.getElementById('modelo-auto').value; // Para compatibilidad
+                productoData.colorAuto = document.getElementById('color-auto').value;
+                productoData.kilometros = Number(document.getElementById('kilometros').value) || 0;
+                productoData.ubicacion = document.getElementById('ubicacion').value;
+                productoData.descripcionAuto = document.getElementById('descripcion-auto').value;
+                productoData.stock = 1; // Autos siempre stock 1
+            }
+            // DATOS ESPECÍFICOS PARA REPUESTOS
+            else {
+                productoData.stock = Number(form.stock.value);
+                productoData.marca = form.marca ? form.marca.value : '';
+                
+                // Obtener modelos seleccionados (checkboxes)
+                const modelosSeleccionados = Array.from(document.querySelectorAll('input[name="modelos"]:checked'))
+                    .map(cb => cb.value);
+                productoData.modelos = modelosSeleccionados;
+                productoData.categoria = modelosSeleccionados.join(', '); // Para compatibilidad
+                
+                productoData.subcategoria = form.subcategoria ? form.subcategoria.value : '';
+                productoData.color = form.color ? form.color.value : '';
+                productoData.tamano = form.tamano ? form.tamano.value : '';
+                productoData['descripcion-corta'] = form['descripcion-corta'] ? form['descripcion-corta'].value : '';
+                productoData['descripcion-larga'] = form['descripcion-larga'] ? form['descripcion-larga'].value : '';
+                productoData.envio = form.envio ? form.envio.checked : false;
+            }
+            
+            // PROCESAR IMÁGENES
+            const inputImagenes = document.getElementById('imagenes');
+            if (inputImagenes && inputImagenes.files.length > 0 && window.uploadImages) {
+                console.log('📸 Procesando imágenes...');
+                const imagenes = await window.uploadImages.convertirImagenesABase64(inputImagenes.files);
+                productoData.imagenes = imagenes;
+                console.log(`✅ ${imagenes.length} imágenes procesadas`);
+            }
+            
+            console.log('📦 Producto completo a enviar:', productoData);
+
+            // Enviar producto al backend
+            if (window.API_CONFIG) {
+                const url = isEdit 
+                    ? `${window.API_CONFIG.getProductosUrl()}/${editId}`
+                    : window.API_CONFIG.getProductosUrl();
+                const method = isEdit ? 'PUT' : 'POST';
+                
+                console.log(`📤 ${isEdit ? 'Actualizando' : 'Creando'} producto...`);
+                const res = await fetch(url, { 
+                    method: method, 
+                    headers: {'Content-Type':'application/json'}, 
+                    body: JSON.stringify(productoData) 
+                });
+                
+                if (res.ok) {
+                    const result = await res.json();
+                    const saved = result.data || result;
+                    console.log('✅ Producto guardado:', saved);
+                    
+                    // Recargar productos desde el backend
+                    const response = await fetch(window.API_CONFIG.getProductosUrl());
+                    const productsResult = await response.json();
+                    window.productos = productsResult.data || productsResult;
+                    todosLosProductos = window.productos;
+                    renderizarTabla();
+                    
+                    // Resetear formulario
+                    form.reset();
+                    document.getElementById('preview-imagenes').innerHTML = '';
+                    btnSubmit.textContent = 'Agregar';
+                    delete btnSubmit.dataset.editId;
+                    cambiarTipoProducto(); // Restaurar vista por defecto
+                    
+                    alert(`✅ Producto ${isEdit ? 'actualizado' : 'creado'} exitosamente`);
+                } else {
+                    const error = await res.json();
+                    console.error('❌ Error del servidor:', error);
+                    alert('❌ Error: ' + (error.message || 'No se pudo guardar'));
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = isEdit ? 'Actualizar' : 'Agregar';
+                }
+            } else {
+                throw new Error('API_CONFIG no disponible');
+            }
+        } catch (err) {
+            console.error('❌ Error:', err);
+            alert('❌ Error: ' + err.message);
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = isEdit ? 'Actualizar' : 'Agregar';
+        }
+    });
+                const productsResult = await response.json();
+                window.productos = productsResult.data || productsResult;
+                todosLosProductos = window.productos;
+                renderizarTabla();                        // Resetear formulario
+                        form.reset();
+                        btnSubmit.textContent = 'Agregar';
+                        delete btnSubmit.dataset.editId;
+                        
+                        alert(`✅ Producto ${isEdit ? 'actualizado' : 'creado'} exitosamente`);
+                    } else {
+                        const error = await res.json();
+                        console.error('❌ Error del servidor:', error);
+                        alert('❌ Error: ' + (error.message || 'No se pudo guardar'));
+                    }
+                } catch (err) {
+                    console.error('❌ Error de conexión:', err);
+                    alert('❌ Error de conexión con el servidor');
+                }
+            })();
+        } else {
+            // Fallback: guardar solo localmente
+            if (isEdit) {
+                const index = window.productos.findIndex(p => p._id === editId);
+                if (index !== -1) window.productos[index] = {...window.productos[index], ...productoData};
+            } else {
+                window.productos = window.productos || [];
+                window.productos.push(productoData);
+            }
             renderizarTabla();
+            form.reset();
+            btnSubmit.textContent = 'Agregar';
+            alert(`⚠️ Producto ${isEdit ? 'actualizado' : 'guardado'} solo localmente`);
+        }
+    });
+    
+    // FUNCIONALIDAD DE FILTRO EN LA TABLA
+    const filtroTabla = document.getElementById('filtro-tabla');
+    
+    if (filtroTabla) {
+        filtroTabla.addEventListener('input', (e) => {
+            const termino = e.target.value.trim().toLowerCase();
+            filtrarTablaProductos(termino);
         });
     }
-
-    const filtroTipo = document.getElementById('filtro-tipo');
-    if (filtroTipo) {
-        filtroTipo.addEventListener('change', (e) => {
-            const tipo = e.target.value;
-            const productosFiltrados = tipo === 'todos' 
-                ? todosLosProductos 
-                : todosLosProductos.filter(p => p.tipoProducto === tipo);
-            window.productos = productosFiltrados;
-            renderizarTabla();
+    
+    function filtrarTablaProductos(termino) {
+        if (!termino) {
+            renderizarTabla(todosLosProductos);
+            return;
+        }
+        
+        const productosFiltrados = todosLosProductos.filter(producto => {
+            const nombre = (producto.nombre || '').toLowerCase();
+            const marca = (producto.marca || '').toLowerCase();
+            const categoria = (producto.categoria || '').toLowerCase();
+            const descripcion = (producto['descripcion-corta'] || producto.descripcion || '').toLowerCase();
+            
+            return nombre.includes(termino) || 
+                   marca.includes(termino) || 
+                   categoria.includes(termino) || 
+                   descripcion.includes(termino);
         });
+        
+        renderizarTabla(productosFiltrados);
+        
+        if (productosFiltrados.length === 0 && tablaBody) {
+            tablaBody.innerHTML = `
+                <tr>
+                    <td colspan="10" style="text-align:center; padding:2rem; color:#666;">
+                        No se encontraron productos con "<strong>${termino}</strong>"
+                        <br><br>
+                        <button onclick="document.getElementById('filtro-tabla').value=''; initAlta();" 
+                                style="background:#28a745; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; cursor:pointer;">
+                            Ver todos los productos
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
     }
 }
 

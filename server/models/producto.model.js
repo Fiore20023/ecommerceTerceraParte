@@ -28,23 +28,57 @@ class ProductoModel {
 
     // Sanitizar datos antes de insertar/actualizar
     sanitize(producto) {
-        return {
+        const base = {
             nombre: producto.nombre?.trim(),
-            descripcion: producto.descripcion?.trim() || producto['descripcion-corta']?.trim() || '',
-            'descripcion-corta': producto['descripcion-corta']?.trim() || producto.descripcion?.trim() || '',
-            'descripcion-larga': producto['descripcion-larga']?.trim() || '',
+            descripcion: producto.descripcion?.trim() || producto['descripcion-corta']?.trim() || producto.descripcionAuto?.trim() || '',
             precio: parseFloat(producto.precio),
-            stock: parseInt(producto.stock) || 0,
-            categoria: producto.categoria?.trim() || '',
-            marca: producto.marca?.trim() || '',
-            imagen: producto.imagen?.trim() || producto.foto?.trim() || '',
-            foto: producto.foto?.trim() || producto.imagen?.trim() || '',
-            destacado: Boolean(producto.destacado),
-            envio: Boolean(producto.envio),
+            moneda: producto.moneda || 'ARS', // ARS o USD
+            tipoProducto: producto.tipoProducto || 'producto', // 'auto' o 'producto'
             activo: producto.activo !== undefined ? Boolean(producto.activo) : true,
             fechaCreacion: producto.fechaCreacion || new Date(),
             fechaActualizacion: new Date()
         };
+
+        // CAMPOS PARA AUTOS
+        if (producto.tipoProducto === 'auto') {
+            base.marca = producto.marca?.trim() || '';
+            base.modeloAuto = producto.marca?.trim() || producto.modeloAuto?.trim() || '';
+            base.categoria = producto.marca?.trim() || producto.categoria?.trim() || '';
+            base.colorAuto = producto.colorAuto?.trim() || '';
+            base.kilometros = parseInt(producto.kilometros) || 0;
+            base.estadoStock = producto.estadoStock || 'disponible'; // disponible, reservado, vendido
+            base.stock = producto.estadoStock === 'vendido' ? 0 : 1;
+            base.descripcionAuto = producto.descripcionAuto?.trim() || producto.descripcion?.trim() || '';
+            base.envioExterior = Boolean(producto.envioExterior);
+        } 
+        // CAMPOS PARA PRODUCTOS
+        else {
+            base.stock = parseInt(producto.stock) || 0;
+            base.marca = producto.marca?.trim() || '';
+            base.modelos = Array.isArray(producto.modelos) ? producto.modelos : [];
+            base.categoria = producto.categoria?.trim() || (Array.isArray(producto.modelos) ? producto.modelos.join(', ') : '');
+            base.subcategoria = producto.subcategoria?.trim() || '';
+            base.color = producto.color?.trim() || '';
+            base.tamano = producto.tamano?.trim() || '';
+            base['descripcion-corta'] = producto['descripcion-corta']?.trim() || producto.descripcion?.trim() || '';
+            base['descripcion-larga'] = producto['descripcion-larga']?.trim() || '';
+            base.envio = Boolean(producto.envio);
+        }
+
+        // IMÁGENES (común para ambos)
+        if (Array.isArray(producto.imagenes) && producto.imagenes.length > 0) {
+            base.imagenes = producto.imagenes;
+        } else {
+            base.imagenes = [];
+        }
+
+        // Mantener compatibilidad con foto/imagen antiguas
+        base.imagen = producto.imagen?.trim() || producto.foto?.trim() || '';
+        base.foto = producto.foto?.trim() || producto.imagen?.trim() || '';
+        
+        base.destacado = Boolean(producto.destacado);
+
+        return base;
     }
 
     // Obtener todos los productos

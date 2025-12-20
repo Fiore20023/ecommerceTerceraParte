@@ -37,4 +37,37 @@ main {
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.6;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 0.75rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    h2 {
+        font-size: 1.2rem;
+    }
+    
+    p {
+        font-size: 0.95rem;
+    }
 }

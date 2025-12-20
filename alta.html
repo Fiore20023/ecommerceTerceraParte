@@ -6,6 +6,33 @@
     <title>ECommerce (alta)</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/alta.css">
+    
+    <!-- Protección de autenticación INMEDIATA -->
+    <script type="module">
+        // Verificar autenticación ANTES de cargar el resto de la página
+        import { auth } from './js/firebase-config.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        let verificado = false;
+        
+        onAuthStateChanged(auth, (user) => {
+            if (!user && !verificado) {
+                // NO autenticado - redirigir inmediatamente
+                window.location.replace('login.html');
+            }
+            verificado = true;
+        });
+    </script>
+    
+    <style>
+        /* Ocultar contenido hasta verificar autenticación */
+        body {
+            visibility: hidden;
+        }
+        body.authenticated {
+            visibility: visible;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,14 +43,12 @@
                     <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
                 </a>
             </div>
-            <div id="barra-busqueda">
-                <form action="">
-                    <input type="text" placeholder="Buscar productos...">
-                    <button type="submit">Buscar</button>
-                </form>
-            </div>
             <div id="boton-carrito">
                 <a href="./carrito.html" data-cart-toggle>🛒</a>
+            </div>
+            <div id="user-info" style="margin-left: auto; padding: 10px; color: white;">
+                <span id="user-email"></span>
+                <button id="btn-logout" style="margin-left: 10px; padding: 5px 10px; cursor: pointer;">Cerrar Sesión</button>
             </div>
         </div>
         <nav>
@@ -42,49 +67,246 @@
         <h1>Alta de Productos</h1>
 
         <form id="form-alta-producto" class="alta-form">
-            <div class="input-group">
-                <label for="nombre">Nombre</label>
-                <input id="nombre" type="text" name="nombre" required minlength="2">
+            <!-- SELECTOR DE TIPO DE PRODUCTO -->
+            <div class="input-group" style="background:#f8f9fa; padding:1rem; border-radius:8px; margin-bottom:1.5rem;">
+                <label style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem; display:block;">¿Qué deseas cargar?</label>
+                <div style="display:flex; gap:1rem;">
+                    <label style="display:flex; align-items:center; cursor:pointer; padding:0.5rem 1rem; border:2px solid #ddd; border-radius:5px; background:white;">
+                        <input type="radio" id="tipo-auto" name="tipoProducto" value="auto" style="margin-right:0.5rem;">
+                        <span style="font-weight:bold;">🚗 Auto</span>
+                    </label>
+                    <label style="display:flex; align-items:center; cursor:pointer; padding:0.5rem 1rem; border:2px solid #ddd; border-radius:5px; background:white;">
+                        <input type="radio" id="tipo-producto" name="tipoProducto" value="producto" checked style="margin-right:0.5rem;">
+                        <span style="font-weight:bold;">🔧 Productos</span>
+                    </label>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="precio">Precio</label>
-                <input id="precio" type="number" name="precio" required min="0">
+            <!-- Los campos específicos varían según el tipo seleccionado -->
+
+            <!-- CAMPOS ESPECÍFICOS PARA AUTOS -->
+            <div id="campos-auto" style="display:none;">
+                <div class="input-group">
+                    <label for="titulo-auto">Título *</label>
+                    <input id="titulo-auto" type="text" name="titulo-auto" placeholder="Ej: Citroën 2CV Charleston 1985" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="precio-auto">Precio *</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input id="precio-auto" type="number" name="precio-auto" min="0" step="0.01" placeholder="Ingrese precio" style="flex: 1;" required>
+                        <select id="moneda-auto" name="moneda-auto" style="width: 120px;">
+                            <option value="ARS">Peso (ARS)</option>
+                            <option value="USD">Dólar (USD)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="estado-auto">Estado *</label>
+                    <select id="estado-auto" name="estado-auto" required>
+                        <option value="disponible">Disponible</option>
+                        <option value="reservado">Reservado</option>
+                        <option value="vendido">Vendido</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="kilometros-auto">Kilómetros *</label>
+                    <input id="kilometros-auto" type="number" name="kilometros-auto" min="0" placeholder="Ej: 50000" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="marca-auto">Marca/Modelo *</label>
+                    <select id="marca-auto" name="marca-auto" required>
+                        <option value="">-- Seleccionar modelo --</option>
+                        <option value="3CV">3CV</option>
+                        <option value="2CV">2CV</option>
+                        <option value="Mehari">Mehari</option>
+                        <option value="Super America">Super America</option>
+                        <option value="IES">IES</option>
+                        <option value="Ami 8">Ami 8</option>
+                        <option value="Dyane">Dyane</option>
+                        <option value="Furgoneta">Furgoneta</option>
+                        <option value="Visa Club">Visa Club</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="color-auto">Color</label>
+                    <select id="color-auto" name="color-auto">
+                        <option value="">-- Seleccionar color --</option>
+                        <option value="Rojo">Rojo</option>
+                        <option value="Azul">Azul</option>
+                        <option value="Verde">Verde</option>
+                        <option value="Amarillo">Amarillo</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Gris">Gris</option>
+                        <option value="Beige">Beige</option>
+                        <option value="Naranja">Naranja</option>
+                        <option value="otro">Otro (especificar abajo)</option>
+                    </select>
+                </div>
+
+                <div class="input-group" id="color-auto-otro-group" style="display:none;">
+                    <label for="color-auto-otro">Especificar color</label>
+                    <input id="color-auto-otro" type="text" name="color-auto-otro" placeholder="Ej: Rojo metalizado, Azul Charleston">
+                </div>
+
+                <div class="input-group">
+                    <label for="descripcion-auto">Descripción</label>
+                    <textarea id="descripcion-auto" name="descripcion-auto" rows="4" placeholder="Describe el auto en detalle..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="envio-exterior-auto" name="envio-exterior-auto" style="margin-right: 0.5rem;">
+                        Apto para envío al exterior
+                    </label>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="stock">Stock</label>
-                <input id="stock" type="number" name="stock" required min="0">
+            <!-- CAMPOS ESPECÍFICOS PARA PRODUCTOS -->
+            <div id="campos-producto">
+                <div class="input-group">
+                    <label for="tipo-producto-select">Tipo de Producto *</label>
+                    <select id="tipo-producto-select" name="tipo-producto-select" required>
+                        <option value="">-- Seleccionar tipo --</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Neumáticos">Neumáticos</option>
+                        <option value="Carrocerías">Carrocerías</option>
+                        <option value="Motores">Motores</option>
+                        <option value="Suspensiones">Suspensiones</option>
+                        <option value="Frenos">Frenos</option>
+                        <option value="Eléctricos">Eléctricos</option>
+                        <option value="Interiores">Interiores</option>
+                        <option value="Exteriores">Exteriores</option>
+                        <option value="Dirección">Dirección</option>
+                        <option value="Boutique">Boutique</option>
+                        <option value="Personalizados">Personalizados</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="titulo-producto">Título *</label>
+                    <input id="titulo-producto" type="text" name="titulo-producto" required placeholder="Ej: Kit de Embrague Completo">
+                </div>
+
+                <div class="input-group">
+                    <label for="precio-producto">Precio *</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input id="precio-producto" type="number" name="precio-producto" required min="0" step="0.01" placeholder="Ingrese precio" style="flex: 1;">
+                        <select id="moneda-producto" name="moneda-producto" style="width: 120px;">
+                            <option value="ARS">Peso (ARS)</option>
+                            <option value="USD">Dólar (USD)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="stock-producto">Stock *</label>
+                    <input id="stock-producto" type="number" name="stock-producto" required min="0" placeholder="Cantidad disponible">
+                </div>
+
+                <div class="input-group">
+                    <label for="marca-producto">Marca</label>
+                    <input id="marca-producto" type="text" name="marca-producto" placeholder="Ej: Valeo, Bosch, Original">
+                </div>
+
+                <div class="input-group">
+                    <label for="categoria">Modelo de Auto (puedes seleccionar varios)</label>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.5rem; padding:0.5rem; border:1px solid #ddd; border-radius:5px; max-height:200px; overflow-y:auto;">
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="3CV" style="margin-right:0.5rem;"> 3CV
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="2CV" style="margin-right:0.5rem;"> 2CV
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Mehari" style="margin-right:0.5rem;"> Mehari
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Super America" style="margin-right:0.5rem;"> Super America
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="IES" style="margin-right:0.5rem;"> IES
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Ami 8" style="margin-right:0.5rem;"> Ami 8
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Dyane" style="margin-right:0.5rem;"> Dyane
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Furgoneta" style="margin-right:0.5rem;"> Furgoneta
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Visa Club" style="margin-right:0.5rem;"> Visa Club
+                        </label>
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" name="modelos" value="Todos" style="margin-right:0.5rem;"> Todos
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="color-producto">Color</label>
+                    <select id="color-producto" name="color-producto">
+                        <option value="">-- Seleccionar color --</option>
+                        <option value="Rojo">Rojo</option>
+                        <option value="Azul">Azul</option>
+                        <option value="Verde">Verde</option>
+                        <option value="Amarillo">Amarillo</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Gris">Gris</option>
+                        <option value="Plateado">Plateado</option>
+                        <option value="Dorado">Dorado</option>
+                        <option value="Multicolor">Multicolor</option>
+                        <option value="N/A">N/A</option>
+                        <option value="otro">Otro (especificar abajo)</option>
+                    </select>
+                </div>
+
+                <div class="input-group" id="color-producto-otro-group" style="display:none;">
+                    <label for="color-producto-otro">Especificar color</label>
+                    <input id="color-producto-otro" type="text" name="color-producto-otro" placeholder="Especifica el color">
+                </div>
+
+                <div class="input-group">
+                    <label for="tamano">Tamaño/Medida</label>
+                    <input id="tamano" type="text" name="tamano" placeholder="Ej: M, L, XL, 25cm, Universal">
+                </div>
+
+                <div class="input-group">
+                    <label for="descripcion-producto">Descripción</label>
+                    <textarea id="descripcion-producto" name="descripcion-producto" rows="4" placeholder="Descripción detallada del producto, características, materiales, compatibilidad, etc."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="envio-producto" name="envio-producto" style="margin-right: 0.5rem;">
+                        Envío sin cargo
+                    </label>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="marca">Marca</label>
-                <input id="marca" type="text" name="marca" required>
+            <!-- DESTACADO (COMÚN PARA AMBOS) -->
+            <div class="input-group" style="background: #fff3cd; padding: 1rem; border-radius: 5px; border: 2px solid #ffc107;">
+                <label style="display: flex; align-items: center; cursor: pointer; font-weight: bold; color: #856404;">
+                    <input id="destacado" type="checkbox" name="destacado" style="margin-right: 0.5rem; width: 20px; height: 20px; cursor: pointer;">
+                    ⭐ Marcar como DESTACADO (aparecerá en la página principal)
+                </label>
             </div>
 
+            <!-- CARGA DE IMÁGENES (COMÚN PARA AMBOS) -->
             <div class="input-group">
-                <label for="categoria">Categoría</label>
-                <input id="categoria" type="text" name="categoria" required>
-            </div>
-
-            <div class="input-group">
-                <label for="descripcion-corta">Descripción Corta</label>
-                <input id="descripcion-corta" type="text" name="descripcion-corta" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="descripcion-larga">Descripción Larga</label>
-                <textarea id="descripcion-larga" name="descripcion-larga"></textarea>
-            </div>
-
-            <div class="input-group">
-                <label for="foto">URL Foto</label>
-                <input id="foto" type="text" name="foto" placeholder="https://ejemplo.com/imagen.jpg">
-            </div>
-
-            <div class="input-group-checkbox">
-                <input id="envio" type="checkbox" name="envio">
-                <label for="envio">Envío sin cargo</label>
+                <label for="imagenes">Imágenes del producto</label>
+                <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" 
+                       style="padding:0.5rem; border:2px dashed #ddd; border-radius:5px;">
+                <small style="color:#666; display:block; margin-top:0.3rem;">Puedes seleccionar múltiples imágenes (máximo 5)</small>
+                <div id="preview-imagenes" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:0.5rem; margin-top:0.5rem;"></div>
             </div>
 
             <button type="submit">Agregar</button>
@@ -92,20 +314,24 @@
 
         <hr>
 
-        <h2>Lista de productos disponibles</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Lista de productos disponibles</h2>
+            <div style="flex: 0 0 300px;">
+                <input type="text" id="filtro-tabla" placeholder="🔍 Filtrar productos..." 
+                       style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+        </div>
+        
         <div class="tabla-container">
             <table id="tabla-productos">
                 <thead>
                     <tr>
+                        <th>Tipo</th>
                         <th>Nombre</th>
                         <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Marca</th>
-                        <th>Categoría</th>
-                        <th>Descripción Corta</th>
-                        <th>Descripción Larga</th>
-                        <th>Envío sin cargo</th>
-                        <th>Foto</th>
+                        <th>Modelo(s)</th>
+                        <th>Detalles</th>
+                        <th>Imágenes</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -122,10 +348,81 @@
         <p>Síguenos en redes sociales</p>
     </footer>
     
-    <script src="js/productos.js"></script>
-    <script src="js/alta.js"></script>
-    <script src="js/spa.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module">
+        import { auth } from './js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        // VERIFICACIÓN INMEDIATA - Ejecutar antes que cualquier otra cosa
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario autenticado - mostrar página
+                console.log('✅ Usuario autenticado:', user.email);
+                document.body.classList.add('authenticated');
+                document.getElementById('user-email').textContent = user.email;
+                
+                // Configurar botón de logout
+                document.getElementById('btn-logout').addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        window.location.href = 'login.html';
+                    } catch (error) {
+                        console.error('Error al cerrar sesión:', error);
+                    }
+                });
+                
+                // Cargar scripts de la aplicación
+                loadScripts();
+            } else {
+                // No hay usuario - redirigir a login
+                console.log('❌ Usuario no autenticado - redirigiendo...');
+                window.location.replace('login.html');
+            }
+        });
+        
+        function loadScripts() {
+            // Cargar scripts en secuencia para asegurar el orden
+            const script1 = document.createElement('script');
+            script1.src = 'js/config.js';
+            script1.onload = () => {
+                console.log('✅ config.js cargado');
+                
+                const scriptUpload = document.createElement('script');
+                scriptUpload.src = 'js/upload-images.js';
+                scriptUpload.onload = () => {
+                    console.log('✅ upload-images.js cargado');
+                    
+                    const script2 = document.createElement('script');
+                    script2.src = 'js/productos.js';
+                    script2.onload = () => {
+                        console.log('✅ productos.js cargado');
+                        
+                        const script3 = document.createElement('script');
+                        script3.src = 'js/alta.js';
+                        script3.onload = () => {
+                            console.log('✅ alta.js cargado');
+                            // Ejecutar initAlta después de que todo esté cargado
+                            if (typeof initAlta === 'function') {
+                                initAlta();
+                            }
+                        };
+                        document.body.appendChild(script3);
+                    };
+                    document.body.appendChild(script2);
+                };
+                document.body.appendChild(scriptUpload);
+            };
+            document.body.appendChild(script1);
+            
+            // Cargar spa.js y main.js en paralelo (no dependen del orden)
+            const scriptSpa = document.createElement('script');
+            scriptSpa.src = 'js/spa.js';
+            document.body.appendChild(scriptSpa);
+            
+            const scriptMain = document.createElement('script');
+            scriptMain.src = 'js/main.js';
+            document.body.appendChild(scriptMain);
+        }
+    </script>
 
 </body>
 </html>

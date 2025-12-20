@@ -18,11 +18,11 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Parser de JSON
-app.use(express.json());
+// Parser de JSON (límite aumentado para imágenes en Base64)
+app.use(express.json({ limit: '50mb' }));
 
-// Parser de URL encoded
-app.use(express.urlencoded({ extended: true }));
+// Parser de URL encoded (límite aumentado para imágenes en Base64)
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Servir archivos estáticos del frontend
 app.use(express.static('.'));

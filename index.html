@@ -21,31 +21,65 @@
                 </a>
             </div>
             <div id="barra-busqueda">
-                <form action="">
-                    <input type="text" placeholder="Buscar productos...">
-                    <button type="submit">Buscar</button>
+                <form id="form-busqueda" action="">
+                    <input type="text" id="input-busqueda" placeholder="Buscar productos..." autocomplete="off">
+                    <button type="submit">🔍 Buscar</button>
                 </form>
             </div>
             <div id="boton-carrito">
                 <a href="./carrito.html" data-cart-toggle>🛒</a>
             </div>
+            <div id="boton-login" style="margin-left: 1rem;">
+                <a href="./login.html" style="background:#007bff; color:white; padding:0.5rem 1rem; border-radius:5px; text-decoration:none; font-weight:bold;">🔐 Login</a>
+            </div>
         </div>
         <nav>
             <ul>
                 <li> <a href="./index.html">Inicio</a> </li>
-                <li> <a href="./alta.html">Alta</a> </li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🚗 Autos ▼</a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="filtrarPorModelo('3CV'); return false;">3CV</a>
+                        <a href="#" onclick="filtrarPorModelo('2CV'); return false;">2CV</a>
+                        <a href="#" onclick="filtrarPorModelo('Mehari'); return false;">Mehari</a>
+                        <a href="#" onclick="filtrarPorModelo('Super America'); return false;">Super America</a>
+                        <a href="#" onclick="filtrarPorModelo('IES'); return false;">IES</a>
+                        <a href="#" onclick="filtrarPorModelo('Ami 8'); return false;">Ami 8</a>
+                        <a href="#" onclick="filtrarPorModelo('Dyane'); return false;">Dyane</a>
+                        <a href="#" onclick="filtrarPorModelo('Furgoneta'); return false;">Furgoneta</a>
+                        <a href="#" onclick="filtrarPorModelo('Visa Club'); return false;">Visa Club</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🛒 Productos ▼</a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="filtrarPorCategoria('Motor'); return false;">Motor</a>
+                        <a href="#" onclick="filtrarPorCategoria('Transmisión'); return false;">Transmisión</a>
+                        <a href="#" onclick="filtrarPorCategoria('Suspensión'); return false;">Suspensión</a>
+                        <a href="#" onclick="filtrarPorCategoria('Frenos'); return false;">Frenos</a>
+                        <a href="#" onclick="filtrarPorCategoria('Dirección'); return false;">Dirección</a>
+                        <a href="#" onclick="filtrarPorCategoria('Neumáticos'); return false;">Neumáticos</a>
+                        <a href="#" onclick="filtrarPorCategoria('Accesorios'); return false;">Accesorios</a>
+                        <a href="#" onclick="filtrarPorCategoria('Carrocería'); return false;">Carrocería</a>
+                    </div>
+                </li>
                 <li> <a href="./carrito.html">Carrito</a> </li>
                 <li> <a href="./contacto.html">Contacto</a> </li>
-                <li> <a href="./nosotros.html">Nosotros</a> </li>
-                <li> <a href="./otra.html">Otra</a> </li>
             </ul>
         </nav>
     </header>
 
     <main id="app">
+        <!-- Banner de Promociones -->
+        <div class="promociones-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; text-align: center; margin-bottom: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <h2 style="font-size: 2.5rem; margin: 0 0 1rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🎉 ¡PROMOCIONES ESPECIALES! 🎉</h2>
+            <p style="font-size: 1.3rem; margin: 0;">Descuentos de hasta 30% en productos seleccionados</p>
+            <p style="font-size: 1.1rem; margin: 0.5rem 0 0 0; opacity: 0.9;">¡Aprovechá las ofertas destacadas!</p>
+        </div>
+
         <div class="section-cards">
             <div class="section-cards-header">
-                <h1>Listado de Productos</h1>
+                <h1>Nuestros Productos</h1>
             </div>
 
             <div class="cards-container">
@@ -69,10 +103,19 @@
         console.log('window.openCart:', typeof window.openCart);
     </script>
     <script src="js/inicio.js"></script>
-    <script src="js/alta.js"></script>
     <script src="js/carrito.js"></script>
     <script src="js/contacto.js"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        // Inicializar la página de inicio
+        if (typeof initInicio === 'function') {
+            console.log('🚀 Llamando a initInicio()');
+            initInicio();
+        } else {
+            console.error('❌ initInicio() no está definida');
+        }
+    </script>
 
 </body>
 </html>
