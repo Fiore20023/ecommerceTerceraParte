@@ -2,8 +2,8 @@
 // Cambiar según el entorno (desarrollo / producción)
 
 const API_CONFIG = {
-    // URL base del backend (desarrollo local)
-    BASE_URL: 'http://localhost:3001/api',
+    // URL base del backend (producción en Heroku)
+    BASE_URL: 'https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api',
     
     // WhatsApp Business
     WHATSAPP: {
