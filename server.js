@@ -24,9 +24,6 @@ app.use(express.json({ limit: '50mb' }));
 // Parser de URL encoded (límite aumentado para imágenes en Base64)
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Servir archivos estáticos del frontend
-app.use(express.static('.'));
-
 // Middleware de logging
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url} - ${new Date().toLocaleString('es-AR')}`);
@@ -35,7 +32,18 @@ app.use((req, res, next) => {
 
 // ===== RUTAS =====
 
-// Ruta raíz
+// Ruta raíz - Redirigir a /api
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: '🚀 API Backend de Planeta Citroën',
+        info: 'Este es el servidor de datos. Para ver la tienda, visitá:',
+        frontend: 'https://ecommerce-planeta-citroen.web.app',
+        api_docs: '/api'
+    });
+});
+
+// Ruta raíz API
 app.get('/api', (req, res) => {
     res.json({
         success: true,
