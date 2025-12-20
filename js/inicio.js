@@ -36,7 +36,7 @@ document.addEventListener('click', function(event) {
 });
 
 function filtrarPorModelo(modelo) {
-    console.log('🚗 Filtrando por modelo:', modelo);
+    console.log('🚗 Filtrando autos en venta por modelo:', modelo);
     cerrarMenusDesplegables(); // Cerrar menú
     const cardsContainer = document.querySelector('.cards-container');
     const inputBusqueda = document.getElementById('input-busqueda');
@@ -45,20 +45,54 @@ function filtrarPorModelo(modelo) {
         inputBusqueda.value = ''; // Limpiar búsqueda de texto
     }
     
+    // Filtrar solo AUTOS (tipoProducto === 'auto')
     const productosFiltrados = todosLosProductosGlobal.filter(producto => {
+        const esAuto = producto.tipoProducto === 'auto';
+        
+        if (!esAuto) return false;
+        
         // Buscar en el array de modelos o en la categoría
         if (Array.isArray(producto.modelos)) {
             return producto.modelos.some(m => m.toLowerCase().includes(modelo.toLowerCase()));
         }
-        // También buscar en categoria por si hay productos viejos
+        // También buscar en categoria
         const categoria = (producto.categoria || '').toLowerCase();
         return categoria.includes(modelo.toLowerCase());
     });
     
-    console.log(`✅ Encontrados ${productosFiltrados.length} productos para modelo ${modelo}`);
+    console.log(`✅ Encontrados ${productosFiltrados.length} autos ${modelo} en venta`);
     
     if (cardsContainer) {
-        mostrarProductosFiltrados(productosFiltrados, `Modelo: ${modelo}`);
+        mostrarProductosFiltrados(productosFiltrados, `🚗 ${modelo} en Venta`);
+    }
+}
+
+function filtrarRepuestosPorModelo(modelo) {
+    console.log('🔧 Filtrando repuestos para modelo:', modelo);
+    const cardsContainer = document.querySelector('.cards-container');
+    const inputBusqueda = document.getElementById('input-busqueda');
+    
+    if (inputBusqueda) {
+        inputBusqueda.value = ''; // Limpiar búsqueda de texto
+    }
+    
+    // Filtrar solo REPUESTOS (tipoProducto !== 'auto')
+    const productosFiltrados = todosLosProductosGlobal.filter(producto => {
+        const esRepuesto = producto.tipoProducto !== 'auto';
+        
+        if (!esRepuesto) return false;
+        
+        // Buscar en el array de modelos compatibles
+        if (Array.isArray(producto.modelos)) {
+            return producto.modelos.some(m => m.toLowerCase().includes(modelo.toLowerCase()));
+        }
+        return false;
+    });
+    
+    console.log(`✅ Encontrados ${productosFiltrados.length} repuestos para ${modelo}`);
+    
+    if (cardsContainer) {
+        mostrarProductosFiltrados(productosFiltrados, `🔧 Repuestos para ${modelo}`);
     }
 }
 
@@ -450,21 +484,6 @@ function initInicio(){
         console.warn('⚠️ No se encontró el formulario de búsqueda');
     }
     
-    // Event listener para filtro por modelo
-    const selectModelo = document.getElementById('select-modelo');
-    if (selectModelo) {
-        selectModelo.addEventListener('change', (e) => {
-            const modelo = e.target.value;
-            if (modelo) {
-                console.log('🚗 Filtrando por modelo:', modelo);
-                filtrarPorModelo(modelo);
-            } else {
-                console.log('📋 Mostrando todos los productos');
-                renderProducts(todosLosProductos);
-            }
-        });
-    }
-    
     // Cargar productos desde el backend
     if (window.API_CONFIG) {
         console.log('📡 Cargando productos desde el backend...');
@@ -492,13 +511,25 @@ function initInicio(){
                 todosLosProductos = productos;
                 todosLosProductosGlobal = productos;
                 
-                // Verificar si hay término de búsqueda en la URL
+                // Verificar parámetros en la URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const terminoBusqueda = urlParams.get('busqueda');
+                const modeloRepuesto = urlParams.get('modeloRepuesto');
+                const categoria = urlParams.get('categoria');
+                const modelo = urlParams.get('modelo');
                 
                 if (terminoBusqueda && inputBusqueda) {
                     inputBusqueda.value = terminoBusqueda;
                     filtrarProductos(terminoBusqueda);
+                } else if (modeloRepuesto) {
+                    // Filtrar repuestos por modelo compatible
+                    filtrarRepuestosPorModelo(modeloRepuesto);
+                } else if (categoria) {
+                    // Filtrar por categoría de repuesto
+                    filtrarPorCategoria(categoria);
+                } else if (modelo) {
+                    // Filtrar autos por modelo
+                    filtrarPorModelo(modelo);
                 } else {
                     renderProducts(productos);
                 }

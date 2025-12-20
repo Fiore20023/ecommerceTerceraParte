@@ -53,6 +53,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🛒 Repuestos ▼</a>
                     <div class="dropdown-content">
+                        <strong style="padding: 0.5rem 1rem; display: block; color: #007bff; border-bottom: 1px solid #ddd;">Por Categoría:</strong>
                         <a href="#" onclick="filtrarPorCategoria('Motor'); return false;">Motor</a>
                         <a href="#" onclick="filtrarPorCategoria('Transmisión'); return false;">Transmisión</a>
                         <a href="#" onclick="filtrarPorCategoria('Suspensión'); return false;">Suspensión</a>
@@ -61,6 +62,16 @@
                         <a href="#" onclick="filtrarPorCategoria('Neumáticos'); return false;">Neumáticos</a>
                         <a href="#" onclick="filtrarPorCategoria('Accesorios'); return false;">Accesorios</a>
                         <a href="#" onclick="filtrarPorCategoria('Carrocería'); return false;">Carrocería</a>
+                        <strong style="padding: 0.5rem 1rem; display: block; color: #28a745; border-top: 2px solid #ddd; border-bottom: 1px solid #ddd; margin-top: 0.5rem;">Por Modelo Compatible:</strong>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('3CV'); return false;">3CV</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('2CV'); return false;">2CV</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Mehari'); return false;">Mehari</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Super America'); return false;">Super America</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('IES'); return false;">IES</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Ami 8'); return false;">Ami 8</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Dyane'); return false;">Dyane</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Furgoneta'); return false;">Furgoneta</a>
+                        <a href="#" onclick="filtrarRepuestosPorModelo('Visa Club'); return false;">Visa Club</a>
                     </div>
                 </li>
                 <li> <a href="./carrito.html">Carrito</a> </li>
@@ -80,23 +91,6 @@
             <h2>🎉 ¡PROMOCIONES ESPECIALES! 🎉</h2>
             <p class="promo-subtitle">Descuentos de hasta 30% en productos seleccionados</p>
             <p class="promo-description">¡Aprovechá las ofertas destacadas!</p>
-        </div>
-
-        <!-- Filtro por Modelo -->
-        <div class="filtro-modelo">
-            <label for="select-modelo">🚗 Filtrar por Modelo:</label>
-            <select id="select-modelo">
-                <option value="">Todos los modelos</option>
-                <option value="3CV">3CV</option>
-                <option value="2CV">2CV</option>
-                <option value="Mehari">Mehari</option>
-                <option value="Super America">Super America</option>
-                <option value="IES">IES</option>
-                <option value="Ami 8">Ami 8</option>
-                <option value="Dyane">Dyane</option>
-                <option value="Furgoneta">Furgoneta</option>
-                <option value="Visa Club">Visa Club</option>
-            </select>
         </div>
 
         <div class="section-cards">
