@@ -227,7 +227,7 @@ function initInicio(){
                 cardsContainer.appendChild(separador);
                 
                 const tituloNormales = document.createElement('h2');
-                tituloNormales.textContent = '📦 Todos los Productos';
+                tituloNormales.textContent = '🔧 Todos los Repuestos';
                 tituloNormales.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #333; padding: 1rem; margin: 1rem 0; font-size: 1.8rem;';
                 cardsContainer.appendChild(tituloNormales);
                 
@@ -448,6 +448,21 @@ function initInicio(){
         console.log('✅ Buscador configurado');
     } else {
         console.warn('⚠️ No se encontró el formulario de búsqueda');
+    }
+    
+    // Event listener para filtro por modelo
+    const selectModelo = document.getElementById('select-modelo');
+    if (selectModelo) {
+        selectModelo.addEventListener('change', (e) => {
+            const modelo = e.target.value;
+            if (modelo) {
+                console.log('🚗 Filtrando por modelo:', modelo);
+                filtrarPorModelo(modelo);
+            } else {
+                console.log('📋 Mostrando todos los productos');
+                renderProducts(todosLosProductos);
+            }
+        });
     }
     
     // Cargar productos desde el backend

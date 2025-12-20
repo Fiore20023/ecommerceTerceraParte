@@ -51,7 +51,7 @@
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🛒 Productos ▼</a>
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🛒 Repuestos ▼</a>
                     <div class="dropdown-content">
                         <a href="#" onclick="filtrarPorCategoria('Motor'); return false;">Motor</a>
                         <a href="#" onclick="filtrarPorCategoria('Transmisión'); return false;">Transmisión</a>
@@ -82,9 +82,26 @@
             <p class="promo-description">¡Aprovechá las ofertas destacadas!</p>
         </div>
 
+        <!-- Filtro por Modelo -->
+        <div class="filtro-modelo">
+            <label for="select-modelo">🚗 Filtrar por Modelo:</label>
+            <select id="select-modelo">
+                <option value="">Todos los modelos</option>
+                <option value="3CV">3CV</option>
+                <option value="2CV">2CV</option>
+                <option value="Mehari">Mehari</option>
+                <option value="Super America">Super America</option>
+                <option value="IES">IES</option>
+                <option value="Ami 8">Ami 8</option>
+                <option value="Dyane">Dyane</option>
+                <option value="Furgoneta">Furgoneta</option>
+                <option value="Visa Club">Visa Club</option>
+            </select>
+        </div>
+
         <div class="section-cards">
             <div class="section-cards-header">
-                <h1>Nuestros Productos</h1>
+                <h1>Repuestos Citroën</h1>
             </div>
 
             <div class="cards-container">

@@ -35,6 +35,48 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0.9;
 }
 
+/* Filtro por Modelo */
+.filtro-modelo {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filtro-modelo label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.filtro-modelo select {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filtro-modelo select:hover {
+    border-color: #0056b3;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+}
+
+.filtro-modelo select:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -227,6 +269,20 @@ nav ul li a:hover {
     
     .promociones-banner .promo-description {
         font-size: 0.9rem;
+    }
+    
+    .filtro-modelo {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+    }
+    
+    .filtro-modelo label {
+        font-size: 1rem;
+    }
+    
+    .filtro-modelo select {
+        width: 100%;
     }
     
     .cards-container {
