@@ -1,0 +1,326 @@
+/* Estilos para la página de Repuestos */
+
+.repuestos-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.repuestos-main h1 {
+    font-size: 2.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+}
+
+/* Secciones de búsqueda */
+.search-section {
+    margin-bottom: 60px;
+}
+
+.search-section h2 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-description {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+/* Grid de iconos */
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+/* Tarjeta de icono */
+.icon-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.icon-card:hover {
+    transform: translateY(-8px);
+    border-color: #007bff;
+    box-shadow: 0 8px 20px rgba(0,123,255,0.15);
+}
+
+.icon-card:active {
+    transform: translateY(-4px);
+}
+
+/* Contenedor del icono */
+.icon-image {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.icon-card:hover .icon-image {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.icon-image i {
+    font-size: 3rem;
+    color: white;
+}
+
+/* Colores específicos por categoría */
+.category-motor {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.category-transmision {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.category-suspension {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.category-frenos {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.category-direccion {
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+.category-neumaticos {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.category-accesorios {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.category-carroceria {
+    background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+}
+
+/* Texto de la tarjeta */
+.icon-card h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.icon-card p {
+    color: #007bff;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Divisor entre secciones */
+.divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #007bff, transparent);
+    margin: 60px auto;
+    max-width: 80%;
+}
+
+/* Responsive Design */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+    
+    .icon-image {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .icon-image i {
+        font-size: 2.5rem;
+    }
+}
+
+/* Móviles grandes */
+@media (max-width: 768px) {
+    .repuestos-main {
+        padding: 30px 15px;
+    }
+    
+    .repuestos-main h1 {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .search-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .icon-card {
+        padding: 25px 15px;
+    }
+    
+    .icon-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .icon-image i {
+        font-size: 2.2rem;
+    }
+    
+    .icon-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .icon-card p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+    .repuestos-main {
+        padding: 20px 10px;
+    }
+    
+    .repuestos-main h1 {
+        font-size: 1.6rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .search-section {
+        margin-bottom: 40px;
+    }
+    
+    .search-section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .section-description {
+        font-size: 0.9rem;
+    }
+    
+    .icon-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .icon-card {
+        padding: 20px 10px;
+        border-radius: 12px;
+    }
+    
+    .icon-image {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 15px;
+    }
+    
+    .icon-image i {
+        font-size: 2rem;
+    }
+    
+    .icon-card h3 {
+        font-size: 1rem;
+    }
+    
+    .icon-card p {
+        font-size: 0.8rem;
+    }
+    
+    .divider {
+        margin: 40px auto;
+    }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 400px) {
+    .icon-grid {
+        gap: 10px;
+    }
+    
+    .icon-card {
+        padding: 15px 8px;
+    }
+    
+    .icon-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .icon-image i {
+        font-size: 1.8rem;
+    }
+    
+    .icon-card h3 {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animaciones de carga */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-section {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.icon-card {
+    animation: fadeIn 0.4s ease-out backwards;
+}
+
+.icon-card:nth-child(1) { animation-delay: 0.05s; }
+.icon-card:nth-child(2) { animation-delay: 0.1s; }
+.icon-card:nth-child(3) { animation-delay: 0.15s; }
+.icon-card:nth-child(4) { animation-delay: 0.2s; }
+.icon-card:nth-child(5) { animation-delay: 0.25s; }
+.icon-card:nth-child(6) { animation-delay: 0.3s; }
+.icon-card:nth-child(7) { animation-delay: 0.35s; }
+.icon-card:nth-child(8) { animation-delay: 0.4s; }
+.icon-card:nth-child(9) { animation-delay: 0.45s; }
