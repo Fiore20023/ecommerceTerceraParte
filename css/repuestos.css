@@ -1,5 +1,16 @@
 /* Estilos para la página de Repuestos */
 
+/* Logo tamaño ajustado */
+.logo {
+    max-width: 220px;
+    height: auto;
+    display: block;
+}
+
+.logo-container {
+    background: transparent;
+}
+
 .repuestos-main {
     max-width: 1400px;
     margin: 0 auto;
