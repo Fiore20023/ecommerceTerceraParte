@@ -29,10 +29,35 @@
         <nav>
             <ul>
                 <li> <a href="./index.html">Inicio</a> </li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🚗 Autos ▼</a>
+                    <div class="dropdown-content">
+                        <a href="./index.html?modelo=3CV">3CV</a>
+                        <a href="./index.html?modelo=2CV">2CV</a>
+                        <a href="./index.html?modelo=Mehari">Mehari</a>
+                        <a href="./index.html?modelo=Super America">Super America</a>
+                        <a href="./index.html?modelo=IES">IES</a>
+                        <a href="./index.html?modelo=Ami 8">Ami 8</a>
+                        <a href="./index.html?modelo=Dyane">Dyane</a>
+                        <a href="./index.html?modelo=Furgoneta">Furgoneta</a>
+                        <a href="./index.html?modelo=Visa Club">Visa Club</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event, this.parentElement)">🛒 Productos ▼</a>
+                    <div class="dropdown-content">
+                        <a href="./index.html?categoria=Motor">Motor</a>
+                        <a href="./index.html?categoria=Transmisión">Transmisión</a>
+                        <a href="./index.html?categoria=Suspensión">Suspensión</a>
+                        <a href="./index.html?categoria=Frenos">Frenos</a>
+                        <a href="./index.html?categoria=Dirección">Dirección</a>
+                        <a href="./index.html?categoria=Neumáticos">Neumáticos</a>
+                        <a href="./index.html?categoria=Accesorios">Accesorios</a>
+                        <a href="./index.html?categoria=Carrocería">Carrocería</a>
+                    </div>
+                </li>
                 <li> <a href="./carrito.html">Carrito</a> </li>
                 <li> <a href="./contacto.html">Contacto</a> </li>
-                <li> <a href="./nosotros.html">Nosotros</a> </li>
-                <li> <a href="./otra.html">Otra</a> </li>
             </ul>
         </nav>
     </header>
@@ -80,6 +105,32 @@
     <script src="js/busqueda-global.js"></script>
     <script src="js/spa.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Función para manejar dropdowns
+        function toggleDropdown(event, element) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Cerrar otros dropdowns abiertos
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                if (dropdown !== element) {
+                    dropdown.classList.remove('active');
+                }
+            });
+            
+            // Toggle del dropdown actual
+            element.classList.toggle('active');
+        }
+
+        // Cerrar dropdowns al hacer click fuera
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
