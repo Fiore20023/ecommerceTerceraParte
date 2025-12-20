@@ -45,6 +45,9 @@ function filtrarPorModelo(modelo) {
         inputBusqueda.value = ''; // Limpiar búsqueda de texto
     }
     
+    // Ocultar filtro secundario (no aplica para autos en venta)
+    ocultarFiltroSecundario();
+    
     // Filtrar solo AUTOS (tipoProducto === 'auto')
     const productosFiltrados = todosLosProductosGlobal.filter(producto => {
         const esAuto = producto.tipoProducto === 'auto';
@@ -91,6 +94,9 @@ function filtrarRepuestosPorModelo(modelo) {
     
     console.log(`✅ Encontrados ${productosFiltrados.length} repuestos para ${modelo}`);
     
+    // Mostrar filtro secundario por categoría
+    mostrarFiltroSecundario('categoria', modelo);
+    
     if (cardsContainer) {
         mostrarProductosFiltrados(productosFiltrados, `🔧 Repuestos para ${modelo}`);
     }
@@ -112,6 +118,9 @@ function filtrarPorCategoria(categoria) {
     });
     
     console.log(`✅ Encontrados ${productosFiltrados.length} productos para categoría ${categoria}`);
+    
+    // Mostrar filtro secundario por modelo
+    mostrarFiltroSecundario('modelo', categoria);
     
     if (cardsContainer) {
         mostrarProductosFiltrados(productosFiltrados, `Categoría: ${categoria}`);
@@ -148,8 +157,110 @@ function filtrarPorModeloYCategoria(modelo, categoria) {
     
     console.log(`✅ Encontrados ${productosFiltrados.length} productos para ${modelo} en categoría ${categoria}`);
     
+    // Mostrar filtro secundario (categoría, ya que el principal es modelo)
+    mostrarFiltroSecundario('categoria', modelo);
+    
     if (cardsContainer) {
         mostrarProductosFiltrados(productosFiltrados, `${modelo} - ${categoria}`);
+    }
+}
+
+// Función para mostrar filtro secundario según el contexto
+function mostrarFiltroSecundario(tipo, valorActual) {
+    const container = document.getElementById('filtro-secundario-container');
+    if (!container) return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (tipo === 'categoria') {
+        // Estamos viendo resultados de un MODELO, ofrecemos filtrar por CATEGORÍA
+        const modeloRepuesto = urlParams.get('modeloRepuesto');
+        
+        container.innerHTML = `
+            <div class="secondary-filter">
+                <label for="filtro-categoria">
+                    <i class="fas fa-filter"></i> Filtrar también por categoría:
+                </label>
+                <select id="filtro-categoria" onchange="aplicarFiltroCategoriaSecundario('${modeloRepuesto}', this.value)">
+                    <option value="">-- Todas las categorías --</option>
+                    <option value="Motor">Motor</option>
+                    <option value="Transmisión">Transmisión</option>
+                    <option value="Suspensión">Suspensión</option>
+                    <option value="Frenos">Frenos</option>
+                    <option value="Dirección">Dirección</option>
+                    <option value="Neumáticos">Neumáticos</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Carrocería">Carrocería</option>
+                </select>
+            </div>
+        `;
+        
+        // Si ya hay una categoría seleccionada, marcarla
+        const categoriaActual = urlParams.get('categoria');
+        if (categoriaActual) {
+            const select = document.getElementById('filtro-categoria');
+            if (select) select.value = categoriaActual;
+        }
+        
+    } else if (tipo === 'modelo') {
+        // Estamos viendo resultados de una CATEGORÍA, ofrecemos filtrar por MODELO
+        const categoriaActual = urlParams.get('categoria');
+        
+        container.innerHTML = `
+            <div class="secondary-filter">
+                <label for="filtro-modelo">
+                    <i class="fas fa-filter"></i> Filtrar también por modelo compatible:
+                </label>
+                <select id="filtro-modelo" onchange="aplicarFiltroModeloSecundario('${categoriaActual}', this.value)">
+                    <option value="">-- Todos los modelos --</option>
+                    <option value="3CV">3CV</option>
+                    <option value="2CV">2CV</option>
+                    <option value="Mehari">Mehari</option>
+                    <option value="Super America">Super America</option>
+                    <option value="IES">IES</option>
+                    <option value="Ami 8">Ami 8</option>
+                    <option value="Dyane">Dyane</option>
+                    <option value="Furgoneta">Furgoneta</option>
+                    <option value="Visa Club">Visa Club</option>
+                </select>
+            </div>
+        `;
+        
+        // Si ya hay un modelo seleccionado, marcarlo
+        const modeloActual = urlParams.get('modeloRepuesto');
+        if (modeloActual) {
+            const select = document.getElementById('filtro-modelo');
+            if (select) select.value = modeloActual;
+        }
+    }
+    
+    container.style.display = 'block';
+}
+
+// Aplicar filtro de categoría cuando estamos en vista de modelo
+function aplicarFiltroCategoriaSecundario(modelo, categoria) {
+    if (categoria) {
+        window.location.href = `index.html?modeloRepuesto=${encodeURIComponent(modelo)}&categoria=${encodeURIComponent(categoria)}`;
+    } else {
+        window.location.href = `index.html?modeloRepuesto=${encodeURIComponent(modelo)}`;
+    }
+}
+
+// Aplicar filtro de modelo cuando estamos en vista de categoría
+function aplicarFiltroModeloSecundario(categoria, modelo) {
+    if (modelo) {
+        window.location.href = `index.html?categoria=${encodeURIComponent(categoria)}&modeloRepuesto=${encodeURIComponent(modelo)}`;
+    } else {
+        window.location.href = `index.html?categoria=${encodeURIComponent(categoria)}`;
+    }
+}
+
+// Función para ocultar filtro secundario
+function ocultarFiltroSecundario() {
+    const container = document.getElementById('filtro-secundario-container');
+    if (container) {
+        container.style.display = 'none';
+        container.innerHTML = '';
     }
 }
 
@@ -247,6 +358,10 @@ function initInicio(){
 
     const renderProducts = (list) => {
         console.log('🎨 Renderizando productos:', list);
+        
+        // Ocultar filtro secundario cuando mostramos todos los productos
+        ocultarFiltroSecundario();
+        
         cardsContainer.innerHTML = '';
         
         if (!list || list.length === 0) {

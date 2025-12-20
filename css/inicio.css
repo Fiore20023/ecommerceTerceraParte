@@ -77,6 +77,57 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
 }
 
+/* Filtro secundario (aparece después de seleccionar modelo o categoría) */
+#filtro-secundario-container {
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.secondary-filter {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.secondary-filter label {
+    display: block;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.secondary-filter label i {
+    color: #007bff;
+    margin-right: 5px;
+}
+
+.secondary-filter select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    background: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondary-filter select:hover {
+    border-color: #007bff;
+}
+
+.secondary-filter select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -285,6 +336,20 @@ nav ul li a:hover {
         width: 100%;
     }
     
+    .secondary-filter {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .secondary-filter label {
+        font-size: 0.95rem;
+    }
+    
+    .secondary-filter select {
+        font-size: 0.95rem;
+        padding: 10px 12px;
+    }
+    
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
@@ -333,6 +398,20 @@ nav ul li a:hover {
         flex-direction: column;
         gap: 0;
         padding: 0.5rem;
+    }
+    
+    .secondary-filter {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .secondary-filter label {
+        font-size: 0.9rem;
+    }
+    
+    .secondary-filter select {
+        font-size: 0.9rem;
+        padding: 10px;
     }
     
     /* Secciones de categorías */
