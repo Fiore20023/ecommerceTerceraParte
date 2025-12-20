@@ -5,6 +5,43 @@
 // ------------------------------------------------
 //             funciones globales
 // ------------------------------------------------
+
+// Función para enviar email
+async function enviarPorEmail(payload) {
+    try {
+        // Crear el cuerpo del email en HTML
+        const emailBody = `
+            <h2>📩 Nuevo Mensaje de Contacto - Planeta Citroën</h2>
+            <p><strong>Origen:</strong> Formulario de Contacto</p>
+            <hr>
+            <p><strong>👤 Nombre:</strong> ${payload.nombre}</p>
+            <p><strong>📧 Email:</strong> ${payload.email}</p>
+            ${payload.celular ? `<p><strong>📱 Celular:</strong> ${payload.celular}</p>` : ''}
+            ${payload.pais ? `<p><strong>🌎 País:</strong> ${payload.pais}</p>` : ''}
+            ${payload.provincia ? `<p><strong>📍 Provincia:</strong> ${payload.provincia}</p>` : ''}
+            ${payload.ciudad ? `<p><strong>🏙️ Ciudad:</strong> ${payload.ciudad}</p>` : ''}
+            <hr>
+            <p><strong>💬 Mensaje:</strong></p>
+            <p>${payload.comentarios}</p>
+            <hr>
+            <p><strong>🕐 Fecha:</strong> ${payload.createdAt}</p>
+        `;
+
+        // Crear mailto link como fallback
+        const subject = `Nuevo mensaje de ${payload.nombre} - Sector Contacto`;
+        const body = `Nombre: ${payload.nombre}\nEmail: ${payload.email}\n${payload.celular ? 'Celular: ' + payload.celular + '\n' : ''}${payload.pais ? 'País: ' + payload.pais + '\n' : ''}${payload.provincia ? 'Provincia: ' + payload.provincia + '\n' : ''}${payload.ciudad ? 'Ciudad: ' + payload.ciudad + '\n' : ''}\nMensaje:\n${payload.comentarios}\n\nOrigen: Formulario de Contacto\nFecha: ${payload.createdAt}`;
+        
+        const mailtoLink = `mailto:contacto@planetacitroen.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        // Abrir cliente de email
+        window.location.href = mailtoLink;
+        
+        console.log('✅ Email preparado para envío');
+    } catch (error) {
+        console.error('❌ Error al preparar email:', error);
+    }
+}
+
 function initContacto(){
     const form = document.querySelector('.contact-form');
     if (!form) return;
@@ -61,7 +98,7 @@ function initContacto(){
         };
         
         // Crear mensaje para WhatsApp
-        let mensaje = `📩 *NUEVO MENSAJE DE CONTACTO*\n\n`;
+        let mensaje = `📩 *NUEVO MENSAJE - SECTOR CONTACTO*\n\n`;
         mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
         mensaje += `👤 *Nombre:* ${payload.nombre}\n`;
         mensaje += `📧 *Email:* ${payload.email}\n`;
@@ -71,14 +108,18 @@ function initContacto(){
         if (payload.ciudad) mensaje += `🏙️ *Ciudad:* ${payload.ciudad}\n`;
         mensaje += `\n💬 *Mensaje:*\n${payload.comentarios}\n`;
         mensaje += `\n━━━━━━━━━━━━━━━━━━━━\n`;
-        mensaje += `🕐 ${payload.createdAt}`;
+        mensaje += `🕐 ${payload.createdAt}\n`;
+        mensaje += `📍 *Origen:* Formulario de Contacto`;
+        
+        // Enviar por Email
+        enviarPorEmail(payload);
         
         // Enviar por WhatsApp
         if (window.API_CONFIG && window.API_CONFIG.getWhatsAppUrl) {
             const url = window.API_CONFIG.getWhatsAppUrl(mensaje);
             window.open(url, '_blank');
             form.reset();
-            if (typeof showToast === 'function') showToast('✅ Redirigiendo a WhatsApp...');
+            if (typeof showToast === 'function') showToast('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
         } else {
             alert('⚠️ Error: Configuración de WhatsApp no disponible');
         }
