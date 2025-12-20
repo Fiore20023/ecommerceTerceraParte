@@ -95,12 +95,12 @@ async function startServer() {
         // Conectar a la base de datos
         await database.connect();
 
-        // Iniciar servidor
-        const PORT = config.port;
-        app.listen(PORT, () => {
+        // Iniciar servidor - Puerto dinámico para Heroku
+        const PORT = process.env.PORT || config.port;
+        app.listen(PORT, '0.0.0.0', () => {
             console.log('\n🚀 ===== SERVIDOR INICIADO =====');
-            console.log(`📡 Servidor corriendo en: http://localhost:${PORT}`);
-            console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
+            console.log(`📡 Servidor corriendo en puerto: ${PORT}`);
+            console.log(`🔗 API disponible en: /api`);
             console.log(`📦 Base de datos: ${config.mongodb.dbName}`);
             console.log('================================\n');
         });
