@@ -48,11 +48,20 @@
 
     <main class="repuestos-main">
         <h1>🔧 Repuestos Citroën</h1>
-        <p class="subtitle">Buscá por modelo compatible o por categoría de repuesto</p>
+        <p class="subtitle">Encontrá el repuesto que necesitás</p>
+
+        <!-- Tabs para alternar entre Modelo y Categoría -->
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="switchTab('modelos')">
+                🚗 Buscar por Modelo Compatible
+            </button>
+            <button class="tab-button" onclick="switchTab('categorias')">
+                🔍 Buscar por Categoría
+            </button>
+        </div>
 
         <!-- Sección: Buscar por Modelo Compatible -->
-        <section class="search-section">
-            <h2>🚗 Buscar por Modelo Compatible</h2>
+        <section class="search-section tab-content active" id="modelos-section">
             <p class="section-description">Encontrá todos los repuestos compatibles con tu Citroën</p>
             <div class="icon-grid">
                 <div class="icon-card" onclick="buscarPorModelo('3CV')">
@@ -121,11 +130,8 @@
             </div>
         </section>
 
-        <div class="divider"></div>
-
         <!-- Sección: Buscar por Categoría -->
-        <section class="search-section">
-            <h2>🔍 Buscar por Categoría</h2>
+        <section class="search-section tab-content" id="categorias-section">
             <p class="section-description">Navegá por tipo de repuesto</p>
             <div class="icon-grid">
                 <div class="icon-card" onclick="buscarPorCategoria('Motor')">

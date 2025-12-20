@@ -17,7 +17,54 @@
     text-align: center;
     color: #666;
     font-size: 1.1rem;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+}
+
+/* Tabs Container */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px auto;
+    max-width: 800px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 18px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 2px solid #e0e0e0;
+    background: white;
+    color: #666;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.tab-button:hover {
+    border-color: #007bff;
+    color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 /* Secciones de búsqueda */
@@ -38,6 +85,7 @@
     color: #666;
     font-size: 1rem;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 /* Grid de iconos */
@@ -151,6 +199,15 @@
 
 /* Tablets */
 @media (max-width: 1024px) {
+    .tabs-container {
+        max-width: 600px;
+    }
+    
+    .tab-button {
+        font-size: 1rem;
+        padding: 15px 20px;
+    }
+    
     .icon-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 20px;
@@ -179,6 +236,18 @@
     .subtitle {
         font-size: 1rem;
         margin-bottom: 30px;
+    }
+    
+    .tabs-container {
+        flex-direction: column;
+        gap: 10px;
+        margin: 30px auto;
+    }
+    
+    .tab-button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 15px 20px;
     }
     
     .search-section h2 {
@@ -224,6 +293,15 @@
     
     .subtitle {
         font-size: 0.9rem;
+    }
+    
+    .tabs-container {
+        margin: 20px auto;
+    }
+    
+    .tab-button {
+        font-size: 0.95rem;
+        padding: 12px 15px;
     }
     
     .search-section {
