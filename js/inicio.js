@@ -118,6 +118,41 @@ function filtrarPorCategoria(categoria) {
     }
 }
 
+// Nueva función: Filtrar por modelo compatible Y categoría
+function filtrarPorModeloYCategoria(modelo, categoria) {
+    console.log('🔧 Filtrando por modelo Y categoría:', modelo, categoria);
+    cerrarMenusDesplegables();
+    const cardsContainer = document.querySelector('.cards-container');
+    const inputBusqueda = document.getElementById('input-busqueda');
+    
+    if (inputBusqueda) {
+        inputBusqueda.value = '';
+    }
+    
+    const productosFiltrados = todosLosProductosGlobal.filter(producto => {
+        // Excluir autos (solo repuestos)
+        if (producto.tipoProducto === 'auto') return false;
+        
+        // Verificar que el modelo esté en el array de modelos compatibles
+        const modelos = producto.modelos || [];
+        const modeloCompatible = modelos.some(m => 
+            m.toLowerCase() === modelo.toLowerCase()
+        );
+        
+        // Verificar que coincida con la categoría
+        const subcategoria = (producto.subcategoria || '').toLowerCase();
+        const categoriaCoincide = subcategoria.includes(categoria.toLowerCase());
+        
+        return modeloCompatible && categoriaCoincide;
+    });
+    
+    console.log(`✅ Encontrados ${productosFiltrados.length} productos para ${modelo} en categoría ${categoria}`);
+    
+    if (cardsContainer) {
+        mostrarProductosFiltrados(productosFiltrados, `${modelo} - ${categoria}`);
+    }
+}
+
 function mostrarProductosFiltrados(productos, titulo) {
     const cardsContainer = document.querySelector('.cards-container');
     if (!cardsContainer) return;
@@ -521,6 +556,9 @@ function initInicio(){
                 if (terminoBusqueda && inputBusqueda) {
                     inputBusqueda.value = terminoBusqueda;
                     filtrarProductos(terminoBusqueda);
+                } else if (modeloRepuesto && categoria) {
+                    // Filtro combinado: modelo + categoría
+                    filtrarPorModeloYCategoria(modeloRepuesto, categoria);
                 } else if (modeloRepuesto) {
                     // Filtrar repuestos por modelo compatible
                     filtrarRepuestosPorModelo(modeloRepuesto);

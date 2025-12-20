@@ -88,6 +88,52 @@
     text-align: center;
 }
 
+/* Filtro secundario */
+.secondary-filter {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.secondary-filter label {
+    display: block;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.secondary-filter label i {
+    color: #007bff;
+    margin-right: 5px;
+}
+
+.secondary-filter select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    background: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondary-filter select:hover {
+    border-color: #007bff;
+}
+
+.secondary-filter select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
 /* Grid de iconos */
 .icon-grid {
     display: grid;
@@ -250,6 +296,20 @@
         padding: 15px 20px;
     }
     
+    .secondary-filter {
+        padding: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .secondary-filter label {
+        font-size: 0.95rem;
+    }
+    
+    .secondary-filter select {
+        font-size: 0.95rem;
+        padding: 10px 12px;
+    }
+    
     .search-section h2 {
         font-size: 1.5rem;
     }
@@ -302,6 +362,20 @@
     .tab-button {
         font-size: 0.95rem;
         padding: 12px 15px;
+    }
+    
+    .secondary-filter {
+        padding: 12px;
+        margin-bottom: 25px;
+    }
+    
+    .secondary-filter label {
+        font-size: 0.9rem;
+    }
+    
+    .secondary-filter select {
+        font-size: 0.9rem;
+        padding: 10px;
     }
     
     .search-section {

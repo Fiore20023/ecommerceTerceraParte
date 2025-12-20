@@ -1,5 +1,9 @@
 // JavaScript para la página de Repuestos
 
+// Variables para almacenar selecciones de filtros
+let filtroSecundarioModelo = '';
+let filtroSecundarioCategoria = '';
+
 // Función para cambiar entre tabs
 function switchTab(tabName) {
     // Ocultar todas las secciones
@@ -20,16 +24,39 @@ function switchTab(tabName) {
     }
 }
 
-// Función para buscar por modelo compatible
-function buscarPorModelo(modelo) {
-    // Redirigir a index.html con el parámetro modeloRepuesto
-    window.location.href = `index.html?modeloRepuesto=${encodeURIComponent(modelo)}`;
+// Función para aplicar filtro secundario
+function aplicarFiltroSecundario(tipoPrincipal) {
+    if (tipoPrincipal === 'modelo') {
+        // Guardar el filtro de categoría seleccionado
+        filtroSecundarioCategoria = document.getElementById('filtro-categoria-modelo').value;
+    } else if (tipoPrincipal === 'categoria') {
+        // Guardar el filtro de modelo seleccionado
+        filtroSecundarioModelo = document.getElementById('filtro-modelo-categoria').value;
+    }
 }
 
-// Función para buscar por categoría
+// Función para buscar por modelo compatible (con filtro opcional de categoría)
+function buscarPorModelo(modelo) {
+    let url = `index.html?modeloRepuesto=${encodeURIComponent(modelo)}`;
+    
+    // Si hay un filtro de categoría seleccionado, agregarlo a la URL
+    if (filtroSecundarioCategoria) {
+        url += `&categoria=${encodeURIComponent(filtroSecundarioCategoria)}`;
+    }
+    
+    window.location.href = url;
+}
+
+// Función para buscar por categoría (con filtro opcional de modelo)
 function buscarPorCategoria(categoria) {
-    // Redirigir a index.html con el parámetro categoria
-    window.location.href = `index.html?categoria=${encodeURIComponent(categoria)}`;
+    let url = `index.html?categoria=${encodeURIComponent(categoria)}`;
+    
+    // Si hay un filtro de modelo seleccionado, agregarlo a la URL
+    if (filtroSecundarioModelo) {
+        url += `&modeloRepuesto=${encodeURIComponent(filtroSecundarioModelo)}`;
+    }
+    
+    window.location.href = url;
 }
 
 // Función para filtrar por modelo desde el menú de Autos (busca vehículos en venta)

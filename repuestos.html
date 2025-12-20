@@ -63,6 +63,25 @@
         <!-- Sección: Buscar por Modelo Compatible -->
         <section class="search-section tab-content active" id="modelos-section">
             <p class="section-description">Encontrá todos los repuestos compatibles con tu Citroën</p>
+            
+            <!-- Filtro secundario: por categoría -->
+            <div class="secondary-filter">
+                <label for="filtro-categoria-modelo">
+                    <i class="fas fa-filter"></i> Filtrar también por categoría (opcional):
+                </label>
+                <select id="filtro-categoria-modelo" onchange="aplicarFiltroSecundario('modelo')">
+                    <option value="">-- Todas las categorías --</option>
+                    <option value="Motor">Motor</option>
+                    <option value="Transmisión">Transmisión</option>
+                    <option value="Suspensión">Suspensión</option>
+                    <option value="Frenos">Frenos</option>
+                    <option value="Dirección">Dirección</option>
+                    <option value="Neumáticos">Neumáticos</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Carrocería">Carrocería</option>
+                </select>
+            </div>
+            
             <div class="icon-grid">
                 <div class="icon-card" onclick="buscarPorModelo('3CV')">
                     <div class="icon-image">
@@ -133,6 +152,26 @@
         <!-- Sección: Buscar por Categoría -->
         <section class="search-section tab-content" id="categorias-section">
             <p class="section-description">Navegá por tipo de repuesto</p>
+            
+            <!-- Filtro secundario: por modelo -->
+            <div class="secondary-filter">
+                <label for="filtro-modelo-categoria">
+                    <i class="fas fa-filter"></i> Filtrar también por modelo compatible (opcional):
+                </label>
+                <select id="filtro-modelo-categoria" onchange="aplicarFiltroSecundario('categoria')">
+                    <option value="">-- Todos los modelos --</option>
+                    <option value="3CV">3CV</option>
+                    <option value="2CV">2CV</option>
+                    <option value="Mehari">Mehari</option>
+                    <option value="Super America">Super America</option>
+                    <option value="IES">IES</option>
+                    <option value="Ami 8">Ami 8</option>
+                    <option value="Dyane">Dyane</option>
+                    <option value="Furgoneta">Furgoneta</option>
+                    <option value="Visa Club">Visa Club</option>
+                </select>
+            </div>
+            
             <div class="icon-grid">
                 <div class="icon-card" onclick="buscarPorCategoria('Motor')">
                     <div class="icon-image category-motor">
