@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autos Citroën en Venta - Planeta Citroën</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/autos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <a href="https://www.planetacitroen.ar" class="logo-link">
+                <img src="images/logo.png" alt="Planeta Citroën" class="logo">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">🏠 Inicio</a></li>
+                <li><a href="autos.html" class="active">🚗 Autos</a></li>
+                <li><a href="repuestos.html">🛒 Repuestos</a></li>
+                <li><a href="nosotros.html">👥 Nosotros</a></li>
+                <li><a href="contacto.html">📞 Contacto</a></li>
+                <li><a href="carrito.html">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="https://www.planetacitroen.ar">planetacitroen.ar</a> > 
+        <a href="index.html">Tienda Online</a> > 
+        <span>Autos en Venta</span>
+    </div>
+
+    <main class="autos-main">
+        <h1>🚗 Autos Citroën en Venta</h1>
+        <p class="subtitle">Encontrá el Citroën clásico de tus sueños</p>
+
+        <section class="search-section">
+            <p class="section-description">Seleccioná el modelo que te interesa</p>
+            <div class="icon-grid">
+                <div class="icon-card" onclick="verAutosPorModelo('3CV')">
+                    <div class="icon-image auto-3cv">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>3CV</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('2CV')">
+                    <div class="icon-image auto-2cv">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>2CV</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Mehari')">
+                    <div class="icon-image auto-mehari">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    <h3>Mehari</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Super America')">
+                    <div class="icon-image auto-super-america">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Super America</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('IES')">
+                    <div class="icon-image auto-ies">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>IES</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Ami 8')">
+                    <div class="icon-image auto-ami8">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Ami 8</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Dyane')">
+                    <div class="icon-image auto-dyane">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Dyane</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Furgoneta')">
+                    <div class="icon-image auto-furgoneta">
+                        <i class="fas fa-shuttle-van"></i>
+                    </div>
+                    <h3>Furgoneta</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+                <div class="icon-card" onclick="verAutosPorModelo('Visa Club')">
+                    <div class="icon-image auto-visa">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Visa Club</h3>
+                    <p>Ver autos en venta</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Planeta Citroën</h3>
+                <p>Venta de autos clásicos y repuestos Citroën</p>
+                <p>📍 Buenos Aires, Argentina</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>📱 WhatsApp: +54 9 11 65677391</p>
+                <p>📧 <a href="mailto:contacto@planetacitroen.ar">contacto@planetacitroen.ar</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <p>🌐 <a href="https://www.planetacitroen.ar" target="_blank">www.planetacitroen.ar</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a href="https://wa.me/5491165677391" class="whatsapp-float" target="_blank" title="Contactanos por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="js/autos.js"></script>
+</body>
+</html>
