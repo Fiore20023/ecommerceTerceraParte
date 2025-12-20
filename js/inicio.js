@@ -268,6 +268,25 @@ function mostrarProductosFiltrados(productos, titulo) {
     const cardsContainer = document.querySelector('.cards-container');
     if (!cardsContainer) return;
     
+    // Determinar la URL de retorno según el tipo de filtro
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelo = urlParams.get('modelo');
+    const modeloRepuesto = urlParams.get('modeloRepuesto');
+    const categoria = urlParams.get('categoria');
+    
+    let urlRetorno = 'index.html';
+    let textoBoton = 'Ver todos los productos';
+    
+    if (modelo) {
+        // Estamos viendo autos en venta
+        urlRetorno = 'autos.html';
+        textoBoton = 'Volver a Autos';
+    } else if (modeloRepuesto || categoria) {
+        // Estamos viendo repuestos
+        urlRetorno = 'repuestos.html';
+        textoBoton = 'Volver a Repuestos';
+    }
+    
     cardsContainer.innerHTML = '';
     
     if (productos.length === 0) {
@@ -275,9 +294,9 @@ function mostrarProductosFiltrados(productos, titulo) {
             <p style="text-align:center; padding:2rem; color:#666; grid-column: 1 / -1;">
                 No se encontraron productos para "<strong>${titulo}</strong>"
                 <br><br>
-                <button onclick="location.reload();" 
+                <button onclick="window.location.href='${urlRetorno}';" 
                         style="background:#28a745; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; cursor:pointer;">
-                    Ver todos los productos
+                    ${textoBoton}
                 </button>
             </p>
         `;
@@ -290,11 +309,13 @@ function mostrarProductosFiltrados(productos, titulo) {
     tituloFiltro.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #007bff; background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%); padding: 1.5rem; margin: 1rem 0; border-radius: 10px; border: 2px solid #007bff; font-size: 2rem;';
     cardsContainer.appendChild(tituloFiltro);
     
-    // Botón para volver a todos
+    // Botón para volver según contexto
     const btnVolver = document.createElement('button');
-    btnVolver.textContent = '← Volver a todos los productos';
-    btnVolver.style.cssText = 'grid-column: 1 / -1; background:#6c757d; color:white; padding:0.7rem 1.5rem; border:none; border-radius:5px; cursor:pointer; font-size:1rem; margin-bottom:1rem;';
-    btnVolver.onclick = () => location.reload();
+    btnVolver.textContent = `← ${textoBoton}`;
+    btnVolver.style.cssText = 'grid-column: 1 / -1; background:#6c757d; color:white; padding:0.7rem 1.5rem; border:none; border-radius:5px; cursor:pointer; font-size:1rem; margin-bottom:1rem; transition: background 0.3s;';
+    btnVolver.onmouseover = () => btnVolver.style.background = '#5a6268';
+    btnVolver.onmouseout = () => btnVolver.style.background = '#6c757d';
+    btnVolver.onclick = () => window.location.href = urlRetorno;
     cardsContainer.appendChild(btnVolver);
     
     // Renderizar productos filtrados
