@@ -286,21 +286,21 @@ function initInicio(){
             }
             
             // Badge de destacado
-            const badgeDestacado = producto.destacado ? '<span style="position:absolute; top:10px; right:10px; background:#ffc107; color:#000; padding:0.3rem 0.6rem; border-radius:20px; font-size:0.8rem; font-weight:bold;">⭐ DESTACADO</span>' : '';
+            const badgeDestacado = producto.destacado ? '<span class="badge-destacado">⭐ DESTACADO</span>' : '';
             
             card.innerHTML = `
-                <div style="position:relative;">
+                <div class="card-image-container">
                     ${badgeDestacado}
                     <img src="${imagenUrl}" 
                          alt="${producto.nombre}" 
-                         style="width:100%; height:200px; object-fit:cover; border-radius:4px; background:#f0f0f0;"
+                         class="card-image"
                          onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%2328a745%22 width=%22300%22 height=%22200%22/%3E%3Ctext fill=%22%23ffffff%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E';">
                 </div>
-                <div class="card-body" style="padding:1rem 0;">
-                    <h3 class="card-title" style="margin:0.5rem 0; color:#333;">${producto.nombre}</h3>
-                    <p class="card-price" style="font-size:1.5rem; color:#28a745; font-weight:bold; margin:0.5rem 0;">${producto.moneda || 'ARS'} $${producto.precio}</p>
-                    <p class="card-description" style="color:#666; margin:0.5rem 0;">${producto['descripcion-corta'] || producto.descripcion || 'Sin descripción'}</p>
-                    <a href="producto-detalle.html?id=${producto._id || producto.id}" style="color:#007bff; text-decoration:none; font-size:0.9rem;">👁️ Ver detalle completo →</a>
+                <div class="card-body">
+                    <h3 class="card-title">${producto.nombre}</h3>
+                    <p class="card-price">${producto.moneda || 'ARS'} $${producto.precio}</p>
+                    <p class="card-description">${producto['descripcion-corta'] || producto.descripcion || 'Sin descripción'}</p>
+                    <a href="producto-detalle.html?id=${producto._id || producto.id}" class="card-link">👁️ Ver detalle completo →</a>
                 </div>
             `;
             
