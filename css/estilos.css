@@ -299,6 +299,25 @@ footer {
     width: 100%;
 }
 
+/* Íconos de redes sociales */
+.social-icon {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    vertical-align: middle;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+/* Ícono del botón flotante de WhatsApp */
+.whatsapp-icon {
+    width: 40px;
+    height: 40px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     #logo img {
