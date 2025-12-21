@@ -10,27 +10,36 @@
 </head>
 <body>
     <header>
-        <div class="logo-container">
-            <a href="https://www.planetacitroen.ar" class="logo-link">
-                <img src="images/logoPlanetaCitroen.png" alt="Planeta Citroën" class="logo">
-            </a>
+        <div class="header-container">
+            <div id="logo">
+                <a href="https://www.planetacitroen.ar">
+                    <img src="images/logoPlanetaCitroen.png" alt="Logo Planeta Citroen" />
+                </a>
+            </div>
+            <div id="barra-busqueda">
+                <form id="form-busqueda" action="">
+                    <input type="text" id="input-busqueda" placeholder="Buscar productos..." autocomplete="off">
+                    <button type="submit">🔍 Buscar</button>
+                </form>
+            </div>
+            <div id="boton-carrito">
+                <a href="./carrito.html" data-cart-toggle>🛒</a>
+            </div>
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">🏠 Inicio</a></li>
+                <li><a href="./index.html">Inicio</a></li>
                 <li><a href="autos.html">🚗 Autos</a></li>
-                <li><a href="repuestos.html" class="active">🛒 Repuestos</a></li>
+                <li><a href="repuestos.html">🛒 Repuestos</a></li>
                 <li><a href="https://www.planetacitroen.ar/#quienes-somos" target="_blank">👥 Nosotros</a></li>
-                <li><a href="contacto.html">📞 Contacto</a></li>
-                <li><a href="carrito.html">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="./carrito.html">Carrito</a></li>
+                <li><a href="./contacto.html">Contacto</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="breadcrumb">
-        <a href="https://www.planetacitroen.ar">planetacitroen.ar</a> > 
-        <a href="index.html">Tienda Online</a> > 
-        <span>Repuestos</span>
+        <a href="https://www.planetacitroen.ar">🏠 Inicio</a> → <span>Repuestos</span>
     </div>
 
     <main class="repuestos-main">
