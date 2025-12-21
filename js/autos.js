@@ -49,10 +49,24 @@ async function cargarYMostrarAutos(modelo) {
         
         // Filtrar solo autos del modelo seleccionado
         const autos = productos.filter(p => {
-            console.log(`Producto: ${p.nombre}, tipo: "${p.tipo}", modelo: "${p.modelo}"`);
-            return p.tipo === 'auto' && 
-                   p.modelo && 
-                   p.modelo.toLowerCase() === modelo.toLowerCase();
+            console.log(`Producto: ${p.nombre}, tipoProducto: "${p.tipoProducto}", modelos:`, p.modelos);
+            
+            // Verificar si es un auto (tipoProducto === 'auto')
+            const esAuto = p.tipoProducto === 'auto';
+            
+            // Verificar si el modelo coincide (modelos puede ser array o string)
+            let tieneModelo = false;
+            if (p.modelos) {
+                if (Array.isArray(p.modelos)) {
+                    // Si es array, buscar si alguno coincide
+                    tieneModelo = p.modelos.some(m => m.toLowerCase() === modelo.toLowerCase());
+                } else {
+                    // Si es string, comparar directamente
+                    tieneModelo = p.modelos.toLowerCase() === modelo.toLowerCase();
+                }
+            }
+            
+            return esAuto && tieneModelo;
         });
         
         console.log('Autos filtrados:', autos);
