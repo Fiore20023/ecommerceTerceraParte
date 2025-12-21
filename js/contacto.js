@@ -92,8 +92,13 @@ function enviarPorEmail(payload) {
         
         const mailtoLink = `mailto:contacto@planetacitroen.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         
-        // Abrir cliente de email
-        window.location.href = mailtoLink;
+        // Crear un enlace invisible y hacer click
+        const link = document.createElement('a');
+        link.href = mailtoLink;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         
         console.log('✅ Email enviado');
         return true;
