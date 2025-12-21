@@ -618,7 +618,6 @@ function initInicio(){
                 <div class="card-body">
                     <h3 class="card-title">${producto.nombre}</h3>
                     <p class="card-price">${producto.moneda || 'ARS'} $${producto.precio}</p>
-                    <p class="card-description">${producto['descripcion-corta'] || producto.descripcion || 'Sin descripción'}</p>
                     <a href="producto-detalle.html?id=${producto._id || producto.id}" class="card-link">👁️ Ver detalle completo →</a>
                 </div>
             `;
