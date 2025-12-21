@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECommerce (inicio)</title>
+    <title>Tienda Online Planeta Citroën (inicio)</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/inicio.css">
     <!-- Load view-specific styles so SPA-loaded pages keep their styles -->
@@ -48,16 +48,35 @@
     </div>
 
     <main id="app">
-        <!-- Banner de Promociones -->
-        <div class="promociones-banner">
-            <h2>🎉 ¡PROMOCIONES ESPECIALES! 🎉</h2>
-            <p class="promo-subtitle">Descuentos de hasta 30% en productos seleccionados</p>
-            <p class="promo-description">¡Aprovechá las ofertas destacadas!</p>
+        <!-- Banner de Promociones - Carrusel -->
+        <div class="promociones-carousel">
+            <div class="carousel-slides">
+                <div class="promociones-banner active">
+                    <h2>🎉 ¡PROMOCIONES ESPECIALES! 🎉</h2>
+                    <p class="promo-subtitle">Descuentos de hasta 30% en productos seleccionados</p>
+                    <p class="promo-description">¡Aprovechá las ofertas destacadas!</p>
+                </div>
+                <div class="promociones-banner">
+                    <h2>🚗 ¡REPUESTOS ORIGINALES! 🚗</h2>
+                    <p class="promo-subtitle">Calidad garantizada para tu Citroën</p>
+                    <p class="promo-description">Envíos a todo el país</p>
+                </div>
+                <div class="promociones-banner">
+                    <h2>⚡ ¡OFERTAS RELÁMPAGO! ⚡</h2>
+                    <p class="promo-subtitle">Nuevas ofertas cada semana</p>
+                    <p class="promo-description">No te pierdas nuestras promociones</p>
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <span class="indicator active" data-slide="0"></span>
+                <span class="indicator" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+            </div>
         </div>
 
         <div class="section-cards">
             <div class="section-cards-header">
-                <h1>Productos Destacados</h1>
+                <h1>Productos</h1>
             </div>
 
             <!-- Filtro secundario dinámico (aparece según contexto) -->

@@ -2,6 +2,45 @@
 //             variables globales
 // ------------------------------------------------
 let todosLosProductosGlobal = []; // Variable global para acceder desde funciones de filtrado
+let currentSlide = 0;
+let carouselInterval;
+
+// ------------------------------------------------
+//             carrusel de banners
+// ------------------------------------------------
+function initCarousel() {
+    const slides = document.querySelectorAll('.promociones-banner');
+    const indicators = document.querySelectorAll('.carousel-indicators .indicator');
+    
+    if (slides.length === 0) return;
+    
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(ind => ind.classList.remove('active'));
+        
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    // Click en indicadores
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            // Reiniciar el intervalo
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(nextSlide, 5000);
+        });
+    });
+    
+    // Rotación automática cada 5 segundos
+    carouselInterval = setInterval(nextSlide, 5000);
+}
 
 // ------------------------------------------------
 //             funciones globales de filtrado
@@ -748,4 +787,7 @@ function initInicio(){
         todosLosProductosGlobal = window.productos || [];
         renderProducts(window.productos || []);
     }
+    
+    // Inicializar carrusel de banners
+    initCarousel();
 }
