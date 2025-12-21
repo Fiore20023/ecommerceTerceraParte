@@ -48,7 +48,7 @@
     border: 2px solid #e0e0e0;
     background: white;
     color: #666;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -180,7 +180,7 @@
     width: 100px;
     height: 100px;
     margin: 0 auto 20px;
-    background: #f0f0f0;
+    background: transparent;
     border-radius: 50%;
     display: flex;
     align-items: center;
