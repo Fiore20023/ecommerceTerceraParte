@@ -401,14 +401,22 @@
         font-size: 0.9rem;
     }
     
+    /* Grid horizontal con scroll en mobile */
     .icon-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding: 10px 5px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
     .icon-card {
+        flex: 0 0 140px;
+        min-width: 140px;
         padding: 20px 10px;
         border-radius: 12px;
+        scroll-snap-align: start;
     }
     
     .icon-image {
