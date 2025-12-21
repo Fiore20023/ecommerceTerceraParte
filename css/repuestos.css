@@ -180,16 +180,25 @@
     width: 100px;
     height: 100px;
     margin: 0 auto 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #f0f0f0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     transition: all 0.3s ease;
 }
 
+/* Imágenes dentro del icono */
+.icon-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .icon-card:hover .icon-image {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1);
 }
 
 .icon-image i {

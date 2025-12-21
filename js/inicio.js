@@ -573,22 +573,17 @@ function initInicio(){
             };
             
             // Determinar imagen a mostrar
-            let imagenUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%2328a745" width="300" height="200"/%3E%3Ctext fill="%23ffffff" font-family="Arial" font-size="20" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ESin Imagen%3C/text%3E%3C/svg%3E';
+            let imagenUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%2328a745" width="300" height="200"/%3E%3Ctext fill=%22%23ffffff%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E';
             
             // Prioridad: imagenes[0].datos > foto > imagen
             if (producto.imagenes && Array.isArray(producto.imagenes) && producto.imagenes.length > 0) {
                 // Si hay imágenes en Base64
                 imagenUrl = producto.imagenes[0].datos || producto.imagenes[0];
-                console.log('📸 Usando imagen Base64 para:', producto.nombre);
             } else if (producto.foto && producto.foto !== '' && producto.foto !== 'undefined') {
                 imagenUrl = producto.foto;
-                console.log('📸 Usando foto para:', producto.nombre);
             } else if (producto.imagen && producto.imagen !== '' && producto.imagen !== 'undefined') {
                 imagenUrl = producto.imagen;
-                console.log('📸 Usando imagen para:', producto.nombre);
             }
-            
-            console.log('🖼️ Imagen final para', producto.nombre, ':', imagenUrl.substring(0, 50) + '...');
             
             // Crear botón de comprar solo si NO es auto
             const esAuto = producto.tipoProducto === 'auto';
@@ -613,6 +608,7 @@ function initInicio(){
                     <img src="${imagenUrl}" 
                          alt="${producto.nombre}" 
                          class="card-image"
+                         loading="lazy"
                          onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%2328a745%22 width=%22300%22 height=%22200%22/%3E%3Ctext fill=%22%23ffffff%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E';">
                 </div>
                 <div class="card-body">
