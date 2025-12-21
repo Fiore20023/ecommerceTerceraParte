@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .promociones-banner {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
     color: white;
     padding: 2rem;
     text-align: center;
@@ -36,6 +39,12 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: none;
     animation: fadeIn 0.6s ease-in;
+    position: relative;
+}
+
+/* Si tiene imagen de fondo, agregar overlay para legibilidad */
+.promociones-banner[style*="background-image"] {
+    background-blend-mode: overlay;
 }
 
 .promociones-banner.active {
@@ -101,31 +110,6 @@ h1, h2, h3, h4, h5, h6 {
 /* Banner clickeable */
 .promociones-banner[data-link] {
     cursor: pointer;
-}
-
-.banner-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-}
-
-.banner-image {
-    flex: 0 0 auto;
-    max-width: 200px;
-}
-
-.banner-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-.banner-text {
-    flex: 1 1 300px;
-    text-align: center;
 }
 
 /* Filtro por Modelo */
@@ -506,15 +490,6 @@ nav ul li a:hover {
     .carousel-indicators .indicator {
         width: 10px;
         height: 10px;
-    }
-    
-    .banner-content {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .banner-image {
-        max-width: 150px;
     }
     
     .section-cards {
