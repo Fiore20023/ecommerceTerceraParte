@@ -114,14 +114,21 @@ function initContacto(){
         // Enviar por Email
         enviarPorEmail(payload);
         
-        // Enviar por WhatsApp
-        if (window.API_CONFIG && window.API_CONFIG.getWhatsAppUrl) {
-            const url = window.API_CONFIG.getWhatsAppUrl(mensaje);
-            window.open(url, '_blank');
-            form.reset();
-            if (typeof showToast === 'function') showToast('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
+        // Enviar por WhatsApp - número directo
+        const telefono = '5491165677391'; // WhatsApp de Planeta Citroën
+        const mensajeEncoded = encodeURIComponent(mensaje);
+        const whatsappUrl = `https://wa.me/${telefono}?text=${mensajeEncoded}`;
+        
+        // Abrir WhatsApp
+        setTimeout(() => {
+            window.open(whatsappUrl, '_blank');
+        }, 500);
+        
+        form.reset();
+        if (typeof showToast === 'function') {
+            showToast('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
         } else {
-            alert('⚠️ Error: Configuración de WhatsApp no disponible');
+            alert('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
         }
     });
 }
