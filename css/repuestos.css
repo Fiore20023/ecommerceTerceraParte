@@ -1,5 +1,10 @@
 /* Estilos para la página de Repuestos */
 
+/* Override del border-radius del nav (estilos.css tiene 0) */
+nav ul li a {
+    border-radius: 8px;
+}
+
 /* Logo tamaño ajustado */
 .logo {
     max-width: 220px;
@@ -180,12 +185,12 @@
     width: 100px;
     height: 100px;
     margin: 0 auto 20px;
-    background: transparent;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background: #f0f0f0;
     transition: all 0.3s ease;
 }
 
