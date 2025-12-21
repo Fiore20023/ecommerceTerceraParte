@@ -2,6 +2,7 @@
 
 // Función para ver autos por modelo
 function verAutosPorModelo(modelo) {
+    console.log('Clic en modelo:', modelo);
     // Obtener productos del backend o localStorage
     cargarYMostrarAutos(modelo);
 }
@@ -12,10 +13,13 @@ function volverAModelos() {
 }
 
 async function cargarYMostrarAutos(modelo) {
+    console.log('Cargando autos para modelo:', modelo);
     try {
         // Intentar cargar desde el backend
         const response = await fetch('https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api/productos');
         const productos = await response.json();
+        
+        console.log('Productos cargados:', productos.length);
         
         // Filtrar solo autos del modelo seleccionado
         const autos = productos.filter(p => 
@@ -23,6 +27,8 @@ async function cargarYMostrarAutos(modelo) {
             p.modelo && 
             p.modelo.toLowerCase() === modelo.toLowerCase()
         );
+        
+        console.log('Autos filtrados:', autos.length);
         
         mostrarAutos(autos, modelo);
     } catch (error) {
