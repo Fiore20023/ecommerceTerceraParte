@@ -111,12 +111,6 @@ body {
 
 header {
     background-color: #f4f4f4;
-    background-image:
-        linear-gradient(rgba(220,220,220,0.4), rgba(220,220,220,0.4)),
-        url('../images/fondoMenu.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     color: white;
     padding: 1rem;
 }
