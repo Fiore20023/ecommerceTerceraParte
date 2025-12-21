@@ -1,5 +1,10 @@
 /* Estilos para la página de Autos */
 
+/* Asegurar que los botones del menú sean redondeados */
+nav ul li a {
+    border-radius: 25px;
+}
+
 /* Logo tamaño ajustado */
 .logo {
     max-width: 220px;
@@ -49,6 +54,18 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 25px;
     margin-top: 20px;
+}
+
+/* Ajustar menú en desktop */
+@media (min-width: 1025px) {
+    nav ul {
+        gap: 0.5rem;
+    }
+    
+    nav ul li a {
+        padding: 0.7rem 1.2rem;
+        font-size: 1rem;
+    }
 }
 
 /* Tarjeta de icono */
