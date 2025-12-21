@@ -5,6 +5,73 @@
     --accent-color: red;
 }
 
+/* Clase unificada para botones de acción */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-action.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-action.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-action.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-action.btn-success:hover {
+    background: #1e7e34;
+}
+
+.btn-action.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-action.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-action.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-action.btn-danger:hover {
+    background: #c82333;
+}
+
+/* Contenedor de botones en línea */
+.buttons-inline {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
 /* Logo tamaño ajustado */
 #logo img {
     max-width: 220px;

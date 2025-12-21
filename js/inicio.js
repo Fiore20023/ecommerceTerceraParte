@@ -294,8 +294,7 @@ function mostrarProductosFiltrados(productos, titulo) {
             <p style="text-align:center; padding:2rem; color:#666; grid-column: 1 / -1;">
                 No se encontraron productos para "<strong>${titulo}</strong>"
                 <br><br>
-                <button onclick="window.location.href='${urlRetorno}';" 
-                        style="background:#28a745; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; cursor:pointer;">
+                <button onclick="window.location.href='${urlRetorno}';" class="btn-action btn-success">
                     ${textoBoton}
                 </button>
             </p>
@@ -312,9 +311,8 @@ function mostrarProductosFiltrados(productos, titulo) {
     // Botón para volver según contexto
     const btnVolver = document.createElement('button');
     btnVolver.textContent = `← ${textoBoton}`;
-    btnVolver.style.cssText = 'grid-column: 1 / -1; background:#6c757d; color:white; padding:0.7rem 1.5rem; border:none; border-radius:5px; cursor:pointer; font-size:1rem; margin-bottom:1rem; transition: background 0.3s;';
-    btnVolver.onmouseover = () => btnVolver.style.background = '#5a6268';
-    btnVolver.onmouseout = () => btnVolver.style.background = '#6c757d';
+    btnVolver.className = 'btn-action btn-secondary';
+    btnVolver.style.cssText = 'grid-column: 1 / -1; margin-bottom: 1rem;';
     btnVolver.onclick = () => window.location.href = urlRetorno;
     cardsContainer.appendChild(btnVolver);
     
@@ -636,7 +634,7 @@ function initInicio(){
                     No se encontraron productos con "<strong>${termino}</strong>"
                     <br><br>
                     <button onclick="var input = document.getElementById('input-busqueda'); if(input) { input.value=''; input.dispatchEvent(new Event('input')); }" 
-                            style="background:#28a745; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; cursor:pointer;">
+                            class="btn-action btn-success">
                         Ver todos los productos
                     </button>
                 </p>
@@ -734,8 +732,7 @@ function initInicio(){
                                 El backend puede tardar unos segundos en despertar.<br>
                                 Por favor, esperá un momento y recargá la página.
                             </p>
-                            <button onclick="location.reload()" 
-                                    style="background: #28a745; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                            <button onclick="location.reload()" class="btn-action btn-success" style="font-size: 1.1rem;">
                                 🔄 Recargar página
                             </button>
                         </div>
