@@ -4,6 +4,11 @@
 function verAutosPorModelo(modelo) {
     console.log('=== INICIO verAutosPorModelo ===');
     console.log('Modelo seleccionado:', modelo);
+    
+    // Mostrar loading spinner
+    document.getElementById('loading-spinner').style.display = 'block';
+    document.querySelector('.search-section').style.display = 'none';
+    
     // Obtener productos del backend o localStorage
     cargarYMostrarAutos(modelo);
 }
@@ -11,6 +16,7 @@ function verAutosPorModelo(modelo) {
 function volverAModelos() {
     document.querySelector('.search-section').style.display = 'block';
     document.getElementById('resultados-autos').style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'none';
 }
 
 async function cargarYMostrarAutos(modelo) {
@@ -60,8 +66,12 @@ async function cargarYMostrarAutos(modelo) {
 function mostrarAutos(autos, modelo) {
     const seccionModelos = document.querySelector('.search-section');
     const seccionResultados = document.getElementById('resultados-autos');
+    const loadingSpinner = document.getElementById('loading-spinner');
     const gridAutos = document.getElementById('grid-autos');
     const tituloResultados = document.getElementById('titulo-resultados');
+    
+    // Ocultar loading
+    loadingSpinner.style.display = 'none';
     
     // Ocultar grid de modelos y mostrar resultados
     seccionModelos.style.display = 'none';
