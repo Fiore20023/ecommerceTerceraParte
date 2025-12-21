@@ -6,6 +6,83 @@
 //             funciones globales
 // ------------------------------------------------
 
+// Función para mostrar notificaciones
+function mostrarNotificacion(mensaje, tipo = 'success') {
+    // Crear el contenedor de notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = `notificacion notificacion-${tipo}`;
+    notificacion.innerHTML = `
+        <div class="notificacion-contenido">
+            <span class="notificacion-icono">${tipo === 'success' ? '✅' : '⚠️'}</span>
+            <span class="notificacion-texto">${mensaje}</span>
+        </div>
+    `;
+    
+    // Estilos inline para la notificación
+    notificacion.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${tipo === 'success' ? '#28a745' : '#dc3545'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+        font-size: 1rem;
+        font-weight: 500;
+        max-width: 400px;
+    `;
+    
+    document.body.appendChild(notificacion);
+    
+    // Remover después de 4 segundos
+    setTimeout(() => {
+        notificacion.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            notificacion.remove();
+        }, 300);
+    }, 4000);
+}
+
+// Agregar animaciones CSS si no existen
+if (!document.getElementById('notificacion-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notificacion-styles';
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        .notificacion-contenido {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notificacion-icono {
+            font-size: 1.5rem;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Función para enviar email
 async function enviarPorEmail(payload) {
     try {
@@ -84,7 +161,10 @@ function initContacto(){
         e.preventDefault();
         const els = ['nombre','email','comentarios'].map(n=> form.elements[n]);
         const allOk = els.map(el=> validateField(el)).every(Boolean);
-        if (!allOk) { if (typeof showToast === 'function') showToast('Corrija los errores'); return; }
+        if (!allOk) { 
+            mostrarNotificacion('⚠️ Por favor, corrija los errores en el formulario', 'error');
+            return; 
+        }
 
         const payload = { 
             nombre: form.nombre.value, 
@@ -114,22 +194,21 @@ function initContacto(){
         // Enviar por Email
         enviarPorEmail(payload);
         
+        // Mostrar notificación de éxito
+        mostrarNotificacion('📧 Mensaje enviado exitosamente! Abriendo WhatsApp...', 'success');
+        
         // Enviar por WhatsApp - número directo
         const telefono = '5491165677391'; // WhatsApp de Planeta Citroën
         const mensajeEncoded = encodeURIComponent(mensaje);
         const whatsappUrl = `https://wa.me/${telefono}?text=${mensajeEncoded}`;
         
-        // Abrir WhatsApp
+        // Limpiar formulario
+        form.reset();
+        
+        // Abrir WhatsApp después de un breve delay
         setTimeout(() => {
             window.open(whatsappUrl, '_blank');
-        }, 500);
-        
-        form.reset();
-        if (typeof showToast === 'function') {
-            showToast('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
-        } else {
-            alert('✅ Mensaje enviado! Redirigiendo a WhatsApp...');
-        }
+        }, 800);
     });
 }
 
