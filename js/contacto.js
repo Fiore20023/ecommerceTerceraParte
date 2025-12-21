@@ -84,38 +84,22 @@ if (!document.getElementById('notificacion-styles')) {
 }
 
 // Función para enviar email
-async function enviarPorEmail(payload) {
+function enviarPorEmail(payload) {
     try {
-        // Crear el cuerpo del email en HTML
-        const emailBody = `
-            <h2>📩 Nuevo Mensaje de Contacto - Planeta Citroën</h2>
-            <p><strong>Origen:</strong> Formulario de Contacto</p>
-            <hr>
-            <p><strong>👤 Nombre:</strong> ${payload.nombre}</p>
-            <p><strong>📧 Email:</strong> ${payload.email}</p>
-            ${payload.celular ? `<p><strong>📱 Celular:</strong> ${payload.celular}</p>` : ''}
-            ${payload.pais ? `<p><strong>🌎 País:</strong> ${payload.pais}</p>` : ''}
-            ${payload.provincia ? `<p><strong>📍 Provincia:</strong> ${payload.provincia}</p>` : ''}
-            ${payload.ciudad ? `<p><strong>🏙️ Ciudad:</strong> ${payload.ciudad}</p>` : ''}
-            <hr>
-            <p><strong>💬 Mensaje:</strong></p>
-            <p>${payload.comentarios}</p>
-            <hr>
-            <p><strong>🕐 Fecha:</strong> ${payload.createdAt}</p>
-        `;
-
-        // Crear mailto link como fallback
-        const subject = `Nuevo mensaje de ${payload.nombre} - Sector Contacto`;
-        const body = `Nombre: ${payload.nombre}\nEmail: ${payload.email}\n${payload.celular ? 'Celular: ' + payload.celular + '\n' : ''}${payload.pais ? 'País: ' + payload.pais + '\n' : ''}${payload.provincia ? 'Provincia: ' + payload.provincia + '\n' : ''}${payload.ciudad ? 'Ciudad: ' + payload.ciudad + '\n' : ''}\nMensaje:\n${payload.comentarios}\n\nOrigen: Formulario de Contacto\nFecha: ${payload.createdAt}`;
+        // Crear mailto link
+        const subject = `Nuevo mensaje de ${payload.nombre} - Formulario de Contacto`;
+        const body = `DATOS DEL CONTACTO:\n\nNombre: ${payload.nombre}\nEmail: ${payload.email}\n${payload.celular ? 'Celular: ' + payload.celular + '\n' : ''}${payload.pais ? 'País: ' + payload.pais + '\n' : ''}${payload.provincia ? 'Provincia: ' + payload.provincia + '\n' : ''}${payload.ciudad ? 'Ciudad: ' + payload.ciudad + '\n' : ''}\nMENSAJE:\n${payload.comentarios}\n\nFecha: ${payload.createdAt}`;
         
         const mailtoLink = `mailto:contacto@planetacitroen.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         
-        // Abrir cliente de email en nueva ventana (no bloquea WhatsApp)
-        window.open(mailtoLink, '_blank');
+        // Abrir cliente de email
+        window.location.href = mailtoLink;
         
-        console.log('✅ Email preparado para envío');
+        console.log('✅ Email enviado');
+        return true;
     } catch (error) {
-        console.error('❌ Error al preparar email:', error);
+        console.error('❌ Error al enviar email:', error);
+        return false;
     }
 }
 
@@ -177,14 +161,16 @@ function initContacto(){
             createdAt: new Date().toLocaleString('es-AR')
         };
         
-        // Enviar por Email
-        enviarPorEmail(payload);
-        
         // Mostrar notificación de éxito
-        mostrarNotificacion('✅ Mensaje enviado exitosamente! Se abrirá tu cliente de email.', 'success');
+        mostrarNotificacion('✅ Abriendo cliente de email...', 'success');
         
         // Limpiar formulario
         form.reset();
+        
+        // Enviar por Email (esto abrirá el cliente de email)
+        setTimeout(() => {
+            enviarPorEmail(payload);
+        }, 500);
     });
 }
 
