@@ -14,7 +14,8 @@ const API_CONFIG = {
     // Endpoints
     ENDPOINTS: {
         PRODUCTOS: '/productos',
-        CARRITO: '/carrito'
+        CARRITO: '/carrito',
+        CONTACTO: '/contacto'
     },
     
     // Métodos helper
@@ -28,6 +29,10 @@ const API_CONFIG = {
     
     getCarritoUrl: function() {
         return this.BASE_URL + this.ENDPOINTS.CARRITO;
+    },
+    
+    getContactoUrl: function() {
+        return this.BASE_URL + this.ENDPOINTS.CONTACTO;
     },
     
     getWhatsAppUrl: function(mensaje) {

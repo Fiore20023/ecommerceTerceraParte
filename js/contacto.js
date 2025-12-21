@@ -146,7 +146,7 @@ function initContacto(){
         el.addEventListener('blur', ()=> validateField(el));
     });
 
-    form.addEventListener('submit', (e)=>{
+    form.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const els = ['nombre','email','comentarios'].map(n=> form.elements[n]);
         const allOk = els.map(el=> validateField(el)).every(Boolean);
@@ -166,16 +166,31 @@ function initContacto(){
             createdAt: new Date().toLocaleString('es-AR')
         };
         
-        // Mostrar notificación de éxito
-        mostrarNotificacion('✅ Abriendo cliente de email...', 'success');
-        
-        // Limpiar formulario
-        form.reset();
-        
-        // Enviar por Email (esto abrirá el cliente de email)
-        setTimeout(() => {
-            enviarPorEmail(payload);
-        }, 500);
+        try {
+            // Enviar al backend
+            const response = await fetch(window.API_CONFIG.getContactoUrl(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                mostrarNotificacion('✅ Mensaje enviado exitosamente!', 'success');
+                form.reset();
+            } else {
+                throw new Error('Error al enviar');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            // Si falla el backend, usar mailto como fallback
+            mostrarNotificacion('📧 Abriendo cliente de email...', 'success');
+            form.reset();
+            setTimeout(() => {
+                enviarPorEmail(payload);
+            }, 500);
+        }
     });
 }
 
