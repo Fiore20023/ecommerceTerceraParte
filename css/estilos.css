@@ -489,16 +489,21 @@ footer {
     }
     
     nav ul {
-        gap: 0;
-        padding: 0;
+        gap: 0.25rem;
+        padding: 0.25rem;
         flex-wrap: wrap;
         justify-content: center;
     }
     
+    nav ul li {
+        margin-bottom: 0.25rem;
+    }
+    
     nav ul li a {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.75rem;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
         border-radius: 0;
+        line-height: 1.2;
     }
     
     #barra-busqueda input[type="text"] {
