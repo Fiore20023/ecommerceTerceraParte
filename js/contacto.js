@@ -33,8 +33,8 @@ async function enviarPorEmail(payload) {
         
         const mailtoLink = `mailto:contacto@planetacitroen.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         
-        // Abrir cliente de email
-        window.location.href = mailtoLink;
+        // Abrir cliente de email en nueva ventana (no bloquea WhatsApp)
+        window.open(mailtoLink, '_blank');
         
         console.log('✅ Email preparado para envío');
     } catch (error) {
