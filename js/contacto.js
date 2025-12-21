@@ -177,38 +177,14 @@ function initContacto(){
             createdAt: new Date().toLocaleString('es-AR')
         };
         
-        // Crear mensaje para WhatsApp
-        let mensaje = `📩 *NUEVO MENSAJE - SECTOR CONTACTO*\n\n`;
-        mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-        mensaje += `👤 *Nombre:* ${payload.nombre}\n`;
-        mensaje += `📧 *Email:* ${payload.email}\n`;
-        if (payload.celular) mensaje += `📱 *Celular:* ${payload.celular}\n`;
-        if (payload.pais) mensaje += `🌎 *País:* ${payload.pais}\n`;
-        if (payload.provincia) mensaje += `📍 *Provincia:* ${payload.provincia}\n`;
-        if (payload.ciudad) mensaje += `🏙️ *Ciudad:* ${payload.ciudad}\n`;
-        mensaje += `\n💬 *Mensaje:*\n${payload.comentarios}\n`;
-        mensaje += `\n━━━━━━━━━━━━━━━━━━━━\n`;
-        mensaje += `🕐 ${payload.createdAt}\n`;
-        mensaje += `📍 *Origen:* Formulario de Contacto`;
-        
         // Enviar por Email
         enviarPorEmail(payload);
         
         // Mostrar notificación de éxito
-        mostrarNotificacion('📧 Mensaje enviado exitosamente! Abriendo WhatsApp...', 'success');
-        
-        // Enviar por WhatsApp - número directo
-        const telefono = '5491165677391'; // WhatsApp de Planeta Citroën
-        const mensajeEncoded = encodeURIComponent(mensaje);
-        const whatsappUrl = `https://wa.me/${telefono}?text=${mensajeEncoded}`;
+        mostrarNotificacion('✅ Mensaje enviado exitosamente! Se abrirá tu cliente de email.', 'success');
         
         // Limpiar formulario
         form.reset();
-        
-        // Abrir WhatsApp después de un breve delay
-        setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
-        }, 800);
     });
 }
 
