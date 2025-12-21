@@ -18,9 +18,14 @@ async function cargarYMostrarAutos(modelo) {
     try {
         // Intentar cargar desde el backend
         const response = await fetch('https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api/productos');
-        const productos = await response.json();
+        const data = await response.json();
         
-        console.log('Productos cargados:', productos.length);
+        console.log('Respuesta completa de la API:', data);
+        console.log('Tipo de data:', typeof data);
+        
+        // La API puede devolver un objeto con una propiedad 'productos' o directamente un array
+        const productos = Array.isArray(data) ? data : (data.productos || data.data || []);
+        console.log('Productos array:', productos.length);
         
         // Filtrar solo autos del modelo seleccionado
         const autos = productos.filter(p => 
