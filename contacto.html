@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECommerce (contacto)</title>
+    <title>Contacto - Planeta Citroën</title>
     <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/contacto.css">
+    <link rel="stylesheet" href="css/contacto-new.css">
 </head>
 <body>
 
@@ -44,65 +44,83 @@
         <span>Contacto</span>
     </div>
 
-    <main>
-        <h1>Contacto</h1>
-        <form class="contact-form">
-            <div class="input-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" required>
-            </div>
-            <div class="input-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="input-group">
-                <label for="celular">Número de celular</label>
-                <input type="tel" id="celular" name="celular" placeholder="+54 9 11 1234 5678">
-            </div>
-            <div class="input-group">
-                <label for="pais">País</label>
-                <input type="text" id="pais" name="pais">
-            </div>
-            <div class="input-group">
-                <label for="provincia">Provincia</label>
-                <input type="text" id="provincia" name="provincia">
-            </div>
-            <div class="input-group">
-                <label for="ciudad">Ciudad</label>
-                <input type="text" id="ciudad" name="ciudad">
-            </div>
-            <div class="input-group">
-                <label for="comentarios">Comentarios</label>
-                <textarea id="comentarios" name="comentarios" rows="5" required></textarea>
-            </div>
-            <button type="submit">Enviar</button>
-        </form>
-    </main>
+    <main class="contact-main">
+        <div class="contact-container">
+            <h1>Contactanos</h1>
+            <p class="contact-subtitle">Estamos para ayudarte con lo que necesites</p>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2025 Planeta Citroën - Todos los derechos reservados</p>
-            <p>Santa Lucía Golf Club 2306 Manuel Alberti/Del Viso - Pilar</p>
-            <p>Tel: +54 9 11 65677391 | Email: contacto@planetacitroen.ar</p>
-            <div class="social-links">
-                <a href="https://www.instagram.com/planetacitroenargentina/" target="_blank" title="Instagram">
-                    <img src="images/LogoIgPromachineRacing.png" alt="Instagram" class="social-icon">
+            <!-- Botón WhatsApp Principal -->
+            <div class="whatsapp-cta">
+                <a href="https://wa.me/5491165677391?text=Hola!%20Te%20contacto%20desde%20la%20página%20de%20Contacto%20de%20Planeta%20Citroën" 
+                   class="whatsapp-button-main" 
+                   target="_blank">
+                    <img src="images/logoWp.png" alt="WhatsApp" class="whatsapp-icon-large">
+                    <span>Chateá con nosotros ahora</span>
                 </a>
-                <a href="https://www.facebook.com/planetacitroenargentina" target="_blank" title="Facebook">
-                    <img src="images/LogoYouFacebookPromachineRacing.png" alt="Facebook" class="social-icon">
-                </a>
-                <a href="https://www.youtube.com/@planetacitroenargentina" target="_blank" title="YouTube">
-                    <img src="images/LogoYouTubePromachineRacing.png" alt="YouTube" class="social-icon">
-                </a>
-                <a href="https://wa.me/5491165677391" target="_blank" title="WhatsApp">
-                    <img src="images/logoWp.png" alt="WhatsApp" class="social-icon">
-                </a>
+                <p class="whatsapp-hint">Respondemos rápido 💬</p>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="contact-info-grid">
+                <div class="contact-info-card">
+                    <div class="info-icon">📍</div>
+                    <h3>Dirección</h3>
+                    <p>Santa Lucía Golf Club 2306</p>
+                    <p>Manuel Alberti/Del Viso - Pilar</p>
+                    <p>Buenos Aires, Argentina</p>
+                </div>
+
+                <div class="contact-info-card">
+                    <div class="info-icon">📞</div>
+                    <h3>Teléfono</h3>
+                    <p><a href="tel:+5491165677391">+54 9 11 6567-7391</a></p>
+                    <p class="info-detail">Llamadas y WhatsApp</p>
+                </div>
+
+                <div class="contact-info-card">
+                    <div class="info-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p><a href="mailto:contacto@planetacitroen.ar">contacto@planetacitroen.ar</a></p>
+                    <p class="info-detail">Respondemos en 24hs</p>
+                </div>
+
+                <div class="contact-info-card">
+                    <div class="info-icon">🕐</div>
+                    <h3>Horarios</h3>
+                    <p>Lunes a Viernes: 9:00 - 18:00</p>
+                    <p>Sábados: 9:00 - 13:00</p>
+                    <p class="info-detail">Domingos cerrado</p>
+                </div>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="social-section">
+                <h2>Seguinos en redes</h2>
+                <div class="social-links-large">
+                    <a href="https://www.instagram.com/planetacitroenargentina/" target="_blank" title="Instagram" class="social-link">
+                        <img src="images/LogoIgPromachineRacing.png" alt="Instagram">
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.facebook.com/planetacitroenargentina" target="_blank" title="Facebook" class="social-link">
+                        <img src="images/LogoYouFacebookPromachineRacing.png" alt="Facebook">
+                        <span>Facebook</span>
+                    </a>
+                    <a href="https://www.youtube.com/@planetacitroenargentina" target="_blank" title="YouTube" class="social-link">
+                        <img src="images/LogoYouTubePromachineRacing.png" alt="YouTube">
+                        <span>YouTube</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright simple -->
+            <div class="contact-footer">
+                <p>&copy; 2025 Planeta Citroën - Todos los derechos reservados</p>
             </div>
         </div>
-    </footer>
+    </main>
 
-    <!-- Botón WhatsApp Flotante -->
-    <a href="https://wa.me/5491165677391?text=Hola!%20Estoy%20interesado%20en%20productos%20de%20Planeta%20Citroën" 
+    <!-- Botón WhatsApp Flotante (mismo mensaje que el botón principal) -->
+    <a href="https://wa.me/5491165677391?text=Hola!%20Te%20contacto%20desde%20la%20página%20de%20Contacto%20de%20Planeta%20Citroën" 
        class="whatsapp-float" 
        target="_blank" 
        title="Contactar por WhatsApp">
