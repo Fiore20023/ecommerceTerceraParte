@@ -185,12 +185,11 @@ nav ul li a {
     width: 100px;
     height: 100px;
     margin: 0 auto 20px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background: #f0f0f0;
+    overflow: visible;
+    background: transparent;
     transition: all 0.3s ease;
 }
 
@@ -198,8 +197,7 @@ nav ul li a {
 .icon-image img {
     width: 100px;
     height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
+    object-fit: contain;
 }
 
 .icon-card:hover .icon-image {
