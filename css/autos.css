@@ -2,7 +2,7 @@
 
 /* Asegurar que los botones del menú sean redondeados */
 nav ul li a {
-    border-radius: 25px;
+    border-radius: 8px;
 }
 
 /* Logo tamaño ajustado */
