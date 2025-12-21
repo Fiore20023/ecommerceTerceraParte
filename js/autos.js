@@ -41,12 +41,19 @@ async function cargarYMostrarAutos(modelo) {
         console.log('Productos extraídos:', productos);
         console.log('Cantidad de productos:', productos.length);
         
+        // Ver estructura del primer producto
+        if (productos.length > 0) {
+            console.log('EJEMPLO - Primer producto:', productos[0]);
+            console.log('Campos disponibles:', Object.keys(productos[0]));
+        }
+        
         // Filtrar solo autos del modelo seleccionado
-        const autos = productos.filter(p => 
-            p.tipo === 'auto' && 
-            p.modelo && 
-            p.modelo.toLowerCase() === modelo.toLowerCase()
-        );
+        const autos = productos.filter(p => {
+            console.log(`Producto: ${p.nombre}, tipo: "${p.tipo}", modelo: "${p.modelo}"`);
+            return p.tipo === 'auto' && 
+                   p.modelo && 
+                   p.modelo.toLowerCase() === modelo.toLowerCase();
+        });
         
         console.log('Autos filtrados:', autos);
         console.log('Cantidad de autos filtrados:', autos.length);
