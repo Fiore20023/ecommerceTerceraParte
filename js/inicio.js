@@ -38,6 +38,19 @@ function initCarousel() {
         });
     });
     
+    // Click en banners para navegar
+    slides.forEach(slide => {
+        const link = slide.getAttribute('data-link');
+        if (link) {
+            slide.addEventListener('click', (e) => {
+                // Evitar navegación si clickea en indicadores
+                if (!e.target.closest('.carousel-indicators')) {
+                    window.location.href = link;
+                }
+            });
+        }
+    });
+    
     // Rotación automática cada 5 segundos
     carouselInterval = setInterval(nextSlide, 5000);
 }
