@@ -2,8 +2,8 @@
 
 // Función para ver autos por modelo
 function verAutosPorModelo(modelo) {
-    alert('Clickeaste en: ' + modelo);
-    console.log('Clic en modelo:', modelo);
+    console.log('=== INICIO verAutosPorModelo ===');
+    console.log('Modelo seleccionado:', modelo);
     // Obtener productos del backend o localStorage
     cargarYMostrarAutos(modelo);
 }
@@ -14,18 +14,26 @@ function volverAModelos() {
 }
 
 async function cargarYMostrarAutos(modelo) {
-    console.log('Cargando autos para modelo:', modelo);
+    console.log('=== INICIO cargarYMostrarAutos ===');
+    console.log('Modelo recibido:', modelo);
+    
     try {
+        console.log('Fetching API...');
         // Intentar cargar desde el backend
         const response = await fetch('https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api/productos');
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
         const data = await response.json();
         
         console.log('Respuesta completa de la API:', data);
         console.log('Tipo de data:', typeof data);
+        console.log('Es array?:', Array.isArray(data));
         
         // La API puede devolver un objeto con una propiedad 'productos' o directamente un array
         const productos = Array.isArray(data) ? data : (data.productos || data.data || []);
-        console.log('Productos array:', productos.length);
+        console.log('Productos extraídos:', productos);
+        console.log('Cantidad de productos:', productos.length);
         
         // Filtrar solo autos del modelo seleccionado
         const autos = productos.filter(p => 
@@ -34,7 +42,8 @@ async function cargarYMostrarAutos(modelo) {
             p.modelo.toLowerCase() === modelo.toLowerCase()
         );
         
-        console.log('Autos filtrados:', autos.length);
+        console.log('Autos filtrados:', autos);
+        console.log('Cantidad de autos filtrados:', autos.length);
         
         mostrarAutos(autos, modelo);
     } catch (error) {
