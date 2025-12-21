@@ -2,6 +2,7 @@
 
 // Función para ver autos por modelo
 function verAutosPorModelo(modelo) {
+    alert('Clickeaste en: ' + modelo);
     console.log('Clic en modelo:', modelo);
     // Obtener productos del backend o localStorage
     cargarYMostrarAutos(modelo);
