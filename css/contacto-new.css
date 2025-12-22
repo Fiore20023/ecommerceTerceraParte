@@ -206,3 +206,22 @@
         height: 60px;
     }
 }
+
+/* Mapa y enlace de direcciones */
+.location-map {
+    transition: opacity 0.3s ease;
+}
+
+.location-map:hover {
+    opacity: 0.9;
+}
+
+.directions-link {
+    transition: all 0.3s ease;
+}
+
+.directions-link:hover {
+    color: #128C7E !important;
+    transform: translateX(5px);
+}
+
