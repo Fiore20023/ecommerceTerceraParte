@@ -1,5 +1,10 @@
 /* Estilos para la página de Contacto */
 
+/* Override para botones del nav - consistencia con otras páginas */
+nav ul li a {
+    border-radius: 8px;
+}
+
 .contact-main {
     max-width: 1200px;
     margin: 0 auto;
