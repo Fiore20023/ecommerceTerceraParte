@@ -77,6 +77,15 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+.contact-info-card.email-card {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    text-align: left;
+}
+
 .contact-info-card:hover {
     transform: translateY(-5px);
     border-color: #28a745;
@@ -195,6 +204,12 @@
     .contact-info-grid {
         grid-template-columns: 1fr;
         gap: 20px;
+    }
+
+    .contact-info-card.email-card {
+        grid-column: span 1;
+        flex-direction: column;
+        text-align: center;
     }
 
     .social-links-large {
