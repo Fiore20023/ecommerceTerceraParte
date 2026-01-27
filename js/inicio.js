@@ -170,8 +170,23 @@ function normalizarCategoria(nombre) {
         'suspensiones': 'suspensión',
         'suspension': 'suspensión',
         'carrocerias': 'carrocería',
+        'carroceria': 'carrocería',
         'motor': 'motor',
-        'motores': 'motor'
+        'motores': 'motor',
+        'interior': 'interior',
+        'interiores': 'interior',
+        'electrical': 'eléctrico',
+        'electricidad': 'eléctrico',
+        'eléctrico': 'eléctrico',
+        'electrico': 'eléctrico',
+        'filtros': 'filtro',
+        'filtro': 'filtro',
+        'luces': 'luz',
+        'luz': 'luz',
+        'frenos': 'freno',
+        'freno': 'freno',
+        'dirección': 'dirección',
+        'direccion': 'dirección'
     };
     return mapa[n] || n;
 }
@@ -227,6 +242,15 @@ function filtrarPorModeloYCategoria(modelo, categoria) {
         const catProd = normalizarCategoria(producto.categoria || producto.subcategoria || '');
         const catFiltro = normalizarCategoria(categoria || '');
         const categoriaCoincide = catProd === catFiltro;
+        
+        // DEBUG: mostrar primeros 3 para ver qué está pasando
+        if (producto.nombre.includes('MOTOR') || producto.nombre.includes('Motor') || producto.nombre.includes('motor')) {
+            console.log(`🔍 ${producto.nombre}:`);
+            console.log(`   categoria/subcategoria BD: "${producto.categoria}" / "${producto.subcategoria}"`);
+            console.log(`   normalizado: "${catProd}" vs filtro: "${catFiltro}"`);
+            console.log(`   modelos: ${JSON.stringify(modelos)}`);
+            console.log(`   modeloCompatible: ${modeloCompatible}, categoriaCoincide: ${categoriaCoincide}`);
+        }
         
         return modeloCompatible && categoriaCoincide;
     });

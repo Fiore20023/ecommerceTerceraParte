@@ -1,15 +1,57 @@
 import { productoModel } from '../models/producto.model.js';
 
+// Función para normalizar categorías (igual que en el frontend)
+function normalizarCategoria(nombre) {
+    if (!nombre) return '';
+    const n = nombre.trim().toLowerCase();
+    const mapa = {
+        'suspensiones': 'suspensión',
+        'suspension': 'suspensión',
+        'carrocerias': 'carrocería',
+        'carroceria': 'carrocería',
+        'motor': 'motor',
+        'motores': 'motor',
+        'interior': 'interior',
+        'interiores': 'interior',
+        'electrical': 'eléctrico',
+        'electricidad': 'eléctrico',
+        'eléctrico': 'eléctrico',
+        'electrico': 'eléctrico',
+        'filtros': 'filtro',
+        'filtro': 'filtro',
+        'luces': 'luz',
+        'luz': 'luz',
+        'frenos': 'freno',
+        'freno': 'freno',
+        'dirección': 'dirección',
+        'direccion': 'dirección'
+    };
+    return mapa[n] || n;
+}
+
 class ProductoController {
     // GET /api/productos - Obtener todos los productos
     async getAll(req, res) {
         try {
             const productos = await productoModel.findAll();
             
+            // Normalizar categorías para productos (no autos)
+            const productosNormalizados = productos.map(p => {
+                if (p.tipoProducto !== 'auto' && (p.categoria || p.subcategoria)) {
+                    const catNormalizada = normalizarCategoria(p.categoria || p.subcategoria);
+                    return {
+                        ...p,
+                        categoria: catNormalizada,
+                        subcategoria: catNormalizada
+                    };
+                }
+                return p;
+            });
+            
             res.status(200).json({
                 success: true,
-                data: productos,
-                total: productos.length
+                data: productosNormalizados,
+                total: productosNormalizados.length
             });
         } catch (error) {
             console.error('Error en getAll:', error);

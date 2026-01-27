@@ -57,8 +57,9 @@ class ProductoModel {
             base.stock = parseInt(producto.stock) || 0;
             base.marca = producto.marca?.trim() || '';
             base.modelos = Array.isArray(producto.modelos) ? producto.modelos : [];
-            base.categoria = producto.categoria?.trim() || (Array.isArray(producto.modelos) ? producto.modelos.join(', ') : '');
-            base.subcategoria = producto.subcategoria?.trim() || '';
+            // UNIFICAR: usar subcategoria como fuente principal de categoría
+            base.subcategoria = producto.subcategoria?.trim() || producto.categoria?.trim() || '';
+            base.categoria = base.subcategoria; // Categoría siempre igual a subcategoria para productos
             base.color = producto.color?.trim() || '';
             base.tamano = producto.tamano?.trim() || '';
             base['descripcion-corta'] = producto['descripcion-corta']?.trim() || producto.descripcion?.trim() || '';
