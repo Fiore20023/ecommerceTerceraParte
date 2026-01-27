@@ -168,12 +168,31 @@ header {
 #boton-carrito {
     display: flex;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
 #boton-carrito a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.85rem;
+    border-radius: 10px;
+    background: #d32f2f;
     color: white;
     font-size: 1.5rem;
     text-decoration: none;
+    border: 2px solid #d32f2f;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+}
+
+#boton-carrito a:hover,
+#boton-carrito a:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    background: #b71c1c;
+    outline: none;
 }
 
 #boton-login {

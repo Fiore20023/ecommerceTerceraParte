@@ -35,6 +35,7 @@ class ProductoModel {
             moneda: producto.moneda || 'ARS', // ARS o USD
             tipoProducto: producto.tipoProducto || 'producto', // 'auto' o 'producto'
             activo: producto.activo !== undefined ? Boolean(producto.activo) : true,
+            oculto: producto.oculto !== undefined ? Boolean(producto.oculto) : false,
             fechaCreacion: producto.fechaCreacion || new Date(),
             fechaActualizacion: new Date()
         };

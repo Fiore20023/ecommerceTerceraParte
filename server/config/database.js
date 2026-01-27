@@ -15,7 +15,11 @@ class Database {
 
             console.log('🔄 Conectando a MongoDB Atlas...');
             
-            this.client = new MongoClient(config.mongodb.uri);
+            this.client = new MongoClient(config.mongodb.uri, {
+                serverSelectionTimeoutMS: 5000,  // Timeout de 5 segundos para encontrar servidor
+                connectTimeoutMS: 10000,  // Timeout de 10 segundos para conectar
+                socketTimeoutMS: 10000,  // Timeout de 10 segundos para socket
+            });
             await this.client.connect();
             
             this.db = this.client.db(config.mongodb.dbName);

@@ -3,6 +3,15 @@
 // ------------------------------------------------
 let pedidoFinalizado = false;
 
+// Formatea montos con separador de miles y decimales opcionales
+function formatMoney(value, fractionDigits = 0){
+    const num = Number(value) || 0;
+    return num.toLocaleString('es-AR', {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits
+    });
+}
+
 // Cargar carrito desde localStorage al inicio
 if (!window.cart) {
     window.cart = {};
@@ -209,7 +218,11 @@ function renderCarrito() {
     // Renderizar tabla de productos
     tablaBody.innerHTML = items.map(p => {
         const subtotal = p.precio * p.qty;
-        const foto = p.foto || p.imagen || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Crect fill="%2328a745" width="60" height="60"/%3E%3Ctext fill="%23ffffff" font-family="Arial" font-size="10" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3E%3F%3C/text%3E%3C/svg%3E';
+        const foto = p.imagenCart
+            || (p.imagenes && Array.isArray(p.imagenes) && p.imagenes.length > 0 && (p.imagenes[0]?.datos || p.imagenes[0]))
+            || p.foto
+            || p.imagen
+            || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Crect fill="%2328a745" width="60" height="60"/%3E%3Ctext fill="%23ffffff" font-family="Arial" font-size="10" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3E%3F%3C/text%3E%3C/svg%3E';
         
         const stockDisponible = p.stock || 999;
         const stockWarning = p.qty > stockDisponible ? ' style="background:#f8d7da; color:#721c24;"' : '';
@@ -221,11 +234,11 @@ function renderCarrito() {
             <tr${stockWarning}>
                 <td><img src="${foto}" alt="${p.nombre}" style="width:60px;height:60px;object-fit:cover;border-radius:5px;"></td>
                 <td>${p.nombre}${stockBadge}</td>
-                <td>$${p.precio}</td>
+                <td>$${formatMoney(p.precio)}</td>
                 <td>
                     <button onclick="cambiarCantidad('${p.id}')" style="background:#ffc107;color:#000;border:none;padding:5px 10px;margin-right:5px;cursor:pointer;border-radius:3px;">✏️ ${p.qty}</button>
                 </td>
-                <td>$${subtotal.toFixed(2)}</td>
+                <td>$${formatMoney(subtotal, 2)}</td>
                 <td>
                     <button onclick="eliminarDelCarrito('${p.id}')" style="background:#dc3545;color:#fff;border:none;padding:5px 10px;cursor:pointer;border-radius:3px;">🗑️ Eliminar</button>
                 </td>
@@ -238,7 +251,7 @@ function renderCarrito() {
     
     // Renderizar resumen y botones
     if (summaryEl) {
-        let html = `<h2 style="margin: 20px 0;">Total: $${total.toFixed(2)}</h2>`;
+        let html = `<h2 style="margin: 20px 0;">Total: $${formatMoney(total, 2)}</h2>`;
         
         if (!pedidoFinalizado) {
             // Antes de finalizar: mostrar botón de finalizar compra y vaciar carrito

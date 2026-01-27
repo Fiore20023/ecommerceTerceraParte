@@ -5,6 +5,15 @@ let todosLosProductosGlobal = []; // Variable global para acceder desde funcione
 let currentSlide = 0;
 let carouselInterval;
 
+// Formatea montos con separador de miles y decimales opcionales
+function formatMoney(value, fractionDigits = 0){
+    const num = Number(value) || 0;
+    return num.toLocaleString('es-AR', {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits
+    });
+}
+
 // ------------------------------------------------
 //             carrusel de banners
 // ------------------------------------------------
@@ -154,6 +163,19 @@ function filtrarRepuestosPorModelo(modelo) {
     }
 }
 
+function normalizarCategoria(nombre) {
+    if (!nombre) return '';
+    const n = nombre.trim().toLowerCase();
+    const mapa = {
+        'suspensiones': 'suspensión',
+        'suspension': 'suspensión',
+        'carrocerias': 'carrocería',
+        'motor': 'motor',
+        'motores': 'motor'
+    };
+    return mapa[n] || n;
+}
+
 function filtrarPorCategoria(categoria) {
     console.log('🛒 Filtrando por categoría:', categoria);
     cerrarMenusDesplegables(); // Cerrar menú
@@ -165,8 +187,9 @@ function filtrarPorCategoria(categoria) {
     }
     
     const productosFiltrados = todosLosProductosGlobal.filter(producto => {
-        const subcategoria = (producto.subcategoria || '').toLowerCase();
-        return subcategoria.includes(categoria.toLowerCase());
+        const catProd = normalizarCategoria(producto.categoria || producto.subcategoria || '');
+        const catFiltro = normalizarCategoria(categoria || '');
+        return catProd === catFiltro;
     });
     
     console.log(`✅ Encontrados ${productosFiltrados.length} productos para categoría ${categoria}`);
@@ -200,9 +223,10 @@ function filtrarPorModeloYCategoria(modelo, categoria) {
             m.toLowerCase() === modelo.toLowerCase()
         );
         
-        // Verificar que coincida con la categoría
-        const subcategoria = (producto.subcategoria || '').toLowerCase();
-        const categoriaCoincide = subcategoria.includes(categoria.toLowerCase());
+        // Verificar que coincida con la categoría (normalizada)
+        const catProd = normalizarCategoria(producto.categoria || producto.subcategoria || '');
+        const catFiltro = normalizarCategoria(categoria || '');
+        const categoriaCoincide = catProd === catFiltro;
         
         return modeloCompatible && categoriaCoincide;
     });
@@ -316,7 +340,7 @@ function ocultarFiltroSecundario() {
     }
 }
 
-function mostrarProductosFiltrados(productos, titulo) {
+function mostrarProductosFiltrados(productos, titulo, urlRetornoParam) {
     const cardsContainer = document.querySelector('.cards-container');
     if (!cardsContainer) return;
     
@@ -326,10 +350,12 @@ function mostrarProductosFiltrados(productos, titulo) {
     const modeloRepuesto = urlParams.get('modeloRepuesto');
     const categoria = urlParams.get('categoria');
     
-    let urlRetorno = 'index.html';
+    let urlRetorno = urlRetornoParam || 'index.html';
     let textoBoton = 'Ver todos los productos';
     
-    if (modelo) {
+    if (urlRetornoParam === 'repuestos.html') {
+        textoBoton = 'Volver a Repuestos';
+    } else if (modelo) {
         // Estamos viendo autos en venta
         urlRetorno = 'autos.html';
         textoBoton = 'Volver a Autos';
@@ -368,12 +394,39 @@ function mostrarProductosFiltrados(productos, titulo) {
     btnVolver.onclick = () => window.location.href = urlRetorno;
     cardsContainer.appendChild(btnVolver);
     
-    // Renderizar productos filtrados
+    // Asegurar que el contenedor esté visible y en grilla
+    cardsContainer.style.display = 'grid';
+    cardsContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(250px, 1fr))';
+    cardsContainer.style.gap = '1rem';
+    
+    let cardsRenderizadas = 0;
     productos.forEach(producto => {
         if (window.renderProductCardGlobal) {
-            window.renderProductCardGlobal(producto);
+            const card = window.renderProductCardGlobal(producto);
+            if (card) {
+                cardsContainer.appendChild(card);
+                cardsRenderizadas += 1;
+            }
         }
     });
+    
+    // Fallback por si no se pudieron renderizar las cards
+    if (cardsRenderizadas === 0) {
+        console.warn('⚠️ No se pudieron renderizar las cards con renderProductCardGlobal. Usando fallback simple.');
+        productos.forEach(producto => {
+            const fallback = document.createElement('div');
+            fallback.className = 'card';
+            fallback.style.padding = '1rem';
+            fallback.innerHTML = `
+                <h3>${producto.nombre || 'Producto'}</h3>
+                <p>${producto.moneda || 'ARS'} $${formatMoney(producto.precio || 0)}</p>
+            `;
+            cardsContainer.appendChild(fallback);
+        });
+        cardsRenderizadas = productos.length;
+    }
+    
+    console.log(`✅ Renderizadas ${cardsRenderizadas} cards en mostrarProductosFiltrados`);
 }
 
 // ------------------------------------------------
@@ -425,7 +478,7 @@ function initInicio(){
     
     let todosLosProductos = []; // Guardar todos los productos para filtrar
     
-    cardsContainer.innerHTML = '<p style="text-align:center; padding:2rem;">Cargando productos...</p>';
+    cardsContainer.innerHTML = '<p style="text-align:center; padding:2rem; font-size:1.2rem;"><span style="font-size:2rem;">⏳</span><br>Cargando productos desde la base de datos...<br><small style="color:#666;">Esto puede tardar unos segundos</small></p>';
 
     const renderProducts = (list) => {
         console.log('🎨 Renderizando productos:', list);
@@ -613,7 +666,7 @@ function initInicio(){
                 </div>
                 <div class="card-body">
                     <h3 class="card-title">${producto.nombre}</h3>
-                    <p class="card-price">${producto.moneda || 'ARS'} $${producto.precio}</p>
+                    <p class="card-price">${producto.moneda || 'ARS'} $${formatMoney(producto.precio)}</p>
                     <a href="producto-detalle.html?id=${producto._id || producto.id}" class="card-link">👁️ Ver detalle completo →</a>
                 </div>
             `;
@@ -712,13 +765,164 @@ function initInicio(){
         console.warn('⚠️ No se encontró el formulario de búsqueda');
     }
     
+    // Verificar primero si venimos de un filtro guardado en sessionStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const esFiltrado = urlParams.get('filtrado') === 'true';
+    
+    if (esFiltrado) {
+        console.log('🔍 Detectado filtro en sessionStorage');
+        const productosFiltrados = JSON.parse(sessionStorage.getItem('productosFiltrados') || '[]');
+        const tituloFiltro = sessionStorage.getItem('tituloFiltro') || 'Productos filtrados';
+        const urlRetorno = sessionStorage.getItem('urlRetorno') || 'repuestos.html';
+        
+        console.log('📦 Mostrando productos filtrados desde sessionStorage:', productosFiltrados.length);
+        console.log('📦 Productos:', productosFiltrados);
+        
+        // Limpiar el mensaje de carga
+        cardsContainer.innerHTML = '';
+        
+        // Mostrar productos filtrados
+        mostrarProductosFiltrados(productosFiltrados, tituloFiltro, urlRetorno);
+        
+        // Limpiar sessionStorage
+        sessionStorage.removeItem('productosFiltrados');
+        sessionStorage.removeItem('tituloFiltro');
+        sessionStorage.removeItem('urlRetorno');
+        
+        // Inicializar carrusel y terminar
+        initCarousel();
+        return; // No necesitamos cargar desde el backend
+    }
+    
     // Cargar productos desde el backend
     if (window.API_CONFIG) {
         console.log('📡 Cargando productos desde el backend...');
+        console.log('📍 URL:', window.API_CONFIG.getProductosUrl());
         
-        // Timeout de 30 segundos para esperar que Heroku despierte
+        // Verificar caché en localStorage
+        const CACHE_KEY = 'productos_cache';
+        const CACHE_TIME_KEY = 'productos_cache_time';
+        const CACHE_DURATION = 30 * 60 * 1000; // 30 minutos
+
+        async function actualizarCacheEnSegundoPlano() {
+            try {
+                console.log('🌐 Actualizando caché en segundo plano...');
+                const res = await fetch(window.API_CONFIG.getProductosUrl());
+                if (!res.ok) throw new Error('No se pudo refrescar caché');
+                const result = await res.json();
+                const productos = result.data || result;
+                localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                console.log('💾 Caché refrescada en segundo plano');
+            } catch (err) {
+                console.warn('⚠️ No se pudo refrescar caché en segundo plano:', err.message);
+            }
+        }
+        
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+        const now = Date.now();
+        let renderedFromStaleCache = false;
+        
+        // Si hay caché válido, usarlo
+        if (cachedData && cachedTime && (now - parseInt(cachedTime)) < CACHE_DURATION) {
+            const timeSinceCached = Math.round((now - parseInt(cachedTime)) / 1000);
+            console.log(`⚡ Usando caché (${timeSinceCached}s de antigüedad)`);
+            
+            try {
+                const productos = JSON.parse(cachedData);
+                const productosVisibles = productos.filter(p => !p.oculto);
+                console.log(`📊 Total: ${productos.length} | Visibles: ${productosVisibles.length} | Ocultos: ${productos.length - productosVisibles.length}`);
+                
+                // Guardar en caché
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+                    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                    console.log('💾 Caché actualizada');
+                } catch (error) {
+                    console.warn('⚠️ No se pudo guardar caché:', error);
+                }
+                
+                window.productos = productosVisibles;
+                todosLosProductos = productosVisibles;
+                todosLosProductosGlobal = productosVisibles;
+                
+                // Verificar parámetros en la URL y renderizar
+                const terminoBusqueda = urlParams.get('busqueda');
+                const modeloRepuesto = urlParams.get('modeloRepuesto');
+                const categoria = urlParams.get('categoria');
+                const modelo = urlParams.get('modelo');
+                
+                if (terminoBusqueda && inputBusqueda) {
+                    inputBusqueda.value = terminoBusqueda;
+                    filtrarProductos(terminoBusqueda);
+                } else if (modeloRepuesto && categoria) {
+                    filtrarPorModeloYCategoria(modeloRepuesto, categoria);
+                } else if (modeloRepuesto) {
+                    filtrarRepuestosPorModelo(modeloRepuesto);
+                } else if (categoria) {
+                    filtrarPorCategoria(categoria);
+                } else if (modelo) {
+                    filtrarPorModelo(modelo);
+                } else {
+                    renderProducts(productosVisibles);
+                }
+                // Refrescar datos en segundo plano para la próxima visita
+                actualizarCacheEnSegundoPlano();
+                return;
+            } catch (error) {
+                console.warn('⚠️ Error al parsear caché, descargando desde servidor');
+                localStorage.removeItem(CACHE_KEY);
+                localStorage.removeItem(CACHE_TIME_KEY);
+            }
+        }
+
+        // Si hay caché pero está vencida, mostrarla rápido y luego seguir al fetch (stale-while-revalidate)
+        if (cachedData && !renderedFromStaleCache) {
+            try {
+                const productos = JSON.parse(cachedData);
+                const productosVisibles = productos.filter(p => !p.oculto);
+                console.log('⚡ Usando caché vencida mientras llega el backend');
+                console.log(`📊 Total: ${productos.length} | Visibles: ${productosVisibles.length} | Ocultos: ${productos.length - productosVisibles.length}`);
+
+                window.productos = productosVisibles;
+                todosLosProductos = productosVisibles;
+                todosLosProductosGlobal = productosVisibles;
+
+                const terminoBusqueda = urlParams.get('busqueda');
+                const modeloRepuesto = urlParams.get('modeloRepuesto');
+                const categoria = urlParams.get('categoria');
+                const modelo = urlParams.get('modelo');
+
+                if (terminoBusqueda && inputBusqueda) {
+                    inputBusqueda.value = terminoBusqueda;
+                    filtrarProductos(terminoBusqueda);
+                } else if (modeloRepuesto && categoria) {
+                    filtrarPorModeloYCategoria(modeloRepuesto, categoria);
+                } else if (modeloRepuesto) {
+                    filtrarRepuestosPorModelo(modeloRepuesto);
+                } else if (categoria) {
+                    filtrarPorCategoria(categoria);
+                } else if (modelo) {
+                    filtrarPorModelo(modelo);
+                } else {
+                    renderProducts(productosVisibles);
+                }
+                renderedFromStaleCache = true;
+            } catch (error) {
+                console.warn('⚠️ Error al usar caché vencida:', error);
+            }
+        }
+        
+        const startTime = Date.now();
+        
+        // Timeout de 30 segundos (MongoDB Atlas puede tardar)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        const timeoutId = setTimeout(() => {
+            console.warn('⏱️ Timeout alcanzado después de 10 segundos');
+            console.warn('⚠️ MongoDB Atlas no responde. Usando caché vencida.');
+            controller.abort();
+        }, 10000);
         
         fetch(window.API_CONFIG.getProductosUrl(), { 
             signal: controller.signal,
@@ -728,19 +932,34 @@ function initInicio(){
             }
         })
             .then(response => {
+                const loadTime = Date.now() - startTime;
+                console.log(`⏱️ Respuesta recibida en ${loadTime}ms`);
                 clearTimeout(timeoutId);
                 if (!response.ok) throw new Error('Error al cargar productos');
                 return response.json();
             })
             .then(result => {
-                console.log('✅ Productos cargados del backend:', result);
+                const totalTime = Date.now() - startTime;
+                console.log(`✅ Productos cargados en ${totalTime}ms`);
+                console.log('📦 Datos recibidos:', result);
                 const productos = result.data || result;
-                window.productos = productos;
-                todosLosProductos = productos;
-                todosLosProductosGlobal = productos;
+                
+                console.log('🔍 Analizando productos ocultos:');
+                productos.forEach((p, i) => {
+                    if (p.oculto) {
+                        console.log(`   ❌ [${i}] ${p.nombre} - oculto: ${p.oculto}`);
+                    }
+                });
+                
+                // Filtrar productos ocultos (solo mostrar productos visibles)
+                const productosVisibles = productos.filter(p => !p.oculto);
+                console.log(`📊 Total: ${productos.length} | Visibles: ${productosVisibles.length} | Ocultos: ${productos.length - productosVisibles.length}`);
+                
+                window.productos = productosVisibles;
+                todosLosProductos = productosVisibles;
+                todosLosProductosGlobal = productosVisibles;
                 
                 // Verificar parámetros en la URL
-                const urlParams = new URLSearchParams(window.location.search);
                 const terminoBusqueda = urlParams.get('busqueda');
                 const modeloRepuesto = urlParams.get('modeloRepuesto');
                 const categoria = urlParams.get('categoria');

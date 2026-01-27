@@ -26,7 +26,7 @@ async function cargarYMostrarAutos(modelo) {
     try {
         console.log('Fetching API...');
         // Intentar cargar desde el backend
-        const response = await fetch('https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api/productos');
+        const response = await fetch(window.API_CONFIG.getProductosUrl());
         console.log('Response status:', response.status);
         console.log('Response ok:', response.ok);
         
@@ -41,14 +41,18 @@ async function cargarYMostrarAutos(modelo) {
         console.log('Productos extraídos:', productos);
         console.log('Cantidad de productos:', productos.length);
         
+        // Filtrar productos ocultos
+        const productosVisibles = productos.filter(p => !p.oculto);
+        console.log(`Productos visibles: ${productosVisibles.length} de ${productos.length}`);
+        
         // Ver estructura del primer producto
-        if (productos.length > 0) {
-            console.log('EJEMPLO - Primer producto:', productos[0]);
-            console.log('Campos disponibles:', Object.keys(productos[0]));
+        if (productosVisibles.length > 0) {
+            console.log('EJEMPLO - Primer producto:', productosVisibles[0]);
+            console.log('Campos disponibles:', Object.keys(productosVisibles[0]));
         }
         
         // Filtrar solo autos del modelo seleccionado
-        const autos = productos.filter(p => {
+        const autos = productosVisibles.filter(p => {
             console.log(`Producto: ${p.nombre}, tipoProducto: "${p.tipoProducto}", modelos:`, p.modelos);
             
             // Verificar si es un auto (tipoProducto === 'auto')

@@ -5,6 +5,8 @@
 function initAlta(){
     console.log('🔵 initAlta ejecutándose');
     console.log('🔧 window.API_CONFIG:', window.API_CONFIG);
+    console.log('📍 BASE_URL:', window.API_CONFIG?.BASE_URL);
+    console.log('📍 getProductosUrl():', window.API_CONFIG?.getProductosUrl());
     
     const form = document.getElementById('form-alta-producto');
     const tablaBody = document.querySelector('#tabla-productos tbody');
@@ -17,7 +19,23 @@ function initAlta(){
         return;
     }
     
+    if (!window.API_CONFIG) {
+        console.error('❌ API_CONFIG no disponible. Esperando...');
+        // Intentar de nuevo después de 1 segundo
+        setTimeout(initAlta, 1000);
+        return;
+    }
+    
     let todosLosProductos = []; // Para filtrado
+
+    // Formatear montos con separadores de miles
+    function formatMoney(value, fractionDigits = 0){
+        const num = Number(value) || 0;
+        return num.toLocaleString('es-AR', {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits
+        });
+    }
     
     // MANEJO DEL CAMBIO ENTRE TIPO AUTO Y PRODUCTO
     const tipoAuto = document.getElementById('tipo-auto');
@@ -30,9 +48,28 @@ function initAlta(){
     console.log('🔍 Campos Auto encontrado:', !!camposAuto);
     console.log('🔍 Campos Producto encontrado:', !!camposProductoDiv);
     
+    let selectedModelosCached = []; // Para guardar modelos cuando cambias de tipo
+    
     function cambiarTipoProducto() {
         const esAuto = tipoAuto && tipoAuto.checked;
         console.log('🔄 Cambiando a:', esAuto ? 'AUTO' : 'PRODUCTO');
+        
+        // Guardar modelos seleccionados ANTES de ocultar
+        if (!esAuto && document.getElementById('campos-producto').style.display !== 'none') {
+            selectedModelosCached = Array.from(document.querySelectorAll('input[name="modelos"]:checked')).map(cb => cb.value);
+            console.log('💾 Guardando modelos:', selectedModelosCached);
+        }
+        
+        // Restaurar modelos cuando vuelves a PRODUCTO
+        if (!esAuto && document.getElementById('campos-producto').style.display === 'none') {
+            setTimeout(() => {
+                selectedModelosCached.forEach(modelo => {
+                    const checkbox = document.querySelector(`input[name="modelos"][value="${modelo}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                console.log('♻️ Restaurando modelos:', selectedModelosCached);
+            }, 0);
+        }
         
         if (camposAuto) {
             camposAuto.style.display = esAuto ? 'block' : 'none';
@@ -141,6 +178,30 @@ function initAlta(){
         
         console.log(`📦 Productos a renderizar: ${list.length}`);
         
+        // Calcular totales
+        const totalProductos = list.length;
+        const totalAutos = list.filter(p => p.tipoProducto === 'auto').length;
+        const totalRepuestos = list.filter(p => p.tipoProducto !== 'auto').length;
+        
+        // Mostrar totales en el contenedor
+        const totalesDiv = document.getElementById('totales-productos');
+        if (totalesDiv) {
+            totalesDiv.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #007bff;">${totalProductos}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Total Productos</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #28a745;">${totalAutos}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Autos</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #ffc107;">${totalRepuestos}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Repuestos</div>
+                </div>
+            `;
+        }
+        
         if (list.length === 0) {
             const fila = document.createElement('tr');
             fila.innerHTML = `<td colspan="10" style="text-align:center; padding:2rem; color:#666;">No hay productos disponibles</td>`;
@@ -162,18 +223,20 @@ function initAlta(){
                 modelos = Array.isArray(p.modelos) ? p.modelos.join(', ') : (p.categoria || '-');
             }
             
-            // Detalles
-            let detalles = '';
+            // Stock - simplificado solo para stock
+            let stockTexto;
             if (p.tipoProducto === 'auto') {
-                const km = p.kilometros ? `${p.kilometros} km` : '';
-                const color = p.colorAuto || '';
-                const estado = p.estadoStock || '';
-                detalles = [estado, color, km].filter(Boolean).join(' | ') || '-';
+                stockTexto = p.estadoStock || 'disponible';
             } else {
-                const stock = `Stock: ${p.stock || 0}`;
-                const tipo = p.subcategoria || '';
-                const color = p.color || '';
-                detalles = [stock, tipo, color].filter(Boolean).join(' | ');
+                stockTexto = p.stock || 0;
+            }
+            
+            // Categoría muestra el tipo de producto
+            let categoriaTexto = '-';
+            if (p.tipoProducto === 'auto') {
+                categoriaTexto = 'Auto';
+            } else {
+                categoriaTexto = p.subcategoria || p.categoria || 'Producto';
             }
             
             // Imágenes
@@ -194,15 +257,22 @@ function initAlta(){
             // Moneda
             const moneda = p.moneda === 'USD' ? 'USD' : 'ARS';
             
+            const estaOculto = p.oculto === true;
+
             fila.innerHTML = `
                 <td style="text-align:center;">${tipo}</td>
                 <td><strong>${p.nombre || ''}</strong></td>
-                <td style="text-align:right; color:#28a745; font-weight:bold;">${moneda} $${p.precio || 0}</td>
+                <td style="text-align:right; color:#28a745; font-weight:bold;">${moneda} $${formatMoney(p.precio)}</td>
                 <td>${modelos}</td>
-                <td><small>${detalles}</small></td>
+                <td>${categoriaTexto}</td>
+                <td style="text-align:center;"><strong>${stockTexto}</strong></td>
                 <td style="text-align:center;">${imagenesHTML}</td>
                 <td style="white-space:nowrap;">
                     <button class="btn-editar" data-id="${p._id}" title="Editar producto" style="background:#ffc107; color:#000; border:none; padding:0.4rem 0.6rem; margin:0 0.3rem; cursor:pointer; border-radius:4px; font-size:1rem;">✏️</button>
+                    <label class="switch-container" title="${estaOculto ? 'Producto oculto' : 'Producto visible'}">
+                        <input type="checkbox" class="switch-checkbox" data-id="${p._id}" ${estaOculto ? '' : 'checked'}>
+                        <span class="switch-slider"></span>
+                    </label>
                     <button class="btn-eliminar" data-id="${p._id}" title="Eliminar producto" style="background:#dc3545; color:#fff; border:none; padding:0.4rem 0.6rem; margin:0 0.3rem; cursor:pointer; border-radius:4px; font-size:1rem;">❌</button>
                 </td>
             `;
@@ -331,6 +401,11 @@ function initAlta(){
                     
                     if (res.ok) {
                         alert('✅ Producto eliminado exitosamente');
+
+                        // Limpiar caché para que el front refleje cambios
+                        localStorage.removeItem('productos_cache');
+                        localStorage.removeItem('productos_cache_time');
+
                         // Recargar productos
                         const response = await fetch(window.API_CONFIG.getProductosUrl());
                         const result = await response.json();
@@ -344,6 +419,70 @@ function initAlta(){
                 } catch (err) {
                     console.error('Error:', err);
                     alert('❌ Error de conexión');
+                }
+            }
+        }
+
+        // Botón Suspender/Mostrar - Ahora con switch
+        const switchCheckbox = e.target.closest('.switch-checkbox');
+        if (switchCheckbox) {
+            const id = switchCheckbox.dataset.id;
+            const producto = window.productos.find(p => p._id === id);
+            if (!producto) return;
+
+            const nuevoEstado = !switchCheckbox.checked; // Si está checked, está visible; si no está checked, está oculto
+            console.log('🔄 Cambiando estado de:', producto.nombre);
+            console.log('   Estado actual oculto:', producto.oculto);
+            console.log('   Nuevo estado oculto:', nuevoEstado);
+            console.log('   Checkbox checked:', switchCheckbox.checked);
+            
+            const mensaje = nuevoEstado ? '¿Ocultar este producto (no aparecerá en la tienda)?' : '¿Mostrar este producto en la tienda?';
+            if (!confirm(mensaje)) {
+                // Revertir el cambio del checkbox si se cancela
+                switchCheckbox.checked = !switchCheckbox.checked;
+                return;
+            }
+
+            if (window.API_CONFIG) {
+                try {
+                    const productoActualizado = { ...producto, oculto: nuevoEstado };
+                    console.log('📤 Enviando producto actualizado:', productoActualizado);
+                    
+                    const res = await fetch(`${window.API_CONFIG.getProductosUrl()}/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(productoActualizado)
+                    });
+                    
+                    console.log('📥 Respuesta del servidor:', res.status);
+                    
+                    if (res.ok) {
+                        const resultData = await res.json();
+                        console.log('✅ Producto actualizado exitosamente:', resultData);
+
+                        // Limpiar caché del listado para reflejar el cambio
+                        localStorage.removeItem('productos_cache');
+                        localStorage.removeItem('productos_cache_time');
+
+                        // Recargar productos
+                        const response = await fetch(window.API_CONFIG.getProductosUrl());
+                        const result = await response.json();
+                        window.productos = result.data || result;
+                        todosLosProductos = window.productos;
+                        console.log('📦 Productos recargados. Total:', window.productos.length);
+                        renderizarTabla();
+                    } else {
+                        const error = await res.json();
+                        console.error('❌ Error del servidor:', error);
+                        alert('❌ Error: ' + (error.message || 'No se pudo actualizar'));
+                        // Revertir el cambio del checkbox si falla
+                        switchCheckbox.checked = !switchCheckbox.checked;
+                    }
+                } catch (err) {
+                    console.error('❌ Error de conexión:', err);
+                    alert('❌ Error de conexión');
+                    // Revertir el cambio del checkbox si falla
+                    switchCheckbox.checked = !switchCheckbox.checked;
                 }
             }
         }
@@ -430,7 +569,9 @@ function initAlta(){
             }
             // DATOS ESPECÍFICOS PARA PRODUCTOS
             else {
-                productoData.subcategoria = document.getElementById('tipo-producto-select').value;
+                const tipoProductoSeleccionado = document.getElementById('tipo-producto-select').value;
+                productoData.subcategoria = tipoProductoSeleccionado;
+                productoData.categoria = tipoProductoSeleccionado; // Guardar la categoría de repuesto
                 productoData.nombre = document.getElementById('titulo-producto').value;
                 productoData.precio = Number(document.getElementById('precio-producto').value);
                 productoData.moneda = document.getElementById('moneda-producto').value;
@@ -441,8 +582,12 @@ function initAlta(){
                 const modelosSeleccionados = Array.from(document.querySelectorAll('input[name="modelos"]:checked'))
                     .map(cb => cb.value)
                     .filter(v => v !== 'Todos'); // Excluir "Todos"
+                
+                console.log('🔍 Checkboxes encontrados:', document.querySelectorAll('input[name="modelos"]').length);
+                console.log('✅ Checkboxes checkeados:', document.querySelectorAll('input[name="modelos"]:checked').length);
+                console.log('📋 Modelos seleccionados:', modelosSeleccionados);
+                
                 productoData.modelos = modelosSeleccionados;
-                productoData.categoria = modelosSeleccionados.join(', ');
                 
                 // Color (con opción "otro")
                 const colorProductoVal = document.getElementById('color-producto').value;
@@ -537,15 +682,16 @@ function initAlta(){
     });
 
     // FILTRADO DE TABLA
-    const buscar = document.getElementById('buscar');
-    if (buscar) {
-        buscar.addEventListener('input', (e) => {
-            const termino = e.target.value.toLowerCase();
+    const filtroTabla = document.getElementById('filtro-tabla');
+    if (filtroTabla) {
+        filtroTabla.addEventListener('input', (e) => {
+            const termino = (e.target.value || '').toLowerCase().trim();
             const productosFiltrados = todosLosProductos.filter(p => {
                 const nombre = (p.nombre || '').toLowerCase();
                 const marca = (p.marca || '').toLowerCase();
                 const categoria = (p.categoria || '').toLowerCase();
-                return nombre.includes(termino) || marca.includes(termino) || categoria.includes(termino);
+                const detalles = (p.descripcion || p['descripcion-corta'] || '').toLowerCase();
+                return nombre.includes(termino) || marca.includes(termino) || categoria.includes(termino) || detalles.includes(termino);
             });
             window.productos = productosFiltrados;
             renderizarTabla();
@@ -567,3 +713,6 @@ function initAlta(){
 
 // NO auto-ejecutar, esperar a que alta.html lo llame después de cargar todos los scripts
 console.log('✅ alta.js definido, esperando llamada a initAlta()');
+
+
+

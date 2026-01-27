@@ -33,17 +33,6 @@ app.use((req, res, next) => {
 
 // ===== RUTAS =====
 
-// Ruta raíz - Redirigir a /api
-app.get('/', (req, res) => {
-    res.json({
-        success: true,
-        message: '🚀 API Backend de Planeta Citroën',
-        info: 'Este es el servidor de datos. Para ver la tienda, visitá:',
-        frontend: 'https://ecommerce-planeta-citroen.web.app',
-        api_docs: '/api'
-    });
-});
-
 // Ruta raíz API
 app.get('/api', (req, res) => {
     res.json({
@@ -84,6 +73,9 @@ app.use('/api/mercadopago', mercadoPagoRoutes);
 
 // Rutas de contacto
 app.use('/api/contacto', contactoRoutes);
+
+// Servir archivos estáticos (HTML, CSS, JS, imágenes) - DESPUÉS de las rutas API
+app.use(express.static('.'));
 
 // Ruta 404
 app.use((req, res) => {

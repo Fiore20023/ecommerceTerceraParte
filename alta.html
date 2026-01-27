@@ -175,9 +175,9 @@
                         <option value="">-- Seleccionar tipo --</option>
                         <option value="Accesorios">Accesorios</option>
                         <option value="Neumáticos">Neumáticos</option>
-                        <option value="Carrocerías">Carrocerías</option>
-                        <option value="Motores">Motores</option>
-                        <option value="Suspensiones">Suspensiones</option>
+                        <option value="Carrocería">Carrocería</option>
+                        <option value="Motor">Motor</option>
+                        <option value="Suspensión">Suspensión</option>
                         <option value="Frenos">Frenos</option>
                         <option value="Eléctricos">Eléctricos</option>
                         <option value="Interiores">Interiores</option>
@@ -314,15 +314,19 @@
 
         <hr>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div class="filtro-tabla-header">
             <h2>Lista de productos disponibles</h2>
-            <div style="flex: 0 0 300px;">
+            <div class="filtro-tabla-wrapper">
                 <input type="text" id="filtro-tabla" placeholder="🔍 Filtrar productos..." 
-                       style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                       class="filtro-tabla-input">
             </div>
         </div>
         
         <div class="tabla-container">
+            <div id="totales-productos" style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px; display: flex; gap: 2rem; justify-content: center;">
+                <!-- Totales se insertarán aquí dinámicamente -->
+            </div>
+            
             <table id="tabla-productos">
                 <thead>
                     <tr>
@@ -330,7 +334,8 @@
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Modelo(s)</th>
-                        <th>Detalles</th>
+                        <th>Categoría</th>
+                        <th>Stock</th>
                         <th>Imágenes</th>
                         <th>Acciones</th>
                     </tr>

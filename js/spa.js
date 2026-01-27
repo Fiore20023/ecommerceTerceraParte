@@ -6,7 +6,28 @@ console.log('spa.js cargado');
 
 // Basic cart modal implementation
 (function(){
+    // Formatea montos con separador de miles y decimales opcionales
+    function formatMoney(value, fractionDigits = 0){
+        const num = Number(value) || 0;
+        return num.toLocaleString('es-AR', {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits
+        });
+    }
+
     const body = document.body;
+
+    // Obtiene la mejor imagen disponible del producto
+    function getProductImage(product){
+        if (!product) return null;
+        if (product.imagenes && Array.isArray(product.imagenes) && product.imagenes.length > 0){
+            const first = product.imagenes[0];
+            return first?.datos || first; // soporta objetos {datos: base64} o string/url
+        }
+        if (product.foto && product.foto !== '' && product.foto !== 'undefined') return product.foto;
+        if (product.imagen && product.imagen !== '' && product.imagen !== 'undefined') return product.imagen;
+        return null;
+    }
     
     // Create cart modal
     const modal = document.createElement('div');
@@ -83,14 +104,14 @@ console.log('spa.js cargado');
         
         productName.textContent = product.nombre || product.name || 'Producto';
         productPrice.innerHTML = `
-            Precio: $${product.precio || 0}<br>
+            Precio: $${formatMoney(product.precio)}<br>
             <span style="font-size:0.9rem; color:#666;">
                 Stock disponible: ${stockDisponible} 
                 ${enCarrito > 0 ? `(${enCarrito} en carrito)` : ''}
             </span>
         `;
         
-        const imagenUrl = product.foto || product.imagen;
+        const imagenUrl = getProductImage(product);
         if (imagenUrl && imagenUrl !== '' && imagenUrl !== 'undefined') {
             productImg.src = imagenUrl;
             productImg.style.display = 'block';
@@ -181,7 +202,8 @@ console.log('spa.js cargado');
         console.log('📦 Carrito antes:', JSON.stringify(window.cart));
         
         if (!window.cart[key]) {
-            window.cart[key] = {...product, qty: 0, precio: precioNum};
+            const imagenCart = getProductImage(product);
+            window.cart[key] = {...product, qty: 0, precio: precioNum, imagenCart};
         }
         
         const cantidadActual = window.cart[key].qty;
@@ -255,18 +277,18 @@ console.log('spa.js cargado');
         
         // render using entries so we keep the internal key
         container.innerHTML = Object.entries(window.cart).map(([key,it]) => {
-            const imagenUrl = it.foto || it.imagen || 'https://via.placeholder.com/80?text=No';
+            const imagenUrl = it.imagenCart || getProductImage(it) || 'https://via.placeholder.com/80?text=No';
             return `
             <div class="cart-item">
                 <img src="${imagenUrl}" alt="${it.nombre}" width="80" height="80" onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=No';">
                 <div class="cart-item-info">
                     <strong>${it.nombre}</strong>
                     <div style="margin-top:0.5rem; color:#666;">
-                        $${Number(it.precio) || 0} × 
+                        $${formatMoney(it.precio)} × 
                         <input type="number" min="1" max="99" value="${it.qty}" data-key="${key}" class="cart-qty"> unidades
                     </div>
                     <div style="margin-top:0.3rem; font-weight:bold; color:#333;">
-                        Subtotal: $${((Number(it.precio) || 0) * it.qty).toFixed(2)}
+                        Subtotal: $${formatMoney((Number(it.precio) || 0) * it.qty, 2)}
                     </div>
                 </div>
                 <div class="cart-item-actions">
@@ -284,7 +306,7 @@ console.log('spa.js cargado');
             const totalItems = items.reduce((s,it)=> s + it.qty, 0);
             summary.innerHTML = `
                 <p><strong>Total de productos:</strong> ${totalItems}</p>
-                <p style="font-size:1.5rem; color:#333;"><strong>Total a pagar: $${total.toFixed(2)}</strong></p>
+                <p style="font-size:1.5rem; color:#333;"><strong>Total a pagar: $${formatMoney(total, 2)}</strong></p>
             `;
         }
         
@@ -342,7 +364,7 @@ console.log('spa.js cargado');
 
                 if (response.ok && result.success) {
                     console.log('✅ Carrito enviado exitosamente:', result);
-                    showToast(`✅ Pedido registrado! Total: $${result.data.total || 0}`);
+                    showToast(`✅ Pedido registrado! Total: $${formatMoney(result.data.total, 2)}`);
                     
                     // Ocultar botones de finalizar compra y vaciar
                     document.getElementById('cart-checkout').style.display = 'none';
@@ -418,7 +440,17 @@ console.log('spa.js cargado');
                     saveCart();
                     
                     // Redirigir al checkout de Mercado Pago
-                    const checkoutUrl = result.sandboxInitPoint || result.initPoint;
+                    const checkoutUrl = result?.data?.sandbox_init_point
+                        || result?.data?.init_point
+                        || result.sandbox_init_point
+                        || result.init_point;
+
+                    if (!checkoutUrl) {
+                        console.error('❌ No se recibió URL de checkout:', result);
+                        showToast('❌ Error: No se pudo obtener el link de pago');
+                        return;
+                    }
+
                     window.location.href = checkoutUrl;
                 } else {
                     console.error('❌ Error al crear preferencia:', result);
