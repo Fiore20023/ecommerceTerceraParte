@@ -92,7 +92,7 @@ Esto creará una aplicación con URL: `https://nombre-de-tu-app.herokuapp.com`
 
 Desde la terminal:
 ```bash
-heroku config:set MONGODB_URI="mongodb+srv://planetacitroenseo_db_user:kDT6bhvN7nmNVgqL@cluster0.mkhyuei.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
+heroku config:set MONGODB_URI="mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
 heroku config:set DB_NAME="ecommerce"
 heroku config:set PRODUCTOS_COLLECTION="productos"
 heroku config:set CARRITO_COLLECTION="carritos"
@@ -178,7 +178,7 @@ heroku logs --tail
 
 ---
 
-## ☁️ Paso 4: Desplegar en Glitch (Alternativa)
+## ☁️ Paso 4: Desplegar en Glitch (alternativa)
 
 ### **Opción A: Importar desde GitHub (Recomendado)**
 
@@ -296,7 +296,7 @@ Compress-Archive -Path * -DestinationPath ecommerce-proyecto-final.zip
 - [ ] Productos de prueba creados
 - [ ] Repositorio en GitHub creado y actualizado
 - [ ] Proyecto desplegado en Heroku (Producción) funcionando
-- [ ] Proyecto desplegado en Glitch (Opcional/Alternativa) funcionando
+- [ ] Proyecto desplegado en Glitch (opcional/alternativa) funcionando
 - [ ] ZIP del proyecto sin node_modules
 - [ ] README.md con instrucciones
 
@@ -306,7 +306,7 @@ Compress-Archive -Path * -DestinationPath ecommerce-proyecto-final.zip
 
 1. **GitHub:** `https://github.com/TU_USUARIO/ecommerce-backend`
 2. **Heroku (Producción):** `https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api`
-3. **Glitch (Alternativa):** `https://tu-proyecto.glitch.me`
+3. **Glitch (alternativa):** `https://tu-proyecto.glitch.me`
 4. **ZIP:** `ecommerce-proyecto-final.zip`
 
 ---
