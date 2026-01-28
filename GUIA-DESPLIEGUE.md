@@ -64,7 +64,121 @@ git push -u origin main
 
 ---
 
-## ☁️ Paso 3: Desplegar en Glitch
+## ☁️ Paso 3: Desplegar en Heroku (Producción)
+
+### **URL de Producción Actual:**
+```
+https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api
+```
+
+### **Pasos para desplegar en Heroku:**
+
+#### **1. Instalar Heroku CLI:**
+Descarga e instala desde: https://devcenter.heroku.com/articles/heroku-cli
+
+#### **2. Iniciar sesión en Heroku:**
+```bash
+heroku login
+```
+
+#### **3. Crear una nueva aplicación en Heroku:**
+```bash
+heroku create nombre-de-tu-app
+```
+
+Esto creará una aplicación con URL: `https://nombre-de-tu-app.herokuapp.com`
+
+#### **4. Configurar variables de entorno en Heroku:**
+
+Desde la terminal:
+```bash
+heroku config:set MONGODB_URI="mongodb+srv://planetacitroenseo_db_user:kDT6bhvN7nmNVgqL@cluster0.mkhyuei.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
+heroku config:set DB_NAME="ecommerce"
+heroku config:set PRODUCTOS_COLLECTION="productos"
+heroku config:set CARRITO_COLLECTION="carritos"
+heroku config:set MP_ACCESS_TOKEN="TU_TOKEN_DE_MERCADOPAGO"
+heroku config:set EMAIL_USER="tu-email@gmail.com"
+heroku config:set EMAIL_PASSWORD="tu-password-de-app"
+```
+
+O desde el dashboard de Heroku:
+1. Ve a https://dashboard.heroku.com/apps
+2. Selecciona tu aplicación
+3. Ve a **Settings** → **Config Vars**
+4. Agrega las variables de entorno
+
+#### **5. Verificar archivos necesarios:**
+
+**Procfile** (ya incluido):
+```
+web: node server.js
+```
+
+**package.json** - Asegúrate que tenga:
+```json
+{
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+```
+
+#### **6. Desplegar a Heroku:**
+```bash
+# Agregar Heroku como remoto (si no se hizo automáticamente)
+heroku git:remote -a nombre-de-tu-app
+
+# Hacer push a Heroku
+git push heroku main
+```
+
+#### **7. Verificar el despliegue:**
+```bash
+# Ver logs en tiempo real
+heroku logs --tail
+
+# Abrir la aplicación en el navegador
+heroku open
+
+# Verificar el estado
+heroku ps
+```
+
+#### **8. Actualizar la URL en el frontend:**
+
+Edita `js/config.js`:
+```javascript
+const API_CONFIG = {
+    BASE_URL: 'https://nombre-de-tu-app.herokuapp.com/api',
+    // ...
+};
+```
+
+### **Comandos útiles de Heroku:**
+
+```bash
+# Ver información de la app
+heroku info
+
+# Ver variables de entorno
+heroku config
+
+# Reiniciar la aplicación
+heroku restart
+
+# Ejecutar comandos en Heroku
+heroku run bash
+
+# Ver métricas
+heroku logs --tail
+```
+
+---
+
+## ☁️ Paso 4: Desplegar en Glitch (Alternativa)
 
 ### **Opción A: Importar desde GitHub (Recomendado)**
 
@@ -110,7 +224,7 @@ BASE_URL: 'https://tu-proyecto.glitch.me/api',
 
 ---
 
-## 🧪 Paso 4: Probar con Postman (Opcional)
+## 🧪 Paso 5: Probar con Postman (Opcional)
 
 ### **Instalar Postman:**
 Descarga desde: https://www.postman.com/downloads/
@@ -163,7 +277,7 @@ Descarga desde: https://www.postman.com/downloads/
 
 ---
 
-## 📦 Paso 5: Crear ZIP para entregar
+## 📦 Paso 6: Crear ZIP para entregar
 
 ```bash
 # Asegúrate de estar en la carpeta del proyecto
@@ -181,7 +295,8 @@ Compress-Archive -Path * -DestinationPath ecommerce-proyecto-final.zip
 - [ ] Base de datos en MongoDB Atlas configurada
 - [ ] Productos de prueba creados
 - [ ] Repositorio en GitHub creado y actualizado
-- [ ] Proyecto desplegado en Glitch funcionando
+- [ ] Proyecto desplegado en Heroku (Producción) funcionando
+- [ ] Proyecto desplegado en Glitch (Opcional/Alternativa) funcionando
 - [ ] ZIP del proyecto sin node_modules
 - [ ] README.md con instrucciones
 
@@ -190,8 +305,9 @@ Compress-Archive -Path * -DestinationPath ecommerce-proyecto-final.zip
 ## 📝 URLs a entregar:
 
 1. **GitHub:** `https://github.com/TU_USUARIO/ecommerce-backend`
-2. **Glitch:** `https://tu-proyecto.glitch.me`
-3. **ZIP:** `ecommerce-proyecto-final.zip`
+2. **Heroku (Producción):** `https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api`
+3. **Glitch (Alternativa):** `https://tu-proyecto.glitch.me`
+4. **ZIP:** `ecommerce-proyecto-final.zip`
 
 ---
 
