@@ -1,5 +1,11 @@
 # ⚡ Guía Rápida: Actualizar Heroku desde Git
 
+> 📍 **Estás aquí:** Este archivo está en el repositorio de GitHub  
+> 📖 **¿Cómo llegaste aquí?** Hiciste click en `GUIA-RAPIDA-HEROKU.md` desde la lista de archivos  
+> ❓ **¿No sabes cómo acceder a las guías?** Lee: [COMO-USAR-GUIAS.md](COMO-USAR-GUIAS.md)
+
+---
+
 ## 🎯 Resumen en 3 Pasos
 
 ### 1️⃣ Configuración Inicial (Solo UNA vez)

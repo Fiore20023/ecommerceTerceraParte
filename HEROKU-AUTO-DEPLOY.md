@@ -1,5 +1,11 @@
 # 🔄 Despliegue Automático a Heroku desde GitHub
 
+> 📍 **Estás aquí:** Este archivo está en el repositorio de GitHub  
+> 💡 **Esta es la guía COMPLETA** - Si buscas algo más rápido, ve a: [GUIA-RAPIDA-HEROKU.md](GUIA-RAPIDA-HEROKU.md)  
+> ❓ **¿No sabes cómo acceder a las guías?** Lee: [COMO-USAR-GUIAS.md](COMO-USAR-GUIAS.md)
+
+---
+
 ## 📋 Descripción
 
 Este proyecto está configurado para desplegarse **automáticamente** a Heroku cada vez que se hace `push` a la rama `main` en GitHub. Esto elimina la necesidad de desplegar manualmente usando `git push heroku main`.
