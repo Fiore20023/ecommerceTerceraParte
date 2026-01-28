@@ -35,23 +35,43 @@ class ProductoController {
         try {
             const productos = await productoModel.findAll();
             
-            // Normalizar categorías para productos (no autos)
-            const productosNormalizados = productos.map(p => {
-                if (p.tipoProducto !== 'auto' && (p.categoria || p.subcategoria)) {
-                    const catNormalizada = normalizarCategoria(p.categoria || p.subcategoria);
+            // Transformar datos: en la BD, categoria tiene MODELOS y subcategoria tiene TIPO
+            // Necesitamos invertir eso para que:
+            // - modelos[] tenga los modelos
+            // - categoria tenga el tipo de repuesto (normalizado)
+            const productosTransformados = productos.map(p => {
+                // Si es un producto (no auto)
+                if (p.tipoProducto === 'producto') {
+                    // Parsear modelos desde el campo "categoria" (separados por coma)
+                    const modelosStr = p.categoria || '';
+                    const modelos = modelosStr
+                        .split(',')
+                        .map(m => m.trim())
+                        .filter(m => m && m !== '');
+                    
+                    // El tipo de repuesto está en subcategoria, normalizarlo
+                    const tipoRepuesto = normalizarCategoria(p.subcategoria || '');
+                    
                     return {
                         ...p,
-                        categoria: catNormalizada,
-                        subcategoria: catNormalizada
+                        modelos: modelos,  // Array de modelos compatibles
+                        categoria: tipoRepuesto,  // Tipo de repuesto normalizado
+                        subcategoria: tipoRepuesto  // Ambos deben tener lo mismo
                     };
                 }
+                // Si es auto, dejar como está
                 return p;
+            });
+            
+            console.log('🔍 Primeros 3 productos transformados:');
+            productosTransformados.slice(0, 3).forEach(p => {
+                console.log(`   ${p.nombre}: modelos=${JSON.stringify(p.modelos)} categoria="${p.categoria}" tipo="${p.tipoProducto}"`);
             });
             
             res.status(200).json({
                 success: true,
-                data: productosNormalizados,
-                total: productosNormalizados.length
+                data: productosTransformados,
+                total: productosTransformados.length
             });
         } catch (error) {
             console.error('Error en getAll:', error);

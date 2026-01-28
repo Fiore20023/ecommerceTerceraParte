@@ -940,13 +940,13 @@ function initInicio(){
         
         const startTime = Date.now();
         
-        // Timeout de 30 segundos (MongoDB Atlas puede tardar)
+        // Timeout de 60 segundos (MongoDB Atlas puede tardar mucho)
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
-            console.warn('⏱️ Timeout alcanzado después de 10 segundos');
+            console.warn('⏱️ Timeout alcanzado después de 60 segundos');
             console.warn('⚠️ MongoDB Atlas no responde. Usando caché vencida.');
             controller.abort();
-        }, 10000);
+        }, 60000);
         
         fetch(window.API_CONFIG.getProductosUrl(), { 
             signal: controller.signal,
@@ -967,6 +967,21 @@ function initInicio(){
                 console.log(`✅ Productos cargados en ${totalTime}ms`);
                 console.log('📦 Datos recibidos:', result);
                 const productos = result.data || result;
+                
+                // DEBUG: Ver si las categorías ya vienen normalizadas del backend
+                const productosMotor = productos.filter(p => 
+                    (p.categoria || '').toLowerCase().includes('motor') || 
+                    (p.subcategoria || '').toLowerCase().includes('motor')
+                );
+                console.log(`🔍 DEBUG: Productos con "motor" en categoria/subcategoria: ${productosMotor.length}`);
+                if (productosMotor.length > 0) {
+                    console.log('   Ejemplos:', productosMotor.slice(0, 3).map(p => ({
+                        nombre: p.nombre,
+                        categoria: p.categoria,
+                        subcategoria: p.subcategoria,
+                        modelos: p.modelos
+                    })));
+                }
                 
                 console.log('🔍 Analizando productos ocultos:');
                 productos.forEach((p, i) => {
