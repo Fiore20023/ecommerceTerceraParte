@@ -172,7 +172,7 @@ heroku restart
 # Ejecutar comandos en Heroku
 heroku run bash
 
-# Ver métricas
+# Ver logs en tiempo real
 heroku logs --tail
 ```
 
@@ -203,7 +203,7 @@ heroku logs --tail
 
 ```env
 PORT=3000
-MONGODB_URI=mongodb+srv://planetacitroenseo_db_user:kDT6bhvN7nmNVgqL@cluster0.mkhyuei.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0
 DB_NAME=ecommerce
 PRODUCTOS_COLLECTION=productos
 CARRITO_COLLECTION=carritos
