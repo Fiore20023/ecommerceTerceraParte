@@ -45,7 +45,7 @@ Este proyecto está configurado para desplegarse **automáticamente** a Heroku c
 Una vez configurados los secrets, el despliegue es completamente automático:
 
 1. **Haces cambios** en tu código localmente
-2. **Commiteas** los cambios:
+2. **Haces commit de los cambios:**
    ```bash
    git add .
    git commit -m "Descripción de los cambios"

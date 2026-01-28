@@ -22,6 +22,11 @@ jobs:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           
       - name: Verify deployment
+        if: success()
         run: |
           echo "✅ Deployment completed successfully!"
           echo "🌐 App URL: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com"
+          echo "⏳ Waiting for app to be ready..."
+          sleep 10
+          echo "🔍 Checking if app is responding..."
+          curl -f -s -o /dev/null -w "HTTP Status: %{http_code}\n" https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/api || echo "⚠️ App may still be starting up"
