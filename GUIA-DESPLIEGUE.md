@@ -71,7 +71,58 @@ git push -u origin main
 https://planeta-citroen-api-8e0a0fc0bda1.herokuapp.com/api
 ```
 
-### **Pasos para desplegar en Heroku:**
+---
+
+## 🔄 Opción A: Despliegue Automático desde GitHub (RECOMENDADO)
+
+Este proyecto está configurado para desplegarse automáticamente a Heroku cuando haces `push` a la rama `main`.
+
+### **Configuración inicial (solo una vez):**
+
+#### **1. Obtener tu Heroku API Key:**
+```bash
+heroku login
+heroku auth:token
+```
+Copia el token que aparece.
+
+#### **2. Configurar Secrets en GitHub:**
+
+1. Ve a tu repositorio en GitHub
+2. Click en **Settings** → **Secrets and variables** → **Actions**
+3. Click en **New repository secret**
+4. Agrega estos tres secrets:
+
+| Secret Name | Value |
+|------------|-------|
+| `HEROKU_API_KEY` | Tu API key de Heroku |
+| `HEROKU_APP_NAME` | `planeta-citroen-api-8e0a0fc0bda1` |
+| `HEROKU_EMAIL` | Tu email de Heroku |
+
+### **Uso diario - Desplegar cambios:**
+
+```bash
+# 1. Hacer cambios en tu código
+# 2. Commit
+git add .
+git commit -m "Descripción de cambios"
+
+# 3. Push a GitHub - ¡El despliegue es automático!
+git push origin main
+```
+
+### **Monitorear el despliegue:**
+- Ve a **Actions** en GitHub para ver el progreso
+- Los logs aparecen en tiempo real
+- ✅ El despliegue tarda ~2-3 minutos
+
+📖 **Guía completa:** [HEROKU-AUTO-DEPLOY.md](HEROKU-AUTO-DEPLOY.md)
+
+---
+
+## 🛠️ Opción B: Despliegue Manual con Heroku CLI
+
+### **Pasos para desplegar manualmente en Heroku:**
 
 #### **1. Instalar Heroku CLI:**
 Descarga e instala desde: https://devcenter.heroku.com/articles/heroku-cli
