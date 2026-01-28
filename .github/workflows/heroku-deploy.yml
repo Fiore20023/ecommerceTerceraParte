@@ -15,7 +15,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
@@ -28,8 +28,20 @@ jobs:
         if: success()
         run: |
           echo "✅ Deployment completed successfully!"
+          if [ -z "${{ secrets.HEROKU_APP_NAME }}" ]; then
+            echo "⚠️ HEROKU_APP_NAME secret is not set!"
+            exit 1
+          fi
           echo "🌐 App URL: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com"
           echo "⏳ Waiting for app to be ready..."
           sleep 10
           echo "🔍 Checking if app is responding..."
-          curl -f -s -o /dev/null -w "HTTP Status: %{http_code}\n" https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/api || echo "⚠️ App may still be starting up"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/api)
+          echo "HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "✅ App is responding correctly!"
+          else
+            echo "❌ App verification failed with status: $HTTP_STATUS"
+            echo "⚠️ Deployment may have issues - check Heroku logs"
+            exit 1
+          fi
