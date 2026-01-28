@@ -116,7 +116,9 @@ git push origin main
 - Los logs aparecen en tiempo real
 - ✅ El despliegue tarda ~2-3 minutos
 
-📖 **Guía completa:** [HEROKU-AUTO-DEPLOY.md](HEROKU-AUTO-DEPLOY.md)
+📖 **Guías de referencia:**
+- ⚡ [GUIA-RAPIDA-HEROKU.md](GUIA-RAPIDA-HEROKU.md) - Resumen en 3 pasos
+- 📚 [HEROKU-AUTO-DEPLOY.md](HEROKU-AUTO-DEPLOY.md) - Documentación completa con troubleshooting
 
 ---
 
