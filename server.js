@@ -12,12 +12,26 @@ const app = express();
 
 // ===== MIDDLEWARES =====
 
-// CORS - Permitir peticiones desde el frontend
+// CORS - Permitir peticiones desde el frontend y desde cualquier origen
 app.use(cors({
-    origin: '*', // En producción, especificar el dominio del frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: ['https://ecommerce-planeta-citroen.web.app', 'http://localhost:3000', 'http://localhost:5500', '*'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    maxAge: 86400
 }));
+
+// Middleware adicional para asegurar headers CORS en todas las respuestas
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
 
 // Parser de JSON (límite aumentado para imágenes en Base64)
 app.use(express.json({ limit: '50mb' }));
