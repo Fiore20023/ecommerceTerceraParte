@@ -12,21 +12,40 @@ const app = express();
 
 // ===== MIDDLEWARES =====
 
-// CORS - Permitir peticiones desde cualquier origen
+// CORS - Configuración mejorada para permitir peticiones desde cualquier origen
 const corsOptions = {
     origin: function (origin, callback) {
-        // Permitir cualquier origen
+        // Permitir cualquier origen (incluyendo solicitudes sin origin como Postman)
         callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['Content-Length', 'X-JSON'],
     credentials: true,
-    maxAge: 86400
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    maxAge: 86400 // 24 horas
 };
 
+// Aplicar CORS antes de cualquier otra cosa
 app.use(cors(corsOptions));
 
-// Manejar preflight requests explícitamente
+// Headers CORS adicionales para asegurar compatibilidad
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Manejar preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+    }
+    
+    next();
+});
+
+// Manejar preflight requests explícitamente para todas las rutas
 app.options('*', cors(corsOptions));
 
 // Parser de JSON (límite aumentado para imágenes en Base64)
